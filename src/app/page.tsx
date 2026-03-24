@@ -1,7 +1,14 @@
 "use client";
 
 import Image from "next/image";
+import { useState, type ElementType } from "react";
 import { motion, type Variants, type Easing } from "framer-motion";
+import {
+  Zap, Target, Rocket,
+  Briefcase, BarChart3, Monitor,
+  Building2, RefreshCw, Shield, Brain,
+  Menu, X, ChevronDown,
+} from "lucide-react";
 
 const ease: Easing = "easeOut";
 
@@ -10,16 +17,39 @@ const fadeUp: Variants = {
   visible: (i: number = 0) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, delay: i * 0.1, ease },
+    transition: { duration: 0.6, delay: i * 0.15, ease },
   }),
 };
 
 const fadeIn: Variants = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 0.7, ease } },
+  visible: (i: number = 0) => ({
+    opacity: 1,
+    transition: { duration: 0.7, delay: i * 0.15, ease },
+  }),
 };
 
+function IconBadge({ icon: Icon }: { icon: ElementType }) {
+  return (
+    <div
+      className="w-14 h-14 rounded-full flex items-center justify-center mb-5"
+      style={{ background: "linear-gradient(135deg, rgba(194,24,91,0.12), rgba(234,88,12,0.12))" }}
+    >
+      <Icon className="w-7 h-7 text-[#c2185b]" />
+    </div>
+  );
+}
+
+const navLinks = [
+  { href: "#promesse", label: "Notre promesse" },
+  { href: "#pour-qui", label: "Pour qui" },
+  { href: "#cloud-sap", label: "Cloud SAP" },
+  { href: "#methode", label: "Méthode" },
+];
+
 export default function Home() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   return (
     <main className="font-nunito">
       {/* NAV */}
@@ -28,20 +58,56 @@ export default function Home() {
           <a href="#hero">
             <Image src="/logo.png" alt="BK Pulse" width={120} height={40} className="h-10 w-auto" />
           </a>
+
+          {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-8 text-sm font-semibold text-gray-600">
-            <a href="#promesse" className="hover:text-[#c2185b] transition-colors">Notre promesse</a>
-            <a href="#pour-qui" className="hover:text-[#c2185b] transition-colors">Pour qui</a>
-            <a href="#cloud-sap" className="hover:text-[#c2185b] transition-colors">Cloud SAP</a>
-            <a href="#methode" className="hover:text-[#c2185b] transition-colors">Méthode</a>
+            {navLinks.map((link) => (
+              <a key={link.href} href={link.href} className="hover:text-[#c2185b] transition-colors">
+                {link.label}
+              </a>
+            ))}
             <a
               href="#cta"
-              className="px-5 py-2 rounded-full text-white font-bold text-sm"
+              className="px-5 py-2 rounded-full text-white font-bold text-sm hover:shadow-lg hover:shadow-rose-500/20 hover:scale-105 transition-all duration-300"
               style={{ background: "linear-gradient(135deg, #c2185b, #ea580c)" }}
             >
               Évaluer mon éligibilité
             </a>
           </div>
+
+          {/* Mobile hamburger */}
+          <button
+            className="md:hidden p-2 rounded-lg text-gray-600 hover:text-[#c2185b] transition-colors"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
         </div>
+
+        {/* Mobile menu */}
+        {isMenuOpen && (
+          <div className="md:hidden bg-white border-t border-gray-100 px-6 py-4 flex flex-col gap-3">
+            {navLinks.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                onClick={() => setIsMenuOpen(false)}
+                className="text-gray-700 font-semibold hover:text-[#c2185b] transition-colors py-1"
+              >
+                {link.label}
+              </a>
+            ))}
+            <a
+              href="#cta"
+              onClick={() => setIsMenuOpen(false)}
+              className="px-5 py-2.5 rounded-full text-white font-bold text-sm text-center mt-1 hover:shadow-lg transition-all duration-300"
+              style={{ background: "linear-gradient(135deg, #c2185b, #ea580c)" }}
+            >
+              Évaluer mon éligibilité
+            </a>
+          </div>
+        )}
       </nav>
 
       {/* HERO */}
@@ -57,23 +123,18 @@ export default function Home() {
               "linear-gradient(135deg, rgba(194,24,91,0.06) 0%, rgba(234,88,12,0.06) 50%, rgba(255,255,255,0) 100%)",
           }}
         />
-        {/* Decorative blobs */}
+        {/* Decorative blobs with floating animation */}
         <div
-          className="absolute -top-32 -right-32 w-96 h-96 rounded-full opacity-20 -z-10 blur-3xl"
+          className="absolute -top-32 -right-32 w-96 h-96 rounded-full opacity-20 -z-10 blur-3xl animate-float"
           style={{ background: "radial-gradient(circle, #c2185b, transparent)" }}
         />
         <div
-          className="absolute -bottom-32 -left-32 w-96 h-96 rounded-full opacity-15 -z-10 blur-3xl"
+          className="absolute -bottom-32 -left-32 w-96 h-96 rounded-full opacity-15 -z-10 blur-3xl animate-float-slow"
           style={{ background: "radial-gradient(circle, #ea580c, transparent)" }}
         />
 
         <div className="max-w-5xl mx-auto px-6 text-center">
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            variants={fadeIn}
-            className="mb-6"
-          >
+          <motion.div initial="hidden" animate="visible" variants={fadeIn} className="mb-6">
             <span
               className="inline-block px-4 py-1.5 rounded-full text-sm font-bold text-white mb-8"
               style={{ background: "linear-gradient(135deg, #c2185b, #ea580c)" }}
@@ -87,7 +148,7 @@ export default function Home() {
             animate="visible"
             custom={1}
             variants={fadeUp}
-            className="text-5xl md:text-7xl font-extrabold leading-tight mb-6 text-gray-900"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-extrabold leading-tight mb-6 text-gray-900"
           >
             L&apos;ERP qui va{" "}
             <span className="gradient-brand-text">à votre rythme</span>
@@ -125,7 +186,7 @@ export default function Home() {
           >
             <a
               href="#cta"
-              className="px-8 py-4 rounded-full text-white font-bold text-lg shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300"
+              className="px-8 py-4 rounded-full text-white font-bold text-lg shadow-xl hover:shadow-rose-500/20 hover:scale-105 transition-all duration-300"
               style={{ background: "linear-gradient(135deg, #c2185b, #ea580c)" }}
             >
               Évaluez votre éligibilité
@@ -144,18 +205,31 @@ export default function Home() {
             animate="visible"
             custom={5}
             variants={fadeUp}
-            className="mt-20 grid grid-cols-3 gap-8 max-w-2xl mx-auto"
+            className="mt-20 grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-2xl mx-auto"
           >
             {[
               { value: "8 sem.", label: "Déploiement moyen" },
               { value: "100%", label: "Cloud natif SAP" },
               { value: "0", label: "Maintenance IT" },
-            ].map((stat) => (
-              <div key={stat.label} className="text-center">
+            ].map((stat, i) => (
+              <div
+                key={stat.label}
+                className={`text-center py-2 ${i > 0 ? "sm:border-l sm:border-gray-200" : ""}`}
+              >
                 <div className="text-3xl font-extrabold gradient-brand-text">{stat.value}</div>
                 <div className="text-sm text-gray-500 font-medium mt-1">{stat.label}</div>
               </div>
             ))}
+          </motion.div>
+        </div>
+
+        {/* Scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
+          <motion.div
+            animate={{ y: [0, 10, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <ChevronDown className="w-6 h-6 text-gray-400" />
           </motion.div>
         </div>
       </section>
@@ -180,24 +254,24 @@ export default function Home() {
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8">
             {[
               {
-                icon: "⚡",
+                icon: Zap,
                 title: "Déploiement rapide",
                 desc: "Un socle opérationnel en quelques semaines. Pas de tunnel projet, pas d'attente interminable.",
                 gradient: "from-rose-50 to-orange-50",
                 border: "border-rose-100",
               },
               {
-                icon: "🎯",
+                icon: Target,
                 title: "Standard intelligent",
                 desc: "Basé sur les meilleures pratiques du marché assurance/mutuelles. Prêt à l'emploi, immédiatement efficace.",
                 gradient: "from-orange-50 to-rose-50",
                 border: "border-orange-100",
               },
               {
-                icon: "🚀",
+                icon: Rocket,
                 title: "Zéro lourdeur technique",
                 desc: "Tout est pensé pour aller vite, sans compromis sur la qualité ou la sécurité.",
                 gradient: "from-rose-50 to-orange-50",
@@ -213,8 +287,8 @@ export default function Home() {
                 variants={fadeUp}
                 className={`relative bg-gradient-to-br ${card.gradient} border ${card.border} rounded-2xl p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-1`}
               >
-                <div className="text-4xl mb-5">{card.icon}</div>
-                <h3 className="text-xl font-extrabold text-gray-900 mb-3">{card.title}</h3>
+                <IconBadge icon={card.icon} />
+                <h3 className="text-xl font-bold text-gray-900 mb-3">{card.title}</h3>
                 <p className="text-gray-600 leading-relaxed">{card.desc}</p>
                 <div
                   className="absolute bottom-0 left-0 right-0 h-1 rounded-b-2xl"
@@ -229,7 +303,7 @@ export default function Home() {
       {/* POUR QUI */}
       <section
         id="pour-qui"
-        className="py-24 relative overflow-hidden"
+        className="py-20 relative overflow-hidden"
         style={{
           background:
             "linear-gradient(135deg, rgba(194,24,91,0.04) 0%, rgba(234,88,12,0.04) 100%)",
@@ -240,7 +314,7 @@ export default function Home() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
-            variants={fadeUp}
+            variants={fadeIn}
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">
@@ -252,11 +326,11 @@ export default function Home() {
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8">
             {[
               {
                 role: "Dirigeants",
-                emoji: "👔",
+                icon: Briefcase,
                 benefit: "Accélérez votre croissance et réduisez votre time-to-market",
                 points: [
                   "Vision temps réel de la performance",
@@ -266,7 +340,7 @@ export default function Home() {
               },
               {
                 role: "DAF",
-                emoji: "📊",
+                icon: BarChart3,
                 benefit: "Fiabilisez vos données et pilotez votre rentabilité en temps réel",
                 points: [
                   "Clôtures accélérées",
@@ -276,7 +350,7 @@ export default function Home() {
               },
               {
                 role: "DSI",
-                emoji: "💻",
+                icon: Monitor,
                 benefit: "Libérez-vous de la maintenance et concentrez-vous sur l'innovation",
                 points: [
                   "Zéro infrastructure à gérer",
@@ -294,7 +368,7 @@ export default function Home() {
                 variants={fadeUp}
                 className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 border border-gray-100"
               >
-                <div className="text-5xl mb-4">{item.emoji}</div>
+                <IconBadge icon={item.icon} />
                 <div
                   className="inline-block px-3 py-1 rounded-full text-sm font-bold text-white mb-4"
                   style={{ background: "linear-gradient(135deg, #c2185b, #ea580c)" }}
@@ -319,7 +393,7 @@ export default function Home() {
       </section>
 
       {/* CLOUD SAP */}
-      <section id="cloud-sap" className="py-24 bg-white">
+      <section id="cloud-sap" className="py-28 bg-white">
         <div className="max-w-6xl mx-auto px-6">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <motion.div
@@ -344,7 +418,7 @@ export default function Home() {
               </p>
               <a
                 href="#cta"
-                className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full text-white font-bold hover:shadow-lg hover:scale-105 transition-all duration-300"
+                className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full text-white font-bold hover:shadow-lg hover:shadow-rose-500/20 hover:scale-105 transition-all duration-300"
                 style={{ background: "linear-gradient(135deg, #c2185b, #ea580c)" }}
               >
                 En savoir plus →
@@ -354,42 +428,50 @@ export default function Home() {
             <div className="grid grid-cols-2 gap-5">
               {[
                 {
-                  icon: "🏗️",
+                  icon: Building2,
                   title: "Processus métiers prêts à l'emploi",
                   desc: "Configurés pour l'assurance et la mutuelle dès le premier jour.",
                 },
                 {
-                  icon: "🔄",
+                  icon: RefreshCw,
                   title: "Mises à jour automatiques",
                   desc: "Toujours sur la dernière version SAP, sans effort de votre côté.",
                 },
                 {
-                  icon: "🔒",
+                  icon: Shield,
                   title: "Sécurité & conformité intégrées",
                   desc: "Conformité RGPD, DDA et réglementations assurancielles natives.",
                 },
                 {
-                  icon: "🤖",
+                  icon: Brain,
                   title: "IA & analytics embarqués",
                   desc: "Tableaux de bord intelligents et prédictions métiers intégrés.",
                 },
-              ].map((item, i) => (
-                <motion.div
-                  key={item.title}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true, margin: "-60px" }}
-                  custom={i}
-                  variants={fadeUp}
-                  className="bg-gradient-to-br from-gray-50 to-white border border-gray-100 rounded-2xl p-6 hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5"
-                >
-                  <div className="text-3xl mb-3">{item.icon}</div>
-                  <h3 className="font-extrabold text-gray-900 text-sm mb-2 leading-snug">
-                    {item.title}
-                  </h3>
-                  <p className="text-gray-500 text-xs leading-relaxed">{item.desc}</p>
-                </motion.div>
-              ))}
+              ].map((item, i) => {
+                const Icon = item.icon;
+                return (
+                  <motion.div
+                    key={item.title}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, margin: "-60px" }}
+                    custom={i}
+                    variants={fadeUp}
+                    className="bg-gradient-to-br from-gray-50 to-white border border-gray-100 rounded-2xl p-8 hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5"
+                  >
+                    <div
+                      className="w-12 h-12 rounded-full flex items-center justify-center mb-4"
+                      style={{ background: "linear-gradient(135deg, rgba(194,24,91,0.12), rgba(234,88,12,0.12))" }}
+                    >
+                      <Icon className="w-6 h-6 text-[#c2185b]" />
+                    </div>
+                    <h3 className="font-bold text-gray-900 text-base mb-2 leading-snug">
+                      {item.title}
+                    </h3>
+                    <p className="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
+                  </motion.div>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -403,11 +485,11 @@ export default function Home() {
       >
         {/* Decorative orbs */}
         <div
-          className="absolute top-0 left-1/4 w-96 h-96 rounded-full opacity-20 blur-3xl -z-0"
+          className="absolute top-0 left-1/4 w-96 h-96 rounded-full opacity-20 blur-3xl -z-0 animate-float"
           style={{ background: "radial-gradient(circle, #c2185b, transparent)" }}
         />
         <div
-          className="absolute bottom-0 right-1/4 w-96 h-96 rounded-full opacity-15 blur-3xl -z-0"
+          className="absolute bottom-0 right-1/4 w-96 h-96 rounded-full opacity-15 blur-3xl -z-0 animate-float-slow"
           style={{ background: "radial-gradient(circle, #ea580c, transparent)" }}
         />
 
@@ -436,8 +518,13 @@ export default function Home() {
 
           {/* Timeline */}
           <div className="relative">
-            {/* Connector line */}
-            <div className="hidden md:block absolute top-10 left-0 right-0 h-0.5 mx-16"
+            {/* Animated connector line */}
+            <motion.div
+              initial={{ scaleX: 0 }}
+              whileInView={{ scaleX: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1, ease: "easeOut", delay: 0.3 }}
+              className="hidden md:block absolute top-10 left-0 right-0 h-0.5 mx-16 origin-left"
               style={{ background: "linear-gradient(90deg, #c2185b, #ea580c)" }}
             />
 
@@ -479,10 +566,7 @@ export default function Home() {
                   </div>
                   <h3 className="text-2xl font-extrabold text-white mb-3">{item.title}</h3>
                   <p className="text-gray-400 leading-relaxed mb-4">{item.desc}</p>
-                  <span
-                    className="inline-block px-4 py-1.5 rounded-full text-xs font-bold border"
-                    style={{ borderColor: "#c2185b", color: "#ea580c" }}
-                  >
+                  <span className="inline-block px-4 py-1.5 rounded-full text-xs font-bold text-white bg-white/10 border border-white/20">
                     {item.duration}
                   </span>
                 </motion.div>
@@ -524,28 +608,52 @@ export default function Home() {
             viewport={{ once: true, margin: "-80px" }}
             custom={1}
             variants={fadeUp}
-            className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto leading-relaxed"
+            className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed"
           >
             Évaluez votre éligibilité à un déploiement rapide en 15 minutes.
             Notre équipe d&apos;experts vous accompagne à chaque étape.
           </motion.p>
 
-          <motion.div
+          {/* Contact form */}
+          <motion.form
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: "-80px" }}
+            viewport={{ once: true, margin: "-60px" }}
             custom={2}
             variants={fadeUp}
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12"
+            onSubmit={(e) => e.preventDefault()}
+            className="max-w-xl mx-auto mb-10 text-left"
           >
-            <a
-              href="mailto:contact@bkpartners.fr"
-              className="px-10 py-5 rounded-full text-white font-extrabold text-xl shadow-2xl hover:shadow-rose-200 hover:scale-105 transition-all duration-300"
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+              <input
+                type="text"
+                placeholder="Votre nom"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#c2185b]/30 focus:border-[#c2185b] text-gray-800 bg-white"
+              />
+              <input
+                type="email"
+                placeholder="Votre email"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#c2185b]/30 focus:border-[#c2185b] text-gray-800 bg-white"
+              />
+            </div>
+            <input
+              type="tel"
+              placeholder="Votre téléphone"
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#c2185b]/30 focus:border-[#c2185b] text-gray-800 bg-white mb-4"
+            />
+            <textarea
+              placeholder="Décrivez votre besoin en quelques mots..."
+              rows={4}
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#c2185b]/30 focus:border-[#c2185b] text-gray-800 bg-white mb-4 resize-none"
+            />
+            <button
+              type="submit"
+              className="w-full px-8 py-4 rounded-full text-white font-extrabold text-lg shadow-xl hover:shadow-rose-500/20 hover:scale-105 transition-all duration-300"
               style={{ background: "linear-gradient(135deg, #c2185b, #ea580c)" }}
             >
-              Évaluez votre éligibilité →
-            </a>
-          </motion.div>
+              Évaluer mon éligibilité →
+            </button>
+          </motion.form>
 
           <motion.div
             initial="hidden"
@@ -558,6 +666,47 @@ export default function Home() {
             {["✓ Réponse sous 24h", "✓ Diagnostic offert", "✓ Sans engagement"].map((item) => (
               <span key={item} className="font-semibold">{item}</span>
             ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* CREDIBILITE */}
+      <section className="py-20 bg-white border-t border-gray-50">
+        <div className="max-w-4xl mx-auto px-6">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-80px" }}
+            variants={fadeIn}
+            className="text-center"
+          >
+            <span className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-12 block">
+              Ils nous font confiance
+            </span>
+            <blockquote className="relative">
+              <div
+                className="text-8xl font-serif leading-none opacity-10 mb-2"
+                style={{ color: "#c2185b" }}
+              >
+                &ldquo;
+              </div>
+              <p className="text-xl md:text-2xl text-gray-700 font-medium italic leading-relaxed max-w-2xl mx-auto mb-10">
+                Grâce à BK Pulse, nous avons mis en production notre ERP en 7 semaines.
+                Une équipe exceptionnelle, une méthode rodée. Exactement ce dont nous avions besoin.
+              </p>
+              <div className="flex items-center justify-center gap-4">
+                <div
+                  className="w-14 h-14 rounded-full flex items-center justify-center text-white font-extrabold text-lg shrink-0"
+                  style={{ background: "linear-gradient(135deg, #c2185b, #ea580c)" }}
+                >
+                  SM
+                </div>
+                <div className="text-left">
+                  <div className="font-bold text-gray-900">Sophie Martin</div>
+                  <div className="text-sm text-gray-500">DAF — Mutuelle Avenir Santé</div>
+                </div>
+              </div>
+            </blockquote>
           </motion.div>
         </div>
       </section>
@@ -618,7 +767,7 @@ export default function Home() {
           </div>
 
           <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-gray-500">
-            <p>© 2024 BK Pulse — BK Partners Group. Tous droits réservés.</p>
+            <p>© 2026 BK Pulse — BK Partners Group. Tous droits réservés.</p>
             <div className="flex gap-6">
               <a href="#" className="hover:text-gray-300 transition-colors">Mentions légales</a>
               <a href="#" className="hover:text-gray-300 transition-colors">Politique de confidentialité</a>
