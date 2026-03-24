@@ -5,23 +5,33 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --rose: #c2185b;
+  --orange: #ea580c;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Nunito", sans-serif;
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  .gradient-brand {
+    background: linear-gradient(135deg, #c2185b 0%, #ea580c 100%);
+  }
+
+  .gradient-brand-text {
+    background: linear-gradient(135deg, #c2185b 0%, #ea580c 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 }

@@ -11,6 +11,31 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        rose: {
+          DEFAULT: "#c2185b",
+          50: "#fce4ec",
+          100: "#f8bbd0",
+          500: "#e91e63",
+          600: "#c2185b",
+          700: "#ad1457",
+          800: "#880e4f",
+        },
+        orange: {
+          DEFAULT: "#ea580c",
+          50: "#fff7ed",
+          100: "#ffedd5",
+          500: "#f97316",
+          600: "#ea580c",
+          700: "#c2410c",
+          800: "#9a3412",
+        },
+      },
+      fontFamily: {
+        nunito: ["var(--font-nunito)", "Nunito", "sans-serif"],
+      },
+      backgroundImage: {
+        "gradient-brand": "linear-gradient(135deg, #c2185b 0%, #ea580c 100%)",
+        "gradient-brand-subtle": "linear-gradient(135deg, rgba(194,24,91,0.08) 0%, rgba(234,88,12,0.08) 100%)",
       },
     },
   },
