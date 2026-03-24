@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useId, type ElementType } from "react";
+import { useState, useId, useEffect, type ElementType } from "react";
 import { motion, type Variants, type Easing } from "framer-motion";
 import dynamic from "next/dynamic";
 const TypeformWidget = dynamic(
@@ -97,11 +97,32 @@ const navLinks = [
 
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      setScrollProgress(docHeight > 0 ? scrollTop / docHeight : 0);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <main className="font-nunito">
       {/* NAV */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100 shadow-sm">
+        {/* Surfer progress indicator */}
+        <div className="absolute bottom-0 left-0 right-0">
+          <div
+            className="absolute -top-5 transition-none"
+            style={{ left: `calc(${scrollProgress * 100}% - 10px)` }}
+          >
+            <span className="text-2xl leading-none drop-shadow-sm" role="img" aria-label="surfeur">🏄</span>
+          </div>
+        </div>
+
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <a href="#hero">
             <Image src="/logo.png" alt="BK Pulse" width={120} height={40} className="h-10 w-auto" />
@@ -204,7 +225,7 @@ export default function Home() {
             variants={blurUp}
             className="text-lg md:text-xl text-gray-500 max-w-3xl mx-auto leading-relaxed mb-10"
           >
-            Transformez votre entreprise en <span className="text-gray-800 font-semibold">quelques semaines, pas en 18 mois.</span>{" "}
+            Transformez votre entreprise en <span className="text-gray-800 font-semibold">quelques semaines.</span>{" "}
             BK Pulse déploie votre ERP Cloud SAP pour l&apos;assurance, les mutuelles et le courtage.
           </motion.p>
 
@@ -441,7 +462,7 @@ export default function Home() {
                   <div className="text-2xl sm:text-3xl font-extrabold text-white mb-1">semaines</div>
                   <div className="text-white/70 text-lg font-medium">
                     pour déployer votre ERP.<br />
-                    Pas 18 mois. 8 semaines.
+                    Seulement 8 semaines.
                   </div>
                 </div>
               </div>
@@ -652,57 +673,38 @@ export default function Home() {
         <BrandWave className="absolute top-10 -left-20 w-[400px] h-auto -rotate-3" opacity={0.04} />
         <BrandWave className="absolute bottom-16 -right-16 w-[350px] h-auto rotate-6" opacity={0.03} />
 
-        <div className="max-w-4xl mx-auto px-6 text-center relative">
-          <motion.h2
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={fadeUp}
-            className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-6 leading-tight"
-          >
-            Votre ERP déployé en{" "}
-            <span className="gradient-brand-text">8 semaines, pas 18 mois.</span>
-          </motion.h2>
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={fadeUp}
+          className="max-w-3xl mx-auto px-6 relative"
+        >
+          <div className="border border-gray-200 rounded-3xl bg-white shadow-lg p-8 md:p-12">
+            <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-3 leading-tight text-center">
+              Votre ERP déployé en{" "}
+              <span className="gradient-brand-text">8 semaines.</span>
+            </h2>
 
-          <motion.p
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-80px" }}
-            custom={1}
-            variants={fadeUp}
-            className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed"
-          >
-            Parlons de votre projet ERP. Notre équipe d&apos;experts vous recontacte sous 24h.
-          </motion.p>
+            <p className="text-lg text-gray-500 mb-8 text-center">
+              Parlons de votre projet ERP.
+            </p>
 
-          {/* Typeform embed */}
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-60px" }}
-            custom={2}
-            variants={fadeUp}
-            className="max-w-2xl mx-auto mb-10 rounded-2xl overflow-hidden"
-          >
-            <TypeformWidget
-              id="Ud7px7Jh"
-              style={{ width: "100%", height: "500px" }}
-            />
-          </motion.div>
+            {/* Typeform embed */}
+            <div className="rounded-2xl overflow-hidden mb-8">
+              <TypeformWidget
+                id="Ud7px7Jh"
+                style={{ width: "100%", height: "500px" }}
+              />
+            </div>
 
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-60px" }}
-            custom={3}
-            variants={fadeUp}
-            className="flex flex-wrap gap-6 justify-center text-sm text-gray-500"
-          >
-            {["✓ Réponse sous 24h", "✓ Diagnostic offert", "✓ Sans engagement"].map((item) => (
-              <span key={item} className="font-semibold">{item}</span>
-            ))}
-          </motion.div>
-        </div>
+            <div className="flex flex-wrap gap-6 justify-center text-sm text-gray-500">
+              {["✓ Réponse sous 24h", "✓ Diagnostic offert", "✓ Sans engagement"].map((item) => (
+                <span key={item} className="font-semibold">{item}</span>
+              ))}
+            </div>
+          </div>
+        </motion.div>
       </section>
 
       {/* Wave before footer */}
