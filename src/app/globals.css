@@ -29,6 +29,28 @@ body {
   50% { transform: translateY(-15px); }
 }
 
+@keyframes drift-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(40px, -30px) scale(1.08); }
+  66% { transform: translate(-20px, 20px) scale(0.95); }
+}
+
+@keyframes drift-2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(-30px, 40px) scale(1.1); }
+  66% { transform: translate(30px, -20px) scale(0.92); }
+}
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes wave-flow {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
@@ -45,11 +67,39 @@ body {
     background-clip: text;
   }
 
+  .gradient-text-animated {
+    background: linear-gradient(90deg, #c2185b, #ea580c, #c2185b, #ea580c);
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradient-shift 5s ease-in-out infinite;
+  }
+
   .animate-float {
     animation: float 6s ease-in-out infinite;
   }
 
   .animate-float-slow {
     animation: float-slow 8s ease-in-out infinite;
+  }
+
+  .animate-drift-1 {
+    animation: drift-1 14s ease-in-out infinite;
+  }
+
+  .animate-drift-2 {
+    animation: drift-2 18s ease-in-out infinite;
+  }
+
+  .animate-wave-flow {
+    animation: wave-flow 25s linear infinite;
+  }
+
+  .hero-cta-glow {
+    box-shadow: 0 0 40px rgba(194, 24, 91, 0.2), 0 0 80px rgba(234, 88, 12, 0.08);
+  }
+  .hero-cta-glow:hover {
+    box-shadow: 0 0 50px rgba(194, 24, 91, 0.35), 0 0 100px rgba(234, 88, 12, 0.15);
   }
 }

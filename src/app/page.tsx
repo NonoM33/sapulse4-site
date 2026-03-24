@@ -1,13 +1,18 @@
 "use client";
 
 import Image from "next/image";
-import { useState, type ElementType } from "react";
+import { useState, useId, type ElementType } from "react";
 import { motion, type Variants, type Easing } from "framer-motion";
+import dynamic from "next/dynamic";
+const TypeformWidget = dynamic(
+  () => import("@typeform/embed-react").then((mod) => mod.Widget),
+  { ssr: false, loading: () => <div className="w-full h-[500px] flex items-center justify-center text-gray-400">Chargement du formulaire...</div> }
+);
 import {
   Zap, Target, Rocket,
   Briefcase, BarChart3, Monitor,
   Building2, RefreshCw, Shield, Brain,
-  Menu, X, ChevronDown,
+  Menu, X,
 } from "lucide-react";
 
 const ease: Easing = "easeOut";
@@ -28,6 +33,49 @@ const fadeIn: Variants = {
     transition: { duration: 0.7, delay: i * 0.15, ease },
   }),
 };
+
+const blurUp: Variants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: (i: number = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.8, delay: i * 0.2, ease },
+  }),
+};
+
+/* ─── Wave SVG Components ──────────────────────────── */
+
+function WaveSeparatorSolid({ color = "white", className = "" }: { color?: string; className?: string }) {
+  return (
+    <div className={`w-full overflow-hidden leading-[0] ${className}`}>
+      <svg viewBox="0 0 1440 80" preserveAspectRatio="none" className="w-full h-12 md:h-20">
+        <path d="M0,30 C360,80 720,0 1080,40 C1260,55 1380,45 1440,30 L1440,80 L0,80 Z" fill={color} />
+      </svg>
+    </div>
+  );
+}
+
+/* ─── Brand wave symbol (pulse pattern) ──────────── */
+function BrandWave({ className = "", opacity = 0.08 }: { className?: string; opacity?: number }) {
+  const id = useId();
+  return (
+    <svg viewBox="0 0 400 100" fill="none" className={className} style={{ opacity }}>
+      <defs>
+        <linearGradient id={`pulseGrad${id}`} x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="#c2185b" />
+          <stop offset="100%" stopColor="#ea580c" />
+        </linearGradient>
+      </defs>
+      <path
+        d="M0,50 Q50,90 100,50 Q150,10 200,50 Q250,90 300,50 Q350,10 400,50"
+        stroke={`url(#pulseGrad${id})`}
+        strokeWidth="6"
+        strokeLinecap="round"
+        fill="none"
+      />
+    </svg>
+  );
+}
 
 function IconBadge({ icon: Icon }: { icon: ElementType }) {
   return (
@@ -71,7 +119,7 @@ export default function Home() {
               className="px-5 py-2 rounded-full text-white font-bold text-sm hover:shadow-lg hover:shadow-rose-500/20 hover:scale-105 transition-all duration-300"
               style={{ background: "linear-gradient(135deg, #c2185b, #ea580c)" }}
             >
-              Évaluer mon éligibilité
+              Prendre contact
             </a>
           </div>
 
@@ -104,139 +152,110 @@ export default function Home() {
               className="px-5 py-2.5 rounded-full text-white font-bold text-sm text-center mt-1 hover:shadow-lg transition-all duration-300"
               style={{ background: "linear-gradient(135deg, #c2185b, #ea580c)" }}
             >
-              Évaluer mon éligibilité
+              Prendre contact
             </a>
           </div>
         )}
       </nav>
 
-      {/* HERO */}
-      <section
-        id="hero"
-        className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20"
-      >
-        {/* Background gradient */}
-        <div
-          className="absolute inset-0 -z-10"
-          style={{
-            background:
-              "linear-gradient(135deg, rgba(194,24,91,0.06) 0%, rgba(234,88,12,0.06) 50%, rgba(255,255,255,0) 100%)",
-          }}
-        />
-        {/* Decorative blobs with floating animation */}
-        <div
-          className="absolute -top-32 -right-32 w-96 h-96 rounded-full opacity-20 -z-10 blur-3xl animate-float"
-          style={{ background: "radial-gradient(circle, #c2185b, transparent)" }}
-        />
-        <div
-          className="absolute -bottom-32 -left-32 w-96 h-96 rounded-full opacity-15 -z-10 blur-3xl animate-float-slow"
-          style={{ background: "radial-gradient(circle, #ea580c, transparent)" }}
-        />
+      {/* ═══════════════════ HERO ═══════════════════ */}
+      <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden bg-white">
+        {/* Decorative elements */}
+        <div className="absolute inset-0 -z-0 overflow-hidden">
+          {/* Large soft gradient circle — top left (like brand charter) */}
+          <div
+            className="absolute -top-[30%] -left-[15%] w-[700px] h-[700px] rounded-full opacity-[0.08] animate-drift-1"
+            style={{ background: "radial-gradient(circle, #c2185b, transparent 65%)" }}
+          />
+          {/* Orange accent — bottom right */}
+          <div
+            className="absolute -bottom-[20%] -right-[10%] w-[600px] h-[600px] rounded-full opacity-[0.06] animate-drift-2"
+            style={{ background: "radial-gradient(circle, #ea580c, transparent 65%)" }}
+          />
 
-        <div className="max-w-5xl mx-auto px-6 text-center">
-          <motion.div initial="hidden" animate="visible" variants={fadeIn} className="mb-6">
-            <span
-              className="inline-block px-4 py-1.5 rounded-full text-sm font-bold text-white mb-8"
-              style={{ background: "linear-gradient(135deg, #c2185b, #ea580c)" }}
-            >
-              BK Partners Group
-            </span>
-          </motion.div>
+          {/* Flowing wave pattern — continuous animation */}
+          <div className="absolute bottom-[10%] left-0 w-[200%] animate-wave-flow">
+            <BrandWave className="w-full h-auto" opacity={0.05} />
+          </div>
+          <div className="absolute top-[20%] left-0 w-[200%] animate-wave-flow" style={{ animationDelay: "-8s", animationDuration: "30s" }}>
+            <BrandWave className="w-full h-auto" opacity={0.03} />
+          </div>
+        </div>
 
+        <div className="relative z-10 max-w-5xl mx-auto px-6 text-center pt-36 pb-20">
+          {/* Main headline */}
           <motion.h1
             initial="hidden"
             animate="visible"
             custom={1}
-            variants={fadeUp}
-            className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-extrabold leading-tight mb-6 text-gray-900"
+            variants={blurUp}
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-[1] tracking-tight mb-6 text-gray-900"
           >
-            L&apos;ERP qui va{" "}
-            <span className="gradient-brand-text">à votre rythme</span>
+            L&apos;ERP qui va
+            <br />
+            <span className="gradient-text-animated">à votre rythme</span>
           </motion.h1>
 
+          {/* Subtitle */}
           <motion.p
             initial="hidden"
             animate="visible"
             custom={2}
-            variants={fadeUp}
-            className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto leading-relaxed mb-4"
+            variants={blurUp}
+            className="text-lg md:text-xl text-gray-500 max-w-3xl mx-auto leading-relaxed mb-10"
           >
-            Transformez votre entreprise en quelques semaines, pas en 18 mois.{" "}
-            <strong className="text-gray-800">BK Pulse</strong> réinvente le déploiement ERP
-            pour les acteurs de l&apos;assurance, des mutuelles et du courtage.
+            Transformez votre entreprise en <span className="text-gray-800 font-semibold">quelques semaines, pas en 18 mois.</span>{" "}
+            BK Pulse déploie votre ERP Cloud SAP pour l&apos;assurance, les mutuelles et le courtage.
           </motion.p>
 
-          <motion.p
-            initial="hidden"
-            animate="visible"
-            custom={3}
-            variants={fadeUp}
-            className="text-lg text-gray-500 max-w-2xl mx-auto mb-12"
-          >
-            Notre promesse&nbsp;: vous offrir la puissance d&apos;un ERP Cloud standard,
-            avec la rapidité et l&apos;agilité dont votre business a réellement besoin.
-          </motion.p>
-
+          {/* CTA — gros boutons */}
           <motion.div
             initial="hidden"
             animate="visible"
-            custom={4}
-            variants={fadeUp}
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+            custom={3}
+            variants={blurUp}
+            className="flex flex-col sm:flex-row gap-5 justify-center items-center"
           >
             <a
               href="#cta"
-              className="px-8 py-4 rounded-full text-white font-bold text-lg shadow-xl hover:shadow-rose-500/20 hover:scale-105 transition-all duration-300"
+              className="px-10 py-5 rounded-full text-white font-extrabold text-lg transition-all duration-500 hover:scale-105 hero-cta-glow"
               style={{ background: "linear-gradient(135deg, #c2185b, #ea580c)" }}
             >
-              Évaluez votre éligibilité
+              Prendre contact
             </a>
             <a
               href="#methode"
-              className="px-8 py-4 rounded-full border-2 border-gray-200 text-gray-700 font-semibold text-lg hover:border-[#c2185b] hover:text-[#c2185b] transition-all duration-300"
+              className="px-10 py-5 rounded-full text-gray-600 font-semibold text-lg border-2 border-gray-200 hover:border-[#c2185b] hover:text-[#c2185b] transition-all duration-300"
             >
               Découvrir la méthode →
             </a>
           </motion.div>
-
-          {/* Stats bar */}
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            custom={5}
-            variants={fadeUp}
-            className="mt-20 grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-2xl mx-auto"
-          >
-            {[
-              { value: "8 sem.", label: "Déploiement moyen" },
-              { value: "100%", label: "Cloud natif SAP" },
-              { value: "0", label: "Maintenance IT" },
-            ].map((stat, i) => (
-              <div
-                key={stat.label}
-                className={`text-center py-2 ${i > 0 ? "sm:border-l sm:border-gray-200" : ""}`}
-              >
-                <div className="text-3xl font-extrabold gradient-brand-text">{stat.value}</div>
-                <div className="text-sm text-gray-500 font-medium mt-1">{stat.label}</div>
-              </div>
-            ))}
-          </motion.div>
         </div>
 
         {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <ChevronDown className="w-6 h-6 text-gray-400" />
-          </motion.div>
-        </div>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 2, duration: 1 }}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-10"
+        >
+          <span className="text-[10px] font-bold text-gray-300 uppercase tracking-[0.2em]">Scroll</span>
+          <div className="w-5 h-8 rounded-full border-2 border-gray-300/60 flex justify-center pt-2">
+            <motion.div
+              animate={{ y: [0, 8, 0], opacity: [1, 0.3, 1] }}
+              transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+              className="w-1 h-1.5 rounded-full bg-gray-400"
+            />
+          </div>
+        </motion.div>
       </section>
 
-      {/* PROMESSE */}
-      <section id="promesse" className="py-24 bg-white">
-        <div className="max-w-6xl mx-auto px-6">
+      {/* ═══════════════════ PROMESSE ═══════════════════ */}
+      <section id="promesse" className="py-24 bg-white relative overflow-hidden">
+        {/* Decorative wave bg */}
+        <BrandWave className="absolute top-12 -right-20 w-[500px] h-auto rotate-12" opacity={0.04} />
+
+        <div className="max-w-6xl mx-auto px-6 relative">
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -259,23 +278,20 @@ export default function Home() {
               {
                 icon: Zap,
                 title: "Déploiement rapide",
-                desc: "Un socle opérationnel en quelques semaines. Pas de tunnel projet, pas d'attente interminable.",
+                desc: "Un socle opérationnel en 8 semaines. Pas de tunnel projet, pas d'attente interminable.",
                 gradient: "from-rose-50 to-orange-50",
-                border: "border-rose-100",
               },
               {
                 icon: Target,
                 title: "Standard intelligent",
                 desc: "Basé sur les meilleures pratiques du marché assurance/mutuelles. Prêt à l'emploi, immédiatement efficace.",
                 gradient: "from-orange-50 to-rose-50",
-                border: "border-orange-100",
               },
               {
                 icon: Rocket,
                 title: "Zéro lourdeur technique",
                 desc: "Tout est pensé pour aller vite, sans compromis sur la qualité ou la sécurité.",
                 gradient: "from-rose-50 to-orange-50",
-                border: "border-rose-100",
               },
             ].map((card, i) => (
               <motion.div
@@ -285,7 +301,7 @@ export default function Home() {
                 viewport={{ once: true, margin: "-80px" }}
                 custom={i}
                 variants={fadeUp}
-                className={`relative bg-gradient-to-br ${card.gradient} border ${card.border} rounded-2xl p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-1`}
+                className={`relative bg-gradient-to-br ${card.gradient} border border-gray-200 rounded-2xl p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-1`}
               >
                 <IconBadge icon={card.icon} />
                 <h3 className="text-xl font-bold text-gray-900 mb-3">{card.title}</h3>
@@ -300,7 +316,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* POUR QUI */}
+      {/* ═══════════════════ POUR QUI ═══════════════════ */}
       <section
         id="pour-qui"
         className="py-20 relative overflow-hidden"
@@ -309,7 +325,10 @@ export default function Home() {
             "linear-gradient(135deg, rgba(194,24,91,0.04) 0%, rgba(234,88,12,0.04) 100%)",
         }}
       >
-        <div className="max-w-6xl mx-auto px-6">
+        {/* Decorative elements */}
+        <BrandWave className="absolute bottom-20 -left-16 w-[400px] h-auto -rotate-6" opacity={0.05} />
+
+        <div className="max-w-6xl mx-auto px-6 relative">
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -392,9 +411,56 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CLOUD SAP */}
-      <section id="cloud-sap" className="py-28 bg-white">
+      {/* ═══════════════════ "8 SEMAINES" BANNER ═══════════════════ */}
+      <section className="py-20 bg-white relative overflow-hidden">
         <div className="max-w-6xl mx-auto px-6">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-80px" }}
+            variants={fadeUp}
+            className="relative rounded-3xl overflow-hidden"
+            style={{ background: "linear-gradient(135deg, #c2185b 0%, #ea580c 100%)" }}
+          >
+            {/* Background wave decoration */}
+            <div className="absolute inset-0 overflow-hidden opacity-10">
+              <svg viewBox="0 0 800 200" fill="none" className="absolute -bottom-4 left-0 w-full h-auto">
+                <path d="M0,100 Q100,160 200,100 Q300,40 400,100 Q500,160 600,100 Q700,40 800,100 L800,200 L0,200 Z" fill="white" />
+              </svg>
+              <svg viewBox="0 0 800 200" fill="none" className="absolute -top-4 right-0 w-full h-auto rotate-180">
+                <path d="M0,100 Q100,160 200,100 Q300,40 400,100 Q500,160 600,100 Q700,40 800,100 L800,200 L0,200 Z" fill="white" />
+              </svg>
+            </div>
+
+            <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-10 px-10 py-14 md:px-16 md:py-16">
+              <div className="flex items-center gap-8">
+                <div className="text-[6rem] sm:text-[8rem] font-black text-white leading-none">
+                  8
+                </div>
+                <div>
+                  <div className="text-2xl sm:text-3xl font-extrabold text-white mb-1">semaines</div>
+                  <div className="text-white/70 text-lg font-medium">
+                    pour déployer votre ERP.<br />
+                    Pas 18 mois. 8 semaines.
+                  </div>
+                </div>
+              </div>
+              <a
+                href="#cta"
+                className="px-10 py-5 rounded-full bg-white text-[#c2185b] font-extrabold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 shrink-0"
+              >
+                Commencer maintenant →
+              </a>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ═══════════════════ CLOUD SAP ═══════════════════ */}
+      <section id="cloud-sap" className="py-28 bg-white relative overflow-hidden">
+        <BrandWave className="absolute top-20 -right-32 w-[500px] h-auto rotate-6" opacity={0.04} />
+
+        <div className="max-w-6xl mx-auto px-6 relative">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <motion.div
               initial="hidden"
@@ -477,21 +543,15 @@ export default function Home() {
         </div>
       </section>
 
-      {/* METHODE */}
+      {/* ═══════════════════ METHODE ═══════════════════ */}
       <section
         id="methode"
         className="py-24 relative overflow-hidden"
-        style={{ background: "linear-gradient(135deg, #1a0a10 0%, #1a0e06 100%)" }}
+        style={{ background: "linear-gradient(180deg, #fdf2f3 0%, #fef7f0 50%, #ffffff 100%)" }}
       >
-        {/* Decorative orbs */}
-        <div
-          className="absolute top-0 left-1/4 w-96 h-96 rounded-full opacity-20 blur-3xl -z-0 animate-float"
-          style={{ background: "radial-gradient(circle, #c2185b, transparent)" }}
-        />
-        <div
-          className="absolute bottom-0 right-1/4 w-96 h-96 rounded-full opacity-15 blur-3xl -z-0 animate-float-slow"
-          style={{ background: "radial-gradient(circle, #ea580c, transparent)" }}
-        />
+        {/* Decorative waves */}
+        <BrandWave className="absolute top-16 -left-20 w-[400px] h-auto rotate-[-8deg]" opacity={0.06} />
+        <BrandWave className="absolute bottom-10 -right-16 w-[350px] h-auto rotate-[12deg]" opacity={0.04} />
 
         <div className="relative z-10 max-w-6xl mx-auto px-6">
           <motion.div
@@ -507,11 +567,11 @@ export default function Home() {
             >
               Notre méthode
             </span>
-            <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4">
+            <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">
               La méthode{" "}
               <span className="gradient-brand-text">BK Pulse</span>
             </h2>
-            <p className="text-lg text-gray-400 max-w-2xl mx-auto">
+            <p className="text-lg text-gray-500 max-w-2xl mx-auto">
               Pas de tunnel projet. Pas de complexité inutile. Juste de l&apos;efficacité.
             </p>
           </motion.div>
@@ -546,7 +606,7 @@ export default function Home() {
                   step: "03",
                   title: "Go-Live",
                   desc: "Mise en production accompagnée, formation des utilisateurs et suivi post-démarrage garantis.",
-                  duration: "En quelques semaines",
+                  duration: "8 semaines total",
                 },
               ].map((item, i) => (
                 <motion.div
@@ -564,9 +624,12 @@ export default function Home() {
                   >
                     {item.step}
                   </div>
-                  <h3 className="text-2xl font-extrabold text-white mb-3">{item.title}</h3>
-                  <p className="text-gray-400 leading-relaxed mb-4">{item.desc}</p>
-                  <span className="inline-block px-4 py-1.5 rounded-full text-xs font-bold text-white bg-white/10 border border-white/20">
+                  <h3 className="text-2xl font-extrabold text-gray-900 mb-3">{item.title}</h3>
+                  <p className="text-gray-500 leading-relaxed mb-4">{item.desc}</p>
+                  <span
+                    className="inline-block px-4 py-1.5 rounded-full text-xs font-bold"
+                    style={{ background: "linear-gradient(135deg, rgba(194,24,91,0.1), rgba(234,88,12,0.1))", color: "#c2185b" }}
+                  >
                     {item.duration}
                   </span>
                 </motion.div>
@@ -576,21 +639,20 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA FINAL */}
+      {/* ═══════════════════ CTA FINAL ═══════════════════ */}
       <section id="cta" className="py-32 bg-white relative overflow-hidden">
         <div
           className="absolute inset-0 -z-10"
           style={{
             background:
-              "linear-gradient(135deg, rgba(194,24,91,0.05) 0%, rgba(234,88,12,0.05) 100%)",
+              "linear-gradient(135deg, rgba(194,24,91,0.03) 0%, rgba(234,88,12,0.03) 100%)",
           }}
         />
-        <div
-          className="absolute -top-20 right-0 w-80 h-80 rounded-full opacity-10 blur-3xl -z-10"
-          style={{ background: "radial-gradient(circle, #c2185b, transparent)" }}
-        />
+        {/* Decorative waves */}
+        <BrandWave className="absolute top-10 -left-20 w-[400px] h-auto -rotate-3" opacity={0.04} />
+        <BrandWave className="absolute bottom-16 -right-16 w-[350px] h-auto rotate-6" opacity={0.03} />
 
-        <div className="max-w-4xl mx-auto px-6 text-center">
+        <div className="max-w-4xl mx-auto px-6 text-center relative">
           <motion.h2
             initial="hidden"
             whileInView="visible"
@@ -598,8 +660,8 @@ export default function Home() {
             variants={fadeUp}
             className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-6 leading-tight"
           >
-            Et si votre ERP devenait enfin{" "}
-            <span className="gradient-brand-text">un levier de croissance&nbsp;?</span>
+            Votre ERP déployé en{" "}
+            <span className="gradient-brand-text">8 semaines, pas 18 mois.</span>
           </motion.h2>
 
           <motion.p
@@ -610,50 +672,23 @@ export default function Home() {
             variants={fadeUp}
             className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed"
           >
-            Évaluez votre éligibilité à un déploiement rapide en 15 minutes.
-            Notre équipe d&apos;experts vous accompagne à chaque étape.
+            Parlons de votre projet ERP. Notre équipe d&apos;experts vous recontacte sous 24h.
           </motion.p>
 
-          {/* Contact form */}
-          <motion.form
+          {/* Typeform embed */}
+          <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-60px" }}
             custom={2}
             variants={fadeUp}
-            onSubmit={(e) => e.preventDefault()}
-            className="max-w-xl mx-auto mb-10 text-left"
+            className="max-w-2xl mx-auto mb-10 rounded-2xl overflow-hidden"
           >
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-              <input
-                type="text"
-                placeholder="Votre nom"
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#c2185b]/30 focus:border-[#c2185b] text-gray-800 bg-white"
-              />
-              <input
-                type="email"
-                placeholder="Votre email"
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#c2185b]/30 focus:border-[#c2185b] text-gray-800 bg-white"
-              />
-            </div>
-            <input
-              type="tel"
-              placeholder="Votre téléphone"
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#c2185b]/30 focus:border-[#c2185b] text-gray-800 bg-white mb-4"
+            <TypeformWidget
+              id="Ud7px7Jh"
+              style={{ width: "100%", height: "500px" }}
             />
-            <textarea
-              placeholder="Décrivez votre besoin en quelques mots..."
-              rows={4}
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#c2185b]/30 focus:border-[#c2185b] text-gray-800 bg-white mb-4 resize-none"
-            />
-            <button
-              type="submit"
-              className="w-full px-8 py-4 rounded-full text-white font-extrabold text-lg shadow-xl hover:shadow-rose-500/20 hover:scale-105 transition-all duration-300"
-              style={{ background: "linear-gradient(135deg, #c2185b, #ea580c)" }}
-            >
-              Évaluer mon éligibilité →
-            </button>
-          </motion.form>
+          </motion.div>
 
           <motion.div
             initial="hidden"
@@ -670,48 +705,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CREDIBILITE */}
-      <section className="py-20 bg-white border-t border-gray-50">
-        <div className="max-w-4xl mx-auto px-6">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-80px" }}
-            variants={fadeIn}
-            className="text-center"
-          >
-            <span className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-12 block">
-              Ils nous font confiance
-            </span>
-            <blockquote className="relative">
-              <div
-                className="text-8xl font-serif leading-none opacity-10 mb-2"
-                style={{ color: "#c2185b" }}
-              >
-                &ldquo;
-              </div>
-              <p className="text-xl md:text-2xl text-gray-700 font-medium italic leading-relaxed max-w-2xl mx-auto mb-10">
-                Grâce à BK Pulse, nous avons mis en production notre ERP en 7 semaines.
-                Une équipe exceptionnelle, une méthode rodée. Exactement ce dont nous avions besoin.
-              </p>
-              <div className="flex items-center justify-center gap-4">
-                <div
-                  className="w-14 h-14 rounded-full flex items-center justify-center text-white font-extrabold text-lg shrink-0"
-                  style={{ background: "linear-gradient(135deg, #c2185b, #ea580c)" }}
-                >
-                  SM
-                </div>
-                <div className="text-left">
-                  <div className="font-bold text-gray-900">Sophie Martin</div>
-                  <div className="text-sm text-gray-500">DAF — Mutuelle Avenir Santé</div>
-                </div>
-              </div>
-            </blockquote>
-          </motion.div>
-        </div>
-      </section>
+      {/* Wave before footer */}
+      <WaveSeparatorSolid color="#1a0a10" />
 
-      {/* FOOTER */}
+      {/* ═══════════════════ FOOTER ═══════════════════ */}
       <footer
         className="py-16 text-white"
         style={{ background: "linear-gradient(135deg, #1a0a10 0%, #1a0e06 100%)" }}
