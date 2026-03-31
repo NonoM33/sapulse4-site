@@ -9,7 +9,7 @@ const nunito = Nunito({
 });
 
 export const metadata: Metadata = {
-  title: "BK Pulse — L'ERP qui va à votre rythme",
+  title: "BK Pulse — Donnez une nouvelle impulsion à votre entreprise avec SAP",
   description:
     "BK Pulse réinvente le déploiement ERP pour les acteurs de l'assurance, des mutuelles et du courtage. Transformez votre entreprise en quelques semaines, pas en 18 mois.",
 };

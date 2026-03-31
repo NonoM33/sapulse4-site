@@ -90,9 +90,8 @@ function IconBadge({ icon: Icon }: { icon: ElementType }) {
 
 const navLinks = [
   { href: "#promesse", label: "Notre promesse" },
-  { href: "#pour-qui", label: "Pour qui" },
   { href: "#cloud-sap", label: "Cloud SAP" },
-  { href: "#methode", label: "Méthode" },
+  { href: "#pour-qui", label: "SAP Pour vous" },
 ];
 
 export default function Home() {
@@ -212,9 +211,9 @@ export default function Home() {
             variants={blurUp}
             className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-[1] tracking-tight mb-6 text-gray-900"
           >
-            L&apos;ERP qui va
+            Donnez une nouvelle impulsion
             <br />
-            <span className="gradient-text-animated">à votre rythme</span>
+            <span className="gradient-text-animated">à votre entreprise avec SAP</span>
           </motion.h1>
 
           {/* Subtitle */}
@@ -225,8 +224,8 @@ export default function Home() {
             variants={blurUp}
             className="text-lg md:text-xl text-gray-500 max-w-3xl mx-auto leading-relaxed mb-10"
           >
-            Transformez votre entreprise en <span className="text-gray-800 font-semibold">quelques semaines.</span>{" "}
-            BK Pulse déploie votre ERP Cloud SAP pour l&apos;assurance, les mutuelles et le courtage.
+            Partenaire certifié SAP PartnerEdge SELL, BK Pulse déploie SAP en <span className="text-gray-800 font-semibold">quelques semaines</span> grâce à une méthodologie agile et efficace.
+            Nous sommes le moteur qui propulse la solution SAP ERP Cloud Public vers les entreprises du secteur de l&apos;assurance, des mutuelles et des courtiers avec un accès direct aux dernières innovations Cloud et IA.
           </motion.p>
 
           {/* CTA — gros boutons */}
@@ -298,20 +297,20 @@ export default function Home() {
             {[
               {
                 icon: Zap,
-                title: "Déploiement rapide",
-                desc: "Un socle opérationnel en 8 semaines. Pas de tunnel projet, pas d'attente interminable.",
+                title: "Déploiement rapide qui bat la mesure",
+                desc: "SAP ERP Cloud Public en 18 semaines.",
                 gradient: "from-rose-50 to-orange-50",
               },
               {
                 icon: Target,
-                title: "Standard intelligent",
-                desc: "Basé sur les meilleures pratiques du marché assurance/mutuelles. Prêt à l'emploi, immédiatement efficace.",
+                title: "Standard intelligent avec de l'IA embarquée",
+                desc: "IA intégrée nativement dans les applications SAP pour faciliter le pilotage de votre quotidien.",
                 gradient: "from-orange-50 to-rose-50",
               },
               {
                 icon: Rocket,
                 title: "Zéro lourdeur technique",
-                desc: "Tout est pensé pour aller vite, sans compromis sur la qualité ou la sécurité.",
+                desc: "Tout est pensé pour aller vite, sans compromis sur la qualité ou la sécurité grâce au cloud.",
                 gradient: "from-rose-50 to-orange-50",
               },
             ].map((card, i) => (
@@ -337,146 +336,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══════════════════ POUR QUI ═══════════════════ */}
-      <section
-        id="pour-qui"
-        className="py-20 relative overflow-hidden"
-        style={{
-          background:
-            "linear-gradient(135deg, rgba(194,24,91,0.04) 0%, rgba(234,88,12,0.04) 100%)",
-        }}
-      >
-        {/* Decorative elements */}
-        <BrandWave className="absolute bottom-20 -left-16 w-[400px] h-auto -rotate-6" opacity={0.05} />
-
-        <div className="max-w-6xl mx-auto px-6 relative">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={fadeIn}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">
-              Une approche pensée{" "}
-              <span className="gradient-brand-text">pour vos enjeux</span>
-            </h2>
-            <p className="text-lg text-gray-500 max-w-2xl mx-auto">
-              Quel que soit votre rôle, BK Pulse vous apporte des réponses concrètes.
-            </p>
-          </motion.div>
-
-          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8">
-            {[
-              {
-                role: "Dirigeants",
-                icon: Briefcase,
-                benefit: "Accélérez votre croissance et réduisez votre time-to-market",
-                points: [
-                  "Vision temps réel de la performance",
-                  "Décisions basées sur la donnée",
-                  "ROI mesurable en semaines",
-                ],
-              },
-              {
-                role: "DAF",
-                icon: BarChart3,
-                benefit: "Fiabilisez vos données et pilotez votre rentabilité en temps réel",
-                points: [
-                  "Clôtures accélérées",
-                  "Consolidation automatisée",
-                  "Conformité réglementaire intégrée",
-                ],
-              },
-              {
-                role: "DSI",
-                icon: Monitor,
-                benefit: "Libérez-vous de la maintenance et concentrez-vous sur l'innovation",
-                points: [
-                  "Zéro infrastructure à gérer",
-                  "Mises à jour automatiques SAP",
-                  "Intégrations API simplifiées",
-                ],
-              },
-            ].map((item, i) => (
-              <motion.div
-                key={item.role}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-80px" }}
-                custom={i}
-                variants={fadeUp}
-                className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 border border-gray-100"
-              >
-                <IconBadge icon={item.icon} />
-                <div
-                  className="inline-block px-3 py-1 rounded-full text-sm font-bold text-white mb-4"
-                  style={{ background: "linear-gradient(135deg, #c2185b, #ea580c)" }}
-                >
-                  {item.role}
-                </div>
-                <p className="text-gray-800 font-bold text-lg leading-snug mb-5">
-                  {item.benefit}
-                </p>
-                <ul className="space-y-2">
-                  {item.points.map((pt) => (
-                    <li key={pt} className="flex items-start gap-2 text-gray-600 text-sm">
-                      <span className="mt-0.5 text-[#c2185b] font-bold shrink-0">✓</span>
-                      {pt}
-                    </li>
-                  ))}
-                </ul>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════ "8 SEMAINES" BANNER ═══════════════════ */}
-      <section className="py-20 bg-white relative overflow-hidden">
-        <div className="max-w-6xl mx-auto px-6">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-80px" }}
-            variants={fadeUp}
-            className="relative rounded-3xl overflow-hidden"
-            style={{ background: "linear-gradient(135deg, #c2185b 0%, #ea580c 100%)" }}
-          >
-            {/* Background wave decoration */}
-            <div className="absolute inset-0 overflow-hidden opacity-10">
-              <svg viewBox="0 0 800 200" fill="none" className="absolute -bottom-4 left-0 w-full h-auto">
-                <path d="M0,100 Q100,160 200,100 Q300,40 400,100 Q500,160 600,100 Q700,40 800,100 L800,200 L0,200 Z" fill="white" />
-              </svg>
-              <svg viewBox="0 0 800 200" fill="none" className="absolute -top-4 right-0 w-full h-auto rotate-180">
-                <path d="M0,100 Q100,160 200,100 Q300,40 400,100 Q500,160 600,100 Q700,40 800,100 L800,200 L0,200 Z" fill="white" />
-              </svg>
-            </div>
-
-            <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-10 px-10 py-14 md:px-16 md:py-16">
-              <div className="flex items-center gap-8">
-                <div className="text-[6rem] sm:text-[8rem] font-black text-white leading-none">
-                  8
-                </div>
-                <div>
-                  <div className="text-2xl sm:text-3xl font-extrabold text-white mb-1">semaines</div>
-                  <div className="text-white/70 text-lg font-medium">
-                    pour déployer votre ERP.<br />
-                    Seulement 8 semaines.
-                  </div>
-                </div>
-              </div>
-              <a
-                href="#cta"
-                className="px-10 py-5 rounded-full bg-white text-[#c2185b] font-extrabold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 shrink-0"
-              >
-                Commencer maintenant →
-              </a>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
       {/* ═══════════════════ CLOUD SAP ═══════════════════ */}
       <section id="cloud-sap" className="py-28 bg-white relative overflow-hidden">
         <BrandWave className="absolute top-20 -right-32 w-[500px] h-auto rotate-6" opacity={0.04} />
@@ -496,12 +355,14 @@ export default function Home() {
                 Technologie SAP
               </span>
               <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-6 leading-tight">
-                Le Cloud SAP,{" "}
-                <span className="gradient-brand-text">sans la complexité</span>
+                SAP facile{" "}
+                <span className="gradient-brand-text">et accessible</span>
               </h2>
               <p className="text-lg text-gray-500 leading-relaxed mb-8">
-                Profitez de toute la puissance de SAP S/4HANA Cloud, déployé et configuré
-                par des experts qui connaissent votre secteur sur le bout des doigts.
+                Le parcours GROW with SAP permet aux entreprises en croissance de déployer rapidement SAP.
+                Alliez la puissance de l&apos;intelligence artificielle aux meilleures pratiques sectorielles
+                pour piloter votre activité avec agilité. Un déploiement maîtrisé, des processus automatisés
+                et un soutien expert : tout est réuni pour stimuler votre innovation dès aujourd&apos;hui.
               </p>
               <a
                 href="#cta"
@@ -517,7 +378,7 @@ export default function Home() {
                 {
                   icon: Building2,
                   title: "Processus métiers prêts à l'emploi",
-                  desc: "Configurés pour l'assurance et la mutuelle dès le premier jour.",
+                  desc: "Toutes les fonctions de l'entreprise sont connectées et créent une organisation dynamique axée sur les données.",
                 },
                 {
                   icon: RefreshCw,
@@ -527,7 +388,7 @@ export default function Home() {
                 {
                   icon: Shield,
                   title: "Sécurité & conformité intégrées",
-                  desc: "Conformité RGPD, DDA et réglementations assurancielles natives.",
+                  desc: "La puissance des modèles SaaS européens et respect du RGPD.",
                 },
                 {
                   icon: Brain,
@@ -560,6 +421,106 @@ export default function Home() {
                 );
               })}
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════ POUR QUI ═══════════════════ */}
+      <section
+        id="pour-qui"
+        className="py-20 relative overflow-hidden"
+        style={{
+          background:
+            "linear-gradient(135deg, rgba(194,24,91,0.04) 0%, rgba(234,88,12,0.04) 100%)",
+        }}
+      >
+        <BrandWave className="absolute bottom-20 -left-16 w-[400px] h-auto -rotate-6" opacity={0.05} />
+
+        <div className="max-w-6xl mx-auto px-6 relative">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={fadeIn}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">
+              Une approche pensée{" "}
+              <span className="gradient-brand-text">pour vos enjeux</span>
+            </h2>
+            <p className="text-lg text-gray-500 max-w-2xl mx-auto">
+              Quel que soit votre rôle, SAP ERP Cloud Public vous apporte des réponses concrètes.
+            </p>
+          </motion.div>
+
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8">
+            {[
+              {
+                role: "Directeur Général",
+                icon: Briefcase,
+                benefit: "Accélérez votre croissance et réduisez votre time-to-market",
+                desc: "Prenez une longueur d\u0027avance. Ne laissez plus votre système d\u0027information freiner votre expansion. Intégrez de nouveaux portefeuilles et lancez vos produits avec une agilité inédite.",
+                points: [
+                  "Vision temps réel de la performance",
+                  "Décisions basées sur la donnée",
+                  "ROI mesurable en semaines",
+                ],
+              },
+              {
+                role: "DAF",
+                icon: BarChart3,
+                benefit: "Fiabilisez vos données et pilotez votre rentabilité en temps réel",
+                desc: "Pilotez au scalpel. Automatisez la gestion des primes, sécurisez vos clôtures et accédez à un reporting financier en temps réel conforme aux exigences réglementaires.",
+                points: [
+                  "Clôtures accélérées",
+                  "Consolidation automatisée",
+                  "Conformité réglementaire intégrée",
+                ],
+              },
+              {
+                role: "DSI",
+                icon: Monitor,
+                benefit: "Libérez-vous de la maintenance et concentrez-vous sur l\u0027innovation",
+                desc: "Innovez sans contrainte. Libérez-vous de la maintenance infrastructure. Adoptez une stratégie \u0027Clean Core\u0027 avec des mises à jour automatiques et une sécurité native.",
+                points: [
+                  "Zéro infrastructure à gérer",
+                  "Mises à jour automatiques SAP",
+                  "Intégrations API simplifiées",
+                ],
+              },
+            ].map((item, i) => (
+              <motion.div
+                key={item.role}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-80px" }}
+                custom={i}
+                variants={fadeUp}
+                className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 border border-gray-100"
+              >
+                <IconBadge icon={item.icon} />
+                <div
+                  className="inline-block px-3 py-1 rounded-full text-sm font-bold text-white mb-4"
+                  style={{ background: "linear-gradient(135deg, #c2185b, #ea580c)" }}
+                >
+                  {item.role}
+                </div>
+                <p className="text-gray-800 font-bold text-lg leading-snug mb-3">
+                  {item.benefit}
+                </p>
+                {item.desc && (
+                  <p className="text-gray-500 text-sm leading-relaxed mb-5">{item.desc}</p>
+                )}
+                <ul className="space-y-2">
+                  {item.points.map((pt) => (
+                    <li key={pt} className="flex items-start gap-2 text-gray-600 text-sm">
+                      <span className="mt-0.5 text-[#c2185b] font-bold shrink-0">✓</span>
+                      {pt}
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
@@ -621,13 +582,13 @@ export default function Home() {
                   step: "02",
                   title: "Configuration agile",
                   desc: "Paramétrage itératif basé sur les best practices secteur. Validation à chaque sprint avec vos équipes.",
-                  duration: "4-6 semaines",
+                  duration: "4-14 semaines",
                 },
                 {
                   step: "03",
                   title: "Go-Live",
                   desc: "Mise en production accompagnée, formation des utilisateurs et suivi post-démarrage garantis.",
-                  duration: "8 semaines total",
+                  duration: "18 semaines total",
                 },
               ].map((item, i) => (
                 <motion.div
@@ -683,7 +644,7 @@ export default function Home() {
           <div className="border border-gray-200 rounded-3xl bg-white shadow-lg p-8 md:p-12">
             <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-3 leading-tight text-center">
               Votre ERP déployé en{" "}
-              <span className="gradient-brand-text">8 semaines.</span>
+              <span className="gradient-brand-text">18 semaines.</span>
             </h2>
 
             <p className="text-lg text-gray-500 mb-8 text-center">
@@ -736,9 +697,8 @@ export default function Home() {
               <ul className="space-y-2 text-sm text-gray-400">
                 {[
                   { href: "#promesse", label: "Notre promesse" },
-                  { href: "#pour-qui", label: "Pour qui" },
                   { href: "#cloud-sap", label: "Cloud SAP" },
-                  { href: "#methode", label: "Méthode" },
+                  { href: "#pour-qui", label: "SAP Pour vous" },
                   { href: "#cta", label: "Contact" },
                 ].map((link) => (
                   <li key={link.href}>
