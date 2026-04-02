@@ -12,7 +12,7 @@ import {
   Zap, Target, Rocket,
   Briefcase, BarChart3, Monitor,
   Building2, RefreshCw, Shield, Brain,
-  Menu, X,
+  Menu, X, Users, TrendingUp, Lightbulb,
 } from "lucide-react";
 
 const ease: Easing = "easeOut";
@@ -358,12 +358,38 @@ export default function Home() {
                 SAP facile{" "}
                 <span className="gradient-brand-text">et accessible</span>
               </h2>
-              <p className="text-lg text-gray-500 leading-relaxed mb-8">
+              <p className="text-lg text-gray-500 leading-relaxed mb-6">
                 Le parcours GROW with SAP permet aux entreprises en croissance de déployer rapidement SAP.
                 Alliez la puissance de l&apos;intelligence artificielle aux meilleures pratiques sectorielles
                 pour piloter votre activité avec agilité. Un déploiement maîtrisé, des processus automatisés
                 et un soutien expert : tout est réuni pour stimuler votre innovation dès aujourd&apos;hui.
               </p>
+
+              {/* Team illustration */}
+              <motion.div
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={fadeIn}
+                className="flex items-center gap-4 mb-8 p-4 rounded-2xl border border-gray-100 bg-gradient-to-r from-rose-50/50 to-orange-50/50"
+              >
+                <div className="flex -space-x-3 shrink-0">
+                  {[Users, TrendingUp, Lightbulb].map((Icon, idx) => (
+                    <div
+                      key={idx}
+                      className="w-11 h-11 rounded-full flex items-center justify-center border-2 border-white shadow-sm"
+                      style={{ background: `linear-gradient(135deg, ${idx === 0 ? "#c2185b" : idx === 1 ? "#d4365f" : "#ea580c"}, ${idx === 0 ? "#d4365f" : idx === 1 ? "#ea580c" : "#f59e0b"})` }}
+                    >
+                      <Icon className="w-5 h-5 text-white" />
+                    </div>
+                  ))}
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-gray-800">Équipe certifiée SAP</p>
+                  <p className="text-xs text-gray-500">Experts assurance, mutuelles & courtage</p>
+                </div>
+              </motion.div>
+
               <a
                 href="#cta"
                 className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full text-white font-bold hover:shadow-lg hover:shadow-rose-500/20 hover:scale-105 transition-all duration-300"
@@ -459,6 +485,7 @@ export default function Home() {
                 role: "Directeur Général",
                 icon: Briefcase,
                 benefit: "Accélérez votre croissance et réduisez votre time-to-market",
+                tagline: "Transformez votre structure de coût en levier de croissance immédiat.",
                 desc: "Prenez une longueur d\u0027avance. Ne laissez plus votre système d\u0027information freiner votre expansion. Intégrez de nouveaux portefeuilles et lancez vos produits avec une agilité inédite.",
                 points: [
                   "Vision temps réel de la performance",
@@ -470,6 +497,7 @@ export default function Home() {
                 role: "DAF",
                 icon: BarChart3,
                 benefit: "Fiabilisez vos données et pilotez votre rentabilité en temps réel",
+                tagline: "Passez du constat à l\u0027analyse prédictive avec un standard mondial.",
                 desc: "Pilotez au scalpel. Automatisez la gestion des primes, sécurisez vos clôtures et accédez à un reporting financier en temps réel conforme aux exigences réglementaires.",
                 points: [
                   "Clôtures accélérées",
@@ -481,6 +509,7 @@ export default function Home() {
                 role: "DSI",
                 icon: Monitor,
                 benefit: "Libérez-vous de la maintenance et concentrez-vous sur l\u0027innovation",
+                tagline: "",
                 desc: "Innovez sans contrainte. Libérez-vous de la maintenance infrastructure. Adoptez une stratégie \u0027Clean Core\u0027 avec des mises à jour automatiques et une sécurité native.",
                 points: [
                   "Zéro infrastructure à gérer",
@@ -505,9 +534,12 @@ export default function Home() {
                 >
                   {item.role}
                 </div>
-                <p className="text-gray-800 font-bold text-lg leading-snug mb-3">
+                <p className="text-gray-800 font-bold text-lg leading-snug mb-2">
                   {item.benefit}
                 </p>
+                {item.tagline && (
+                  <p className="text-[#c2185b] font-semibold text-sm mb-3">{item.tagline}</p>
+                )}
                 {item.desc && (
                   <p className="text-gray-500 text-sm leading-relaxed mb-5">{item.desc}</p>
                 )}
