@@ -12,7 +12,7 @@ import {
   Zap, Target, Rocket,
   Briefcase, BarChart3, Monitor,
   Building2, RefreshCw, Shield, Brain,
-  Menu, X, Users, TrendingUp, Lightbulb,
+  Menu, X,
 } from "lucide-react";
 
 const ease: Easing = "easeOut";
@@ -180,6 +180,17 @@ export default function Home() {
 
       {/* ═══════════════════ HERO ═══════════════════ */}
       <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden bg-white">
+        {/* Background photo */}
+        <div className="absolute inset-0 -z-0">
+          <Image
+            src="/images/hero-meeting.jpg"
+            alt=""
+            fill
+            className="object-cover opacity-[0.07]"
+            priority
+          />
+        </div>
+
         {/* Decorative elements */}
         <div className="absolute inset-0 -z-0 overflow-hidden">
           {/* Large soft gradient circle — top left (like brand charter) */}
@@ -365,28 +376,25 @@ export default function Home() {
                 et un soutien expert : tout est réuni pour stimuler votre innovation dès aujourd&apos;hui.
               </p>
 
-              {/* Team illustration */}
+              {/* Team photo */}
               <motion.div
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
                 variants={fadeIn}
-                className="flex items-center gap-4 mb-8 p-4 rounded-2xl border border-gray-100 bg-gradient-to-r from-rose-50/50 to-orange-50/50"
+                className="relative mb-8 rounded-2xl overflow-hidden shadow-lg"
               >
-                <div className="flex -space-x-3 shrink-0">
-                  {[Users, TrendingUp, Lightbulb].map((Icon, idx) => (
-                    <div
-                      key={idx}
-                      className="w-11 h-11 rounded-full flex items-center justify-center border-2 border-white shadow-sm"
-                      style={{ background: `linear-gradient(135deg, ${idx === 0 ? "#c2185b" : idx === 1 ? "#d4365f" : "#ea580c"}, ${idx === 0 ? "#d4365f" : idx === 1 ? "#ea580c" : "#f59e0b"})` }}
-                    >
-                      <Icon className="w-5 h-5 text-white" />
-                    </div>
-                  ))}
-                </div>
-                <div>
-                  <p className="text-sm font-bold text-gray-800">Équipe certifiée SAP</p>
-                  <p className="text-xs text-gray-500">Experts assurance, mutuelles & courtage</p>
+                <Image
+                  src="/images/team-collaboration.jpg"
+                  alt="Équipe BK Pulse en collaboration"
+                  width={600}
+                  height={340}
+                  className="w-full h-48 object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                <div className="absolute bottom-4 left-4">
+                  <p className="text-white font-bold text-sm">Équipe certifiée SAP</p>
+                  <p className="text-white/80 text-xs">Experts assurance, mutuelles & courtage</p>
                 </div>
               </motion.div>
 
@@ -484,6 +492,7 @@ export default function Home() {
               {
                 role: "Directeur Général",
                 icon: Briefcase,
+                image: "/images/directeur-general.jpg",
                 benefit: "Accélérez votre croissance et réduisez votre time-to-market",
                 tagline: "Transformez votre structure de coût en levier de croissance immédiat.",
                 desc: "Prenez une longueur d\u0027avance. Ne laissez plus votre système d\u0027information freiner votre expansion. Intégrez de nouveaux portefeuilles et lancez vos produits avec une agilité inédite.",
@@ -496,6 +505,7 @@ export default function Home() {
               {
                 role: "DAF",
                 icon: BarChart3,
+                image: "/images/finance-data.jpg",
                 benefit: "Fiabilisez vos données et pilotez votre rentabilité en temps réel",
                 tagline: "Passez du constat à l\u0027analyse prédictive avec un standard mondial.",
                 desc: "Pilotez au scalpel. Automatisez la gestion des primes, sécurisez vos clôtures et accédez à un reporting financier en temps réel conforme aux exigences réglementaires.",
@@ -508,6 +518,7 @@ export default function Home() {
               {
                 role: "DSI",
                 icon: Monitor,
+                image: "/images/tech-innovation.jpg",
                 benefit: "Libérez-vous de la maintenance et concentrez-vous sur l\u0027innovation",
                 tagline: "",
                 desc: "Innovez sans contrainte. Libérez-vous de la maintenance infrastructure. Adoptez une stratégie \u0027Clean Core\u0027 avec des mises à jour automatiques et une sécurité native.",
@@ -525,8 +536,18 @@ export default function Home() {
                 viewport={{ once: true, margin: "-80px" }}
                 custom={i}
                 variants={fadeUp}
-                className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 border border-gray-100"
+                className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 border border-gray-100"
               >
+                <div className="relative h-36 w-full">
+                  <Image
+                    src={item.image}
+                    alt={item.role}
+                    fill
+                    className="object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-white via-white/20 to-transparent" />
+                </div>
+                <div className="px-8 pt-4 pb-8">
                 <IconBadge icon={item.icon} />
                 <div
                   className="inline-block px-3 py-1 rounded-full text-sm font-bold text-white mb-4"
@@ -551,6 +572,7 @@ export default function Home() {
                     </li>
                   ))}
                 </ul>
+                </div>
               </motion.div>
             ))}
           </div>
