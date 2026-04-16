@@ -58,6 +58,12 @@ Pas de tunnel projet. Pas de complexité inutile. Juste de l'efficacité.
 Et si votre ERP devenait enfin un levier de croissance ?
 Évaluez votre éligibilité à un déploiement rapide en 15 minutes.
 
+## GitLab
+- **Instance :** https://git.dev.bkco.link
+- **Projet :** `renaud/sapulse4-site` (ID 3, nom "bk pulse")
+- **Board :** https://git.dev.bkco.link/renaud/sapulse4-site/-/boards
+- **Token :** variable `GITLAB_TOKEN` ou voir mémoire projet
+
 ## Règles
 - NE PAS utiliser de librairies UI complexes (shadcn, etc.) — juste Tailwind
 - Le site doit build avec `npm run build` sans erreur

@@ -89,9 +89,11 @@ function IconBadge({ icon: Icon }: { icon: ElementType }) {
 }
 
 const navLinks = [
-  { href: "#promesse", label: "Notre promesse" },
+  { href: "#promesse", label: "Promesse" },
   { href: "#cloud-sap", label: "Cloud SAP" },
-  { href: "#pour-qui", label: "SAP Pour vous" },
+  { href: "#pour-qui", label: "Pour vous" },
+  { href: "#methode", label: "Méthode" },
+  { href: "#cta", label: "Contact" },
 ];
 
 export default function Home() {
@@ -124,19 +126,19 @@ export default function Home() {
 
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <a href="#hero">
-            <Image src="/logo.png" alt="BK Pulse" width={120} height={40} className="h-10 w-auto" />
+            <Image src="/logo.svg" alt="BK Pulse" width={120} height={40} className="h-10 w-auto" />
           </a>
 
           {/* Desktop nav */}
-          <div className="hidden md:flex items-center gap-8 text-sm font-semibold text-gray-600">
-            {navLinks.map((link) => (
-              <a key={link.href} href={link.href} className="hover:text-[#c2185b] transition-colors">
+          <div className="hidden md:flex items-center gap-6 text-sm font-semibold text-gray-600">
+            {navLinks.filter(l => l.href !== "#cta").map((link) => (
+              <a key={link.href} href={link.href} className="relative hover:text-[#c2185b] transition-colors after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-gradient-to-r after:from-[#c2185b] after:to-[#ea580c] after:transition-all after:duration-300 hover:after:w-full">
                 {link.label}
               </a>
             ))}
             <a
               href="#cta"
-              className="px-5 py-2 rounded-full text-white font-bold text-sm hover:shadow-lg hover:shadow-rose-500/20 hover:scale-105 transition-all duration-300"
+              className="px-5 py-2.5 rounded-full text-white font-bold text-sm hover:shadow-lg hover:shadow-rose-500/20 hover:scale-105 transition-all duration-300"
               style={{ background: "linear-gradient(135deg, #c2185b, #ea580c)" }}
             >
               Prendre contact
@@ -254,12 +256,6 @@ export default function Home() {
             >
               Prendre contact
             </a>
-            <a
-              href="#methode"
-              className="px-10 py-5 rounded-full text-gray-600 font-semibold text-lg border-2 border-gray-200 hover:border-[#c2185b] hover:text-[#c2185b] transition-all duration-300"
-            >
-              Découvrir la méthode →
-            </a>
           </motion.div>
         </div>
 
@@ -282,9 +278,7 @@ export default function Home() {
       </section>
 
       {/* ═══════════════════ PROMESSE ═══════════════════ */}
-      <section id="promesse" className="py-24 bg-white relative overflow-hidden">
-        {/* Decorative wave bg */}
-        <BrandWave className="absolute top-12 -right-20 w-[500px] h-auto rotate-12" opacity={0.04} />
+      <section id="promesse" className="py-24 relative overflow-hidden bg-wave-pattern bg-gray-50/60">
 
         <div className="max-w-6xl mx-auto px-6 relative">
           <motion.div
@@ -332,13 +326,26 @@ export default function Home() {
                 viewport={{ once: true, margin: "-80px" }}
                 custom={i}
                 variants={fadeUp}
-                className={`relative bg-gradient-to-br ${card.gradient} border border-gray-200 rounded-2xl p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-1`}
+                className={`group relative bg-gradient-to-br ${card.gradient} border border-gray-200 rounded-2xl p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-rose-500/10 hover:border-rose-200 cursor-default overflow-hidden`}
               >
-                <IconBadge icon={card.icon} />
-                <h3 className="text-xl font-bold text-gray-900 mb-3">{card.title}</h3>
-                <p className="text-gray-600 leading-relaxed">{card.desc}</p>
+                {/* Gradient overlay on hover */}
                 <div
-                  className="absolute bottom-0 left-0 right-0 h-1 rounded-b-2xl"
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"
+                  style={{ background: "linear-gradient(135deg, rgba(194,24,91,0.04), rgba(234,88,12,0.06))" }}
+                />
+                <div className="relative z-10">
+                  <div
+                    className="w-14 h-14 rounded-full flex items-center justify-center mb-5 transition-all duration-500 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-rose-500/20"
+                    style={{ background: "linear-gradient(135deg, rgba(194,24,91,0.12), rgba(234,88,12,0.12))" }}
+                  >
+                    <card.icon className="w-7 h-7 text-[#c2185b] transition-transform duration-500 group-hover:scale-110" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-3 transition-colors duration-300 group-hover:text-[#c2185b]">{card.title}</h3>
+                  <p className="text-gray-600 leading-relaxed">{card.desc}</p>
+                </div>
+                {/* Bottom bar — grows on hover */}
+                <div
+                  className="absolute bottom-0 left-0 right-0 h-1 rounded-b-2xl transition-all duration-500 group-hover:h-1.5"
                   style={{ background: "linear-gradient(135deg, #c2185b, #ea580c)" }}
                 />
               </motion.div>
@@ -348,8 +355,7 @@ export default function Home() {
       </section>
 
       {/* ═══════════════════ CLOUD SAP ═══════════════════ */}
-      <section id="cloud-sap" className="py-28 bg-white relative overflow-hidden">
-        <BrandWave className="absolute top-20 -right-32 w-[500px] h-auto rotate-6" opacity={0.04} />
+      <section id="cloud-sap" className="py-28 relative overflow-hidden bg-wave-pattern">
 
         <div className="max-w-6xl mx-auto px-6 relative">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
@@ -462,14 +468,8 @@ export default function Home() {
       {/* ═══════════════════ POUR QUI ═══════════════════ */}
       <section
         id="pour-qui"
-        className="py-20 relative overflow-hidden"
-        style={{
-          background:
-            "linear-gradient(135deg, rgba(194,24,91,0.04) 0%, rgba(234,88,12,0.04) 100%)",
-        }}
+        className="py-20 relative overflow-hidden bg-wave-pattern bg-gray-50/60"
       >
-        <BrandWave className="absolute bottom-20 -left-16 w-[400px] h-auto -rotate-6" opacity={0.05} />
-
         <div className="max-w-6xl mx-auto px-6 relative">
           <motion.div
             initial="hidden"
@@ -579,162 +579,130 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══════════════════ METHODE ═══════════════════ */}
-      <section
-        id="methode"
-        className="py-24 relative overflow-hidden"
-        style={{ background: "linear-gradient(180deg, #fdf2f3 0%, #fef7f0 50%, #ffffff 100%)" }}
-      >
-        {/* Decorative waves */}
-        <BrandWave className="absolute top-16 -left-20 w-[400px] h-auto rotate-[-8deg]" opacity={0.06} />
-        <BrandWave className="absolute bottom-10 -right-16 w-[350px] h-auto rotate-[12deg]" opacity={0.04} />
-
-        <div className="relative z-10 max-w-6xl mx-auto px-6">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={fadeUp}
-            className="text-center mb-16"
-          >
-            <span
-              className="inline-block px-4 py-1.5 rounded-full text-sm font-bold text-white mb-6"
-              style={{ background: "linear-gradient(135deg, #c2185b, #ea580c)" }}
-            >
-              Notre méthode
-            </span>
-            <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">
-              La méthode{" "}
-              <span className="gradient-brand-text">BK Pulse</span>
-            </h2>
-            <p className="text-lg text-gray-500 max-w-2xl mx-auto">
-              Pas de tunnel projet. Pas de complexité inutile. Juste de l&apos;efficacité.
-            </p>
-          </motion.div>
-
-          {/* Timeline */}
-          <div className="relative">
-            {/* Animated connector line */}
-            <motion.div
-              initial={{ scaleX: 0 }}
-              whileInView={{ scaleX: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1, ease: "easeOut", delay: 0.3 }}
-              className="hidden md:block absolute top-10 left-0 right-0 h-0.5 mx-16 origin-left"
-              style={{ background: "linear-gradient(90deg, #c2185b, #ea580c)" }}
+      {/* ═══════════════════ MÉTHODE ═══════════════════ */}
+      <section id="methode" className="relative overflow-hidden">
+        {/* Full-width surfer background */}
+        <div className="relative">
+          <div className="relative h-[320px] md:h-[420px] overflow-hidden">
+            <Image
+              src="/images/surfeuse.jpg"
+              alt="Surfez sur la vague de la transformation"
+              fill
+              className="object-cover object-center"
             />
-
-            <div className="grid md:grid-cols-3 gap-10">
-              {[
-                {
-                  step: "01",
-                  title: "Diagnostic",
-                  desc: "Analyse de vos processus actuels, identification des quick-wins et définition du périmètre optimal.",
-                  duration: "1-2 semaines",
-                },
-                {
-                  step: "02",
-                  title: "Configuration agile",
-                  desc: "Paramétrage itératif basé sur les best practices secteur. Validation à chaque sprint avec vos équipes.",
-                  duration: "4-14 semaines",
-                },
-                {
-                  step: "03",
-                  title: "Go-Live",
-                  desc: "Mise en production accompagnée, formation des utilisateurs et suivi post-démarrage garantis.",
-                  duration: "18 semaines total",
-                },
-              ].map((item, i) => (
-                <motion.div
-                  key={item.step}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true, margin: "-60px" }}
-                  custom={i}
-                  variants={fadeUp}
-                  className="text-center relative"
+            <div className="absolute inset-0 bg-gradient-to-r from-gray-900/80 via-gray-900/50 to-transparent" />
+            <div className="absolute inset-0 flex items-center">
+              <motion.div
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-80px" }}
+                variants={fadeUp}
+                className="max-w-6xl mx-auto px-6 w-full"
+              >
+                <span
+                  className="inline-block px-4 py-1.5 rounded-full text-sm font-bold text-white mb-4"
+                  style={{ background: "linear-gradient(135deg, #c2185b, #ea580c)" }}
                 >
-                  <div
-                    className="w-20 h-20 rounded-full flex items-center justify-center text-white text-2xl font-extrabold mx-auto mb-6 shadow-xl relative z-10"
-                    style={{ background: "linear-gradient(135deg, #c2185b, #ea580c)" }}
-                  >
-                    {item.step}
-                  </div>
-                  <h3 className="text-2xl font-extrabold text-gray-900 mb-3">{item.title}</h3>
-                  <p className="text-gray-500 leading-relaxed mb-4">{item.desc}</p>
-                  <span
-                    className="inline-block px-4 py-1.5 rounded-full text-xs font-bold"
-                    style={{ background: "linear-gradient(135deg, rgba(194,24,91,0.1), rgba(234,88,12,0.1))", color: "#c2185b" }}
-                  >
-                    {item.duration}
-                  </span>
-                </motion.div>
-              ))}
+                  La méthode BK Pulse
+                </span>
+                <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-3 leading-tight max-w-lg">
+                  Votre ERP déployé en{" "}
+                  <span className="gradient-text-animated">18 semaines</span>
+                </h2>
+                <p className="text-white/70 text-lg max-w-md">
+                  Pas de tunnel projet. Pas de complexité inutile. Juste de l&apos;efficacité.
+                </p>
+              </motion.div>
             </div>
           </div>
         </div>
+
       </section>
 
       {/* ═══════════════════ CTA FINAL ═══════════════════ */}
-      <section id="cta" className="py-32 bg-white relative overflow-hidden">
+      <section id="cta" className="pt-32 pb-0 relative overflow-hidden bg-wave-pattern bg-gray-50/60">
         <div
           className="absolute inset-0 -z-10"
           style={{
             background:
-              "linear-gradient(135deg, rgba(194,24,91,0.03) 0%, rgba(234,88,12,0.03) 100%)",
+              "linear-gradient(135deg, rgba(194,24,91,0.05) 0%, rgba(234,88,12,0.05) 100%)",
           }}
         />
-        {/* Decorative waves */}
-        <BrandWave className="absolute top-10 -left-20 w-[400px] h-auto -rotate-3" opacity={0.04} />
-        <BrandWave className="absolute bottom-16 -right-16 w-[350px] h-auto rotate-6" opacity={0.03} />
+        <div
+          className="absolute -top-20 right-0 w-80 h-80 rounded-full opacity-10 blur-3xl -z-10"
+          style={{ background: "radial-gradient(circle, #c2185b, transparent)" }}
+        />
 
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          variants={fadeUp}
-          className="max-w-3xl mx-auto px-6 relative"
-        >
-          <div className="border border-gray-200 rounded-3xl bg-white shadow-lg p-8 md:p-12">
-            <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-3 leading-tight text-center">
-              Votre ERP déployé en{" "}
-              <span className="gradient-brand-text">18 semaines.</span>
-            </h2>
+        <div className="max-w-4xl mx-auto px-6 text-center">
+          <motion.h2
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={fadeUp}
+            className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-6 leading-tight"
+          >
+            Et si votre ERP devenait enfin{" "}
+            <span className="gradient-brand-text">un levier de croissance&nbsp;?</span>
+          </motion.h2>
 
-            <p className="text-lg text-gray-500 mb-8 text-center">
-              Parlons de votre projet ERP.
-            </p>
+          <motion.p
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-80px" }}
+            custom={1}
+            variants={fadeUp}
+            className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto leading-relaxed"
+          >
+            Évaluez votre éligibilité à un déploiement rapide en 15 minutes.
+            Notre équipe d&apos;experts vous accompagne à chaque étape.
+          </motion.p>
 
-            {/* Typeform embed */}
-            <div className="rounded-2xl overflow-hidden mb-8">
-              <TypeformWidget
-                id="kMV1RSpR"
-                style={{ width: "100%", height: "500px" }}
-              />
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-80px" }}
+            custom={2}
+            variants={fadeUp}
+            className="max-w-3xl mx-auto mb-12"
+          >
+            <div className="border border-gray-200 rounded-3xl bg-white shadow-lg p-8 md:p-12">
+              <div className="rounded-2xl overflow-hidden mb-8">
+                <TypeformWidget
+                  id="kMV1RSpR"
+                  style={{ width: "100%", height: "500px" }}
+                />
+              </div>
             </div>
+          </motion.div>
 
-            <div className="flex flex-wrap gap-6 justify-center text-sm text-gray-500">
-              {["✓ Réponse sous 24h", "✓ Diagnostic offert", "✓ Sans engagement"].map((item) => (
-                <span key={item} className="font-semibold">{item}</span>
-              ))}
-            </div>
-          </div>
-        </motion.div>
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-60px" }}
+            custom={3}
+            variants={fadeUp}
+            className="flex flex-wrap gap-6 justify-center text-sm text-gray-500"
+          >
+            {["✓ Réponse sous 24h", "✓ Diagnostic offert", "✓ Sans engagement"].map((item) => (
+              <span key={item} className="font-semibold">{item}</span>
+            ))}
+          </motion.div>
+        </div>
+
+        {/* Wave — inside CTA so it inherits the background */}
+        <WaveSeparatorSolid color="#1a0a10" className="mt-16" />
       </section>
-
-      {/* Wave before footer */}
-      <WaveSeparatorSolid color="#1a0a10" />
 
       {/* ═══════════════════ FOOTER ═══════════════════ */}
       <footer
-        className="py-16 text-white"
+        className="py-16 text-white -mt-px"
         style={{ background: "linear-gradient(135deg, #1a0a10 0%, #1a0e06 100%)" }}
       >
         <div className="max-w-6xl mx-auto px-6">
           <div className="grid md:grid-cols-3 gap-10 mb-12">
             <div>
               <Image
-                src="/logo.png"
+                src="/logo.svg"
                 alt="BK Pulse"
                 width={120}
                 height={40}
@@ -750,9 +718,10 @@ export default function Home() {
               <h4 className="font-extrabold text-white mb-4">Navigation</h4>
               <ul className="space-y-2 text-sm text-gray-400">
                 {[
-                  { href: "#promesse", label: "Notre promesse" },
+                  { href: "#promesse", label: "Promesse" },
                   { href: "#cloud-sap", label: "Cloud SAP" },
-                  { href: "#pour-qui", label: "SAP Pour vous" },
+                  { href: "#pour-qui", label: "Pour vous" },
+                  { href: "#methode", label: "Méthode" },
                   { href: "#cta", label: "Contact" },
                 ].map((link) => (
                   <li key={link.href}>
