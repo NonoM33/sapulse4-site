@@ -3,6 +3,9 @@
 import { useState, useEffect, useCallback, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import dynamic from "next/dynamic";
+
+const RichEditor = dynamic(() => import("@/components/rich-editor"), { ssr: false });
 
 interface ContentItem {
   id: string;
@@ -68,6 +71,9 @@ export default function AdminDashboard() {
   // Password change
   const [passwords, setPasswords] = useState({ currentPassword: "", newPassword: "", confirmPassword: "" });
   const [changingPassword, setChangingPassword] = useState(false);
+
+  // Preview mode
+  const [previewMode, setPreviewMode] = useState(false);
 
   const showToast = useCallback((type: "success" | "error", message: string) => {
     setToast({ type, message });
@@ -387,20 +393,62 @@ export default function AdminDashboard() {
                     )}
                   </p>
                 </div>
-                <button
-                  onClick={handleSave}
-                  disabled={saving || sectionChanges.length === 0}
-                  className="px-6 py-2.5 rounded-xl text-white font-bold text-sm transition-all duration-300 hover:shadow-lg hover:shadow-rose-500/20 disabled:opacity-40 disabled:cursor-not-allowed"
-                  style={{ background: "linear-gradient(135deg, #c2185b, #ea580c)" }}
-                >
-                  {saving ? "Sauvegarde..." : "Sauvegarder"}
-                </button>
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => setPreviewMode(!previewMode)}
+                    className={`px-4 py-2.5 rounded-xl text-sm font-bold transition-all border ${
+                      previewMode
+                        ? "border-[#c2185b] text-[#c2185b] bg-rose-50"
+                        : "border-gray-200 text-gray-600 hover:bg-gray-50"
+                    }`}
+                  >
+                    {previewMode ? "Fermer l'aperçu" : "Aperçu"}
+                  </button>
+                  <button
+                    onClick={handleSave}
+                    disabled={saving || sectionChanges.length === 0}
+                    className="px-6 py-2.5 rounded-xl text-white font-bold text-sm transition-all duration-300 hover:shadow-lg hover:shadow-rose-500/20 disabled:opacity-40 disabled:cursor-not-allowed"
+                    style={{ background: "linear-gradient(135deg, #c2185b, #ea580c)" }}
+                  >
+                    {saving ? "Sauvegarde..." : "Sauvegarder"}
+                  </button>
+                </div>
               </div>
+
+              {/* Preview panel */}
+              {previewMode && (
+                <div className="mb-6 bg-white rounded-2xl border-2 border-dashed border-[#c2185b]/30 p-6">
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="text-xs font-bold text-[#c2185b] uppercase tracking-wide">Aperçu en direct</span>
+                    <span className="text-xs text-gray-400">Les modifications non sauvegardées sont affichées</span>
+                  </div>
+                  <div className="space-y-3 font-nunito">
+                    {currentItems.map((item) => {
+                      const val = getDisplayValue(item);
+                      const isHtml = val.startsWith("<");
+                      return (
+                        <div key={item.key} className="border-b border-gray-100 pb-2 last:border-0">
+                          <span className="text-[10px] text-gray-400 font-mono">{item.label}</span>
+                          {isHtml ? (
+                            <div
+                              className="prose prose-sm max-w-none mt-1 [&_.gradient-text]:bg-gradient-to-r [&_.gradient-text]:from-[#c2185b] [&_.gradient-text]:to-[#ea580c] [&_.gradient-text]:bg-clip-text [&_.gradient-text]:text-transparent"
+                              dangerouslySetInnerHTML={{ __html: val.replace(/<mark data-color="gradient">(.*?)<\/mark>/g, '<span class="gradient-text font-extrabold">$1</span>') }}
+                            />
+                          ) : (
+                            <p className="text-sm text-gray-800 mt-1">{val}</p>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
 
               <div className="space-y-4">
                 {currentItems.map((item) => {
                   const displayValue = getDisplayValue(item);
                   const isEdited = editedValues[item.key] !== undefined && editedValues[item.key] !== item.value;
+                  const useRichEditor = isLongText(item.value) || item.value.startsWith("<");
 
                   return (
                     <div
@@ -409,28 +457,29 @@ export default function AdminDashboard() {
                         isEdited ? "border-orange-300 shadow-md shadow-orange-100" : "border-gray-200"
                       }`}
                     >
-                      <div className="flex items-start justify-between mb-2">
-                        <label htmlFor={item.key} className="text-sm font-bold text-gray-800">
-                          {item.label}
-                        </label>
-                        <span className="text-xs text-gray-400 font-mono">{item.key}</span>
-                      </div>
-                      {isLongText(item.value) ? (
-                        <textarea
-                          id={item.key}
-                          value={displayValue}
-                          onChange={(e) => handleChange(item.key, e.target.value)}
-                          rows={Math.min(Math.max(displayValue.split("\n").length, 3), 8)}
-                          className="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#c2185b]/20 focus:border-[#c2185b] transition-all resize-y"
+                      {useRichEditor ? (
+                        <RichEditor
+                          content={displayValue.startsWith("<") ? displayValue : `<p>${displayValue}</p>`}
+                          onChange={(html) => handleChange(item.key, html)}
+                          label={item.label}
+                          contentKey={item.key}
                         />
                       ) : (
-                        <input
-                          id={item.key}
-                          type="text"
-                          value={displayValue}
-                          onChange={(e) => handleChange(item.key, e.target.value)}
-                          className="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#c2185b]/20 focus:border-[#c2185b] transition-all"
-                        />
+                        <>
+                          <div className="flex items-start justify-between mb-2">
+                            <label htmlFor={item.key} className="text-sm font-bold text-gray-800">
+                              {item.label}
+                            </label>
+                            <span className="text-xs text-gray-400 font-mono">{item.key}</span>
+                          </div>
+                          <input
+                            id={item.key}
+                            type="text"
+                            value={displayValue}
+                            onChange={(e) => handleChange(item.key, e.target.value)}
+                            className="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#c2185b]/20 focus:border-[#c2185b] transition-all"
+                          />
+                        </>
                       )}
                       {isEdited && (
                         <div className="flex items-center gap-2 mt-2">

@@ -108,11 +108,11 @@ const contents: ContentEntry[] = [
   { key: "cta.badge3", value: "✓ Sans engagement", section: "cta", label: "Badge confiance 3", sortOrder: 7 },
 
   // ─── FOOTER ───
-  { key: "footer.description", value: "BK Pulse — Cabinet de conseil ERP Cloud SAP spécialisé assurance, mutuelles et courtage.", section: "footer", label: "Description entreprise", sortOrder: 1 },
-  { key: "footer.group", value: "Membre de BK Partners Group", section: "footer", label: "Mention groupe", sortOrder: 2 },
+  { key: "footer.description", value: "Partenaire SAP dédié à la performance des PME", section: "footer", label: "Description entreprise", sortOrder: 1 },
+  { key: "footer.group", value: "BK Groupe", section: "footer", label: "Mention groupe", sortOrder: 2 },
   { key: "footer.contact.email", value: "contact@bkpartners.fr", section: "footer", label: "Email de contact", sortOrder: 3 },
-  { key: "footer.contact.legal", value: "SAP, SAP S/4HANA sont des marques déposées de SAP SE.", section: "footer", label: "Mention légale SAP", sortOrder: 4 },
-  { key: "footer.copyright", value: "© 2026 BK Pulse — BK Partners Group. Tous droits réservés.", section: "footer", label: "Copyright", sortOrder: 5 },
+  { key: "footer.linkedin", value: "https://www.linkedin.com/company/bkpulse/about", section: "footer", label: "Lien LinkedIn", sortOrder: 4 },
+  { key: "footer.copyright", value: "© 2026 BK Pulse — BK Groupe. Tous droits réservés.", section: "footer", label: "Copyright", sortOrder: 5 },
 ];
 
 async function main() {

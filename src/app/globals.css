@@ -110,3 +110,38 @@ body {
     box-shadow: 0 0 50px rgba(194, 24, 91, 0.35), 0 0 100px rgba(234, 88, 12, 0.15);
   }
 }
+
+/* TipTap Editor Styles */
+.tiptap {
+  outline: none;
+}
+.tiptap p {
+  margin: 0.25em 0;
+}
+.tiptap h1 {
+  font-size: 1.75em;
+  font-weight: 800;
+  margin: 0.4em 0 0.2em;
+}
+.tiptap h2 {
+  font-size: 1.4em;
+  font-weight: 800;
+  margin: 0.3em 0 0.15em;
+}
+.tiptap h3 {
+  font-size: 1.15em;
+  font-weight: 700;
+  margin: 0.2em 0 0.1em;
+}
+.tiptap ul {
+  list-style: disc;
+  padding-left: 1.5em;
+  margin: 0.3em 0;
+}
+.tiptap mark[data-color="gradient"] {
+  background: linear-gradient(135deg, #c2185b 0%, #ea580c 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 800;
+}

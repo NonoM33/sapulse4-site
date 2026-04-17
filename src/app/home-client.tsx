@@ -213,13 +213,6 @@ export default function HomeClient({ content }: HomeClientProps) {
     t(content, "cta.badge3", "✓ Sans engagement"),
   ];
 
-  const footerLinks = [
-    { href: "#promesse", label: t(content, "nav.link1", "Promesse") },
-    { href: "#cloud-sap", label: t(content, "nav.link2", "Cloud SAP") },
-    { href: "#pour-qui", label: t(content, "nav.link3", "Pour vous") },
-    { href: "#methode", label: t(content, "nav.link4", "Méthode") },
-    { href: "#cta", label: t(content, "nav.link5", "Contact") },
-  ];
 
   return (
     <main className="font-nunito">
@@ -330,9 +323,9 @@ export default function HomeClient({ content }: HomeClientProps) {
             variants={blurUp}
             className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-[1] tracking-tight mb-6 text-gray-900"
           >
-            {t(content, "hero.title.line1", "Donnez une nouvelle impulsion")}
+            Donnez une <span className="gradient-text-animated">nouvelle impulsion</span>
             <br />
-            <span className="gradient-text-animated">{t(content, "hero.title.line2", "à votre entreprise avec SAP")}</span>
+            à votre entreprise <span className="gradient-text-animated">avec SAP</span>
           </motion.h1>
 
           <motion.p
@@ -541,7 +534,7 @@ export default function HomeClient({ content }: HomeClientProps) {
               {t(content, "pourQui.title.line1", "Une approche pensée")}{" "}
               <span className="gradient-brand-text">{t(content, "pourQui.title.line2", "pour vos enjeux")}</span>
             </h2>
-            <p className="text-lg text-gray-500 max-w-2xl mx-auto">
+            <p className="text-lg text-gray-500 max-w-4xl mx-auto">
               {t(content, "pourQui.subtitle", "Quel que soit votre rôle, SAP ERP Cloud Public vous apporte des réponses concrètes.")}
             </p>
           </motion.div>
@@ -710,55 +703,48 @@ export default function HomeClient({ content }: HomeClientProps) {
 
       {/* ═══════════════════ FOOTER ═══════════════════ */}
       <footer
-        className="py-16 text-white -mt-px"
+        className="py-12 text-white -mt-px"
         style={{ background: "linear-gradient(135deg, #1a0a10 0%, #1a0e06 100%)" }}
       >
         <div className="max-w-6xl mx-auto px-6">
-          <div className="grid md:grid-cols-3 gap-10 mb-12">
-            <div>
+          <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-8 mb-8">
+            <div className="flex flex-col items-center md:items-start">
               <Image
                 src="/logo.svg"
                 alt="BK Pulse"
                 width={120}
                 height={40}
-                className="h-10 w-auto mb-4 brightness-0 invert"
+                className="h-10 w-auto mb-3 brightness-0 invert"
               />
-              <p className="text-gray-400 text-sm leading-relaxed">
-                {t(content, "footer.description", "BK Pulse — Cabinet de conseil ERP Cloud SAP spécialisé assurance, mutuelles et courtage.")}
+              <p className="text-gray-400 text-sm">
+                {t(content, "footer.description", "Partenaire SAP dédié à la performance des PME")}
               </p>
-              <p className="text-gray-500 text-xs mt-3">{t(content, "footer.group", "Membre de BK Partners Group")}</p>
+              <p className="text-gray-500 text-xs mt-1">{t(content, "footer.group", "BK Groupe")}</p>
             </div>
 
-            <div>
-              <h4 className="font-extrabold text-white mb-4">Navigation</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                {footerLinks.map((link) => (
-                  <li key={link.href}>
-                    <a href={link.href} className="hover:text-[#ea580c] transition-colors">
-                      {link.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-extrabold text-white mb-4">Contact</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li>
-                  <a href={`mailto:${t(content, "footer.contact.email", "contact@bkpartners.fr")}`} className="hover:text-[#ea580c] transition-colors">
-                    {t(content, "footer.contact.email", "contact@bkpartners.fr")}
-                  </a>
-                </li>
-                <li className="text-gray-500 text-xs mt-4">
-                  {t(content, "footer.contact.legal", "SAP, SAP S/4HANA sont des marques déposées de SAP SE.")}
-                </li>
-              </ul>
+            <div className="flex items-center gap-5">
+              <a
+                href={`mailto:${t(content, "footer.contact.email", "contact@bkpartners.fr")}`}
+                className="text-sm text-gray-400 hover:text-[#ea580c] transition-colors"
+              >
+                {t(content, "footer.contact.email", "contact@bkpartners.fr")}
+              </a>
+              <a
+                href={t(content, "footer.linkedin", "https://www.linkedin.com/company/bkpulse/about")}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-[#ea580c] transition-colors"
+                aria-label="LinkedIn"
+              >
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                </svg>
+              </a>
             </div>
           </div>
 
-          <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-gray-500">
-            <p>{t(content, "footer.copyright", "© 2026 BK Pulse — BK Partners Group. Tous droits réservés.")}</p>
+          <div className="border-t border-white/10 pt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-gray-500">
+            <p>{t(content, "footer.copyright", "© 2026 BK Pulse — BK Groupe. Tous droits réservés.")}</p>
             <div className="flex gap-6">
               <a href="#" className="hover:text-gray-300 transition-colors">Mentions légales</a>
               <a href="#" className="hover:text-gray-300 transition-colors">Politique de confidentialité</a>
