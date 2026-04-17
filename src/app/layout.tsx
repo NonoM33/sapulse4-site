@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Nunito } from "next/font/google";
 import "./globals.css";
 import { loadSiteContent, c } from "@/lib/content";
+import CookieConsent from "@/components/cookie-consent";
 
 const nunito = Nunito({
   subsets: ["latin"],
@@ -30,14 +31,27 @@ export default function RootLayout({
     <html lang="fr" className="scroll-smooth">
       <head>
         <script
-          defer
-          src="/api/t/script.js"
-          data-website-id="0712a1d1-d37e-41bf-94b5-33c3b10da347"
-          data-host-url="/api/t"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.op=window.op||function(){var n=[];return new Proxy(function(){arguments.length&&n.push([].slice.call(arguments))},{get:function(t,r){return"q"===r?n:function(){n.push([r].concat([].slice.call(arguments)))}},has:function(t,r){return"q"===r}})}();
+              var consent = localStorage.getItem('bkpulse_cookie_consent');
+              if (consent !== 'refused') {
+                window.op('init', {
+                  apiUrl: '/api/t/op',
+                  clientId: 'fc4b026a-f705-44d6-8f86-627bb3481d0f',
+                  trackScreenViews: true,
+                  trackOutgoingLinks: true,
+                  trackAttributes: true,
+                });
+              }
+            `,
+          }}
         />
+        <script src="https://openpanel.dev/op1.js" defer async />
       </head>
       <body className={`${nunito.variable} font-nunito antialiased bg-white text-gray-900`}>
         {children}
+        <CookieConsent />
       </body>
     </html>
   );
