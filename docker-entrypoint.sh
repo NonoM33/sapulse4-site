@@ -2,10 +2,10 @@
 set -e
 
 echo "Running Prisma migrations..."
-npx prisma migrate deploy 2>/dev/null || echo "Warning: migrations skipped (no pending migrations or DB not ready)"
+npx prisma migrate deploy || echo "Warning: migrations skipped"
 
 echo "Running seed..."
-npx prisma db seed 2>/dev/null || echo "Warning: seed skipped"
+node prisma/seed-prod.mjs || echo "Warning: seed skipped"
 
 echo "Starting Next.js server..."
 exec "$@"
