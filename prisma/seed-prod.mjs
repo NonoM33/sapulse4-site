@@ -106,7 +106,11 @@ async function main() {
   console.log(`  ${contents.length} content entries seeded.`);
 
   const adminEmail = process.env.ADMIN_EMAIL ?? "admin@bkpulse.fr";
-  const adminPassword = process.env.ADMIN_PASSWORD ?? "changeme123";
+  const adminPassword = process.env.ADMIN_PASSWORD;
+  if (!adminPassword) {
+    console.error("FATAL: ADMIN_PASSWORD environment variable is required");
+    process.exit(1);
+  }
 
   await prisma.user.upsert({
     where: { email: adminEmail },

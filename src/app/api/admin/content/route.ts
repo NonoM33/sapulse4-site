@@ -2,6 +2,24 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth";
 
+const KEY_REGEX = /^[a-zA-Z0-9._]+$/;
+const MAX_KEY_LENGTH = 100;
+const MAX_VALUE_LENGTH = 5000;
+const MAX_BATCH_SIZE = 50;
+
+function validateKeyValue(key: unknown, value: unknown): string | null {
+  if (typeof key !== "string" || typeof value !== "string") {
+    return "Clé et valeur doivent être des chaînes de caractères";
+  }
+  if (!key || key.length > MAX_KEY_LENGTH || !KEY_REGEX.test(key)) {
+    return "Clé invalide";
+  }
+  if (value.length > MAX_VALUE_LENGTH) {
+    return `La valeur ne peut pas dépasser ${MAX_VALUE_LENGTH} caractères`;
+  }
+  return null;
+}
+
 export async function GET() {
   try {
     await requireAuth();
@@ -10,7 +28,6 @@ export async function GET() {
       orderBy: [{ section: "asc" }, { sortOrder: "asc" }],
     });
 
-    // Group by section with full details
     const sections: Record<string, Array<{
       id: string;
       key: string;
@@ -43,18 +60,16 @@ export async function PUT(request: NextRequest) {
     await requireAuth();
 
     const body = await request.json();
-    const { key, value } = body as { key?: string; value?: string };
+    const { key, value } = body as { key?: unknown; value?: unknown };
 
-    if (!key || value === undefined) {
-      return NextResponse.json(
-        { error: "Clé et valeur requises" },
-        { status: 400 }
-      );
+    const validationError = validateKeyValue(key, value);
+    if (validationError) {
+      return NextResponse.json({ error: validationError }, { status: 400 });
     }
 
     const updated = await prisma.siteContent.update({
-      where: { key },
-      data: { value },
+      where: { key: key as string },
+      data: { value: value as string },
     });
 
     return NextResponse.json({ content: updated });
@@ -71,17 +86,31 @@ export async function PATCH(request: NextRequest) {
     await requireAuth();
 
     const body = await request.json();
-    const { updates } = body as { updates?: Array<{ key: string; value: string }> };
+    const { updates } = body as { updates?: unknown };
 
-    if (!updates || !Array.isArray(updates)) {
+    if (!Array.isArray(updates) || updates.length === 0) {
       return NextResponse.json(
         { error: "Format invalide : { updates: [{ key, value }] }" },
         { status: 400 }
       );
     }
 
+    if (updates.length > MAX_BATCH_SIZE) {
+      return NextResponse.json(
+        { error: `Maximum ${MAX_BATCH_SIZE} modifications par requête` },
+        { status: 400 }
+      );
+    }
+
+    for (const u of updates) {
+      const validationError = validateKeyValue(u?.key, u?.value);
+      if (validationError) {
+        return NextResponse.json({ error: `${validationError} (clé: ${u?.key})` }, { status: 400 });
+      }
+    }
+
     const results = await prisma.$transaction(
-      updates.map((u) =>
+      updates.map((u: { key: string; value: string }) =>
         prisma.siteContent.update({
           where: { key: u.key },
           data: { value: u.value },
