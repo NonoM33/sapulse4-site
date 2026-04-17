@@ -28,7 +28,7 @@ export async function setTokenCookie(token: string): Promise<void> {
   const cookieStore = await cookies();
   cookieStore.set(TOKEN_COOKIE, token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: process.env.COOKIE_SECURE === "true",
     sameSite: "lax",
     maxAge: 8 * 60 * 60, // 8h
     path: "/",
