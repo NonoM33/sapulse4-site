@@ -31,8 +31,9 @@ export default function RootLayout({
       <head>
         <script
           defer
-          src="http://umami-dqgw22zg0phqaqwbm4mkh0of.204.168.183.38.sslip.io/script.js"
+          src="/api/t/script.js"
           data-website-id="0712a1d1-d37e-41bf-94b5-33c3b10da347"
+          data-host-url="/api/t/send"
         />
       </head>
       <body className={`${nunito.variable} font-nunito antialiased bg-white text-gray-900`}>
