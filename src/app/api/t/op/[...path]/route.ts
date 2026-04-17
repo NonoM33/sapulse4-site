@@ -4,11 +4,16 @@ const OP_API = "http://opapi-gqb1vf3qv01xm8dg234traw3.204.168.183.38.sslip.io";
 const OP_CLIENT_ID = "fc4b026a-f705-44d6-8f86-627bb3481d0f";
 const OP_CLIENT_SECRET = "sec_10f8962df499abe6d40b";
 
-export async function POST(request: NextRequest) {
+export async function POST(
+  request: NextRequest,
+  { params }: { params: Promise<{ path: string[] }> }
+) {
   try {
+    const { path } = await params;
+    const targetPath = path.join("/");
     const body = await request.text();
 
-    const res = await fetch(`${OP_API}/track`, {
+    const res = await fetch(`${OP_API}/${targetPath}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -41,8 +46,4 @@ export async function OPTIONS() {
       "Access-Control-Allow-Headers": "Content-Type, openpanel-client-id",
     },
   });
-}
-
-export async function GET() {
-  return NextResponse.json({ status: "ok" });
 }
