@@ -33,7 +33,7 @@ export default function RootLayout({
           defer
           src="/api/t/script.js"
           data-website-id="0712a1d1-d37e-41bf-94b5-33c3b10da347"
-          data-host-url="/api/t/send"
+          data-host-url="/api/t"
         />
       </head>
       <body className={`${nunito.variable} font-nunito antialiased bg-white text-gray-900`}>
