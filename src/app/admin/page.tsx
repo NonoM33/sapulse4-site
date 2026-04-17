@@ -52,6 +52,86 @@ function isLongText(value: string): boolean {
   return value.length > 80 || value.includes("\n");
 }
 
+function PreviewIframe({ editedValues, sections }: { editedValues: Record<string, string>; sections: SectionsData }) {
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function createPreview() {
+      setLoading(true);
+      // Build overrides: merge all edited values with current DB values
+      const overrides: Record<string, string> = {};
+      for (const [, items] of Object.entries(sections)) {
+        for (const item of items) {
+          if (editedValues[item.key] !== undefined) {
+            overrides[item.key] = editedValues[item.key];
+          }
+        }
+      }
+
+      // If no overrides, just show live site
+      if (Object.keys(overrides).length === 0) {
+        setPreviewUrl("/?_t=" + Date.now());
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const res = await fetch("/api/preview", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ overrides }),
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setPreviewUrl(`/?preview=${data.token}&_t=${Date.now()}`);
+        }
+      } catch {
+        setPreviewUrl("/?_t=" + Date.now());
+      } finally {
+        setLoading(false);
+      }
+    }
+    createPreview();
+  }, [editedValues, sections]);
+
+  return (
+    <div className="mb-6">
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-bold text-[#c2185b] uppercase tracking-wide">Aperçu du site</span>
+          {Object.keys(editedValues).length > 0 && (
+            <span className="text-xs text-orange-500 font-medium">avec vos modifications</span>
+          )}
+        </div>
+        <a
+          href={previewUrl ?? "/"}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-xs text-gray-500 hover:text-[#c2185b] transition-colors"
+        >
+          Ouvrir dans un nouvel onglet
+        </a>
+      </div>
+      <div className="relative bg-white rounded-2xl border-2 border-[#c2185b]/20 overflow-hidden shadow-lg" style={{ height: "70vh" }}>
+        {loading && (
+          <div className="absolute inset-0 flex items-center justify-center bg-white z-10">
+            <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#c2185b] border-t-transparent" />
+          </div>
+        )}
+        {previewUrl && (
+          <iframe
+            src={previewUrl}
+            className="w-full h-full border-0"
+            onLoad={() => setLoading(false)}
+            title="Aperçu du site"
+          />
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function AdminDashboard() {
   const router = useRouter();
   const [user, setUser] = useState<UserInfo | null>(null);
@@ -415,33 +495,9 @@ export default function AdminDashboard() {
                 </div>
               </div>
 
-              {/* Preview panel */}
+              {/* Preview — full site in iframe */}
               {previewMode && (
-                <div className="mb-6 bg-white rounded-2xl border-2 border-dashed border-[#c2185b]/30 p-6">
-                  <div className="flex items-center gap-2 mb-4">
-                    <span className="text-xs font-bold text-[#c2185b] uppercase tracking-wide">Aperçu en direct</span>
-                    <span className="text-xs text-gray-400">Les modifications non sauvegardées sont affichées</span>
-                  </div>
-                  <div className="space-y-3 font-nunito">
-                    {currentItems.map((item) => {
-                      const val = getDisplayValue(item);
-                      const isHtml = val.startsWith("<");
-                      return (
-                        <div key={item.key} className="border-b border-gray-100 pb-2 last:border-0">
-                          <span className="text-[10px] text-gray-400 font-mono">{item.label}</span>
-                          {isHtml ? (
-                            <div
-                              className="prose prose-sm max-w-none mt-1 [&_.gradient-text]:bg-gradient-to-r [&_.gradient-text]:from-[#c2185b] [&_.gradient-text]:to-[#ea580c] [&_.gradient-text]:bg-clip-text [&_.gradient-text]:text-transparent"
-                              dangerouslySetInnerHTML={{ __html: val.replace(/<mark data-color="gradient">(.*?)<\/mark>/g, '<span class="gradient-text font-extrabold">$1</span>') }}
-                            />
-                          ) : (
-                            <p className="text-sm text-gray-800 mt-1">{val}</p>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
+                <PreviewIframe editedValues={editedValues} sections={sections} />
               )}
 
               <div className="space-y-4">
