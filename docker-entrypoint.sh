@@ -2,7 +2,7 @@
 set -e
 
 echo "Running Prisma migrations..."
-npx prisma migrate deploy || echo "Warning: migrations skipped"
+node node_modules/prisma/build/index.js migrate deploy || echo "Warning: migrations skipped"
 
 echo "Running seed..."
 node prisma/seed-prod.mjs || echo "Warning: seed skipped"
