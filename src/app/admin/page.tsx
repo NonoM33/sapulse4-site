@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import dynamic from "next/dynamic";
+import { APP_VERSION, RELEASES, type Release } from "@/lib/version";
 
 const RichEditor = dynamic(() => import("@/components/rich-editor"), { ssr: false });
 
@@ -50,6 +51,111 @@ type ActiveView = string; // section key or "__users" or "__password"
 
 function isLongText(value: string): boolean {
   return value.length > 80 || value.includes("\n");
+}
+
+const TYPE_CONFIG: Record<Release["type"], { label: string; color: string; bg: string }> = {
+  major: { label: "Majeure", color: "text-[#c2185b]", bg: "bg-rose-50 border-rose-200" },
+  feature: { label: "Fonctionnalité", color: "text-blue-600", bg: "bg-blue-50 border-blue-200" },
+  fix: { label: "Correction", color: "text-amber-600", bg: "bg-amber-50 border-amber-200" },
+  security: { label: "Sécurité", color: "text-green-600", bg: "bg-green-50 border-green-200" },
+};
+
+function ReleasesView() {
+  return (
+    <>
+      <div className="mb-8">
+        <h1 className="text-2xl font-extrabold text-gray-900 mb-1">Historique des versions</h1>
+        <p className="text-sm text-gray-500">
+          Version actuelle : <span className="font-mono font-bold text-gray-700">{APP_VERSION}</span>
+        </p>
+      </div>
+
+      <div className="relative">
+        {/* Timeline line */}
+        <div className="absolute left-6 top-0 bottom-0 w-px bg-gradient-to-b from-[#c2185b] via-[#ea580c] to-gray-200" />
+
+        <div className="space-y-8">
+          {RELEASES.map((release, idx) => {
+            const config = TYPE_CONFIG[release.type];
+            const isLatest = idx === 0;
+            return (
+              <div key={release.version} className="relative pl-16">
+                {/* Timeline dot */}
+                <div className={`absolute left-4 top-2 w-5 h-5 rounded-full border-[3px] ${
+                  isLatest
+                    ? "border-[#c2185b] bg-white shadow-lg shadow-rose-200"
+                    : "border-gray-300 bg-white"
+                }`} />
+
+                <div className={`bg-white rounded-2xl border p-6 transition-all ${
+                  isLatest ? "border-[#c2185b]/20 shadow-lg shadow-rose-50" : "border-gray-200"
+                }`}>
+                  {/* Header */}
+                  <div className="flex flex-wrap items-center gap-3 mb-4">
+                    <span className="font-mono text-lg font-extrabold text-gray-900">
+                      v{release.version}
+                    </span>
+                    <span className={`text-xs font-bold px-2.5 py-1 rounded-full border ${config.bg} ${config.color}`}>
+                      {config.label}
+                    </span>
+                    {isLatest && (
+                      <span className="text-xs font-bold px-2.5 py-1 rounded-full text-white" style={{ background: "linear-gradient(135deg, #c2185b, #ea580c)" }}>
+                        Actuelle
+                      </span>
+                    )}
+                    <span className="text-xs text-gray-400 ml-auto">
+                      {new Date(release.date).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}
+                    </span>
+                  </div>
+
+                  <h3 className="text-lg font-bold text-gray-800 mb-3">{release.title}</h3>
+
+                  {/* Highlights */}
+                  <div className="space-y-2 mb-4">
+                    {release.highlights.map((h) => (
+                      <div key={h} className="flex items-start gap-2">
+                        <span className="mt-1 shrink-0 w-1.5 h-1.5 rounded-full" style={{ background: "linear-gradient(135deg, #c2185b, #ea580c)" }} />
+                        <span className="text-sm text-gray-700 font-medium">{h}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Details (collapsible) */}
+                  {release.details && release.details.length > 0 && (
+                    <details className="group">
+                      <summary className="text-xs font-bold text-gray-400 uppercase tracking-wide cursor-pointer hover:text-[#c2185b] transition-colors select-none">
+                        Détails techniques ({release.details.length})
+                      </summary>
+                      <div className="mt-3 pl-3 border-l-2 border-gray-100 space-y-1.5">
+                        {release.details.map((d) => (
+                          <p key={d} className="text-xs text-gray-500">{d}</p>
+                        ))}
+                      </div>
+                    </details>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Credits */}
+      <div className="mt-12 text-center">
+        <div className="inline-flex flex-col items-center gap-3 px-8 py-6 rounded-2xl bg-gradient-to-br from-gray-50 to-white border border-gray-100">
+          <p className="text-sm text-gray-500">
+            Développé avec <span className="text-red-500">❤️</span> par
+          </p>
+          <p className="text-lg font-extrabold text-gray-900">Renaud Cosson</p>
+          <div className="flex items-center gap-1.5">
+            <div className="w-2 h-2 rounded-full" style={{ background: "linear-gradient(135deg, #c2185b, #ea580c)" }} />
+            <span className="text-xs text-gray-400 font-mono">BK Pulse Back Office v{APP_VERSION}</span>
+            <div className="w-2 h-2 rounded-full" style={{ background: "linear-gradient(135deg, #c2185b, #ea580c)" }} />
+          </div>
+        </div>
+      </div>
+    </>
+  );
 }
 
 function PreviewIframe({ editedValues, sections }: { editedValues: Record<string, string>; sections: SectionsData }) {
@@ -449,7 +555,24 @@ export default function AdminDashboard() {
                   Mon mot de passe
                 </button>
               </li>
+              <li>
+                <button
+                  onClick={() => setActiveView("__releases")}
+                  className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                    activeView === "__releases"
+                      ? "text-[#c2185b] bg-rose-50 font-bold"
+                      : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                  }`}
+                >
+                  Versions
+                </button>
+              </li>
             </ul>
+
+            {/* Version badge */}
+            <div className="p-3 border-t border-gray-100 text-center">
+              <span className="text-[10px] font-mono text-gray-400">v{APP_VERSION}</span>
+            </div>
           </nav>
         </aside>
 
@@ -744,6 +867,11 @@ export default function AdminDashboard() {
             </>
           )}
 
+          {/* ═══ RELEASES ═══ */}
+          {activeView === "__releases" && (
+            <ReleasesView />
+          )}
+
           {/* Sticky save bar */}
           {hasChanges() && isContentView && (
             <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40">
@@ -763,6 +891,16 @@ export default function AdminDashboard() {
             </div>
           )}
         </main>
+      </div>
+
+      {/* Footer crédit */}
+      <div className="text-center py-6 text-xs text-gray-400">
+        <span>Développé avec </span>
+        <span className="text-red-500">❤️</span>
+        <span> par </span>
+        <span className="font-semibold text-gray-500">Renaud Cosson</span>
+        <span className="mx-2 text-gray-300">·</span>
+        <span className="font-mono text-gray-300">v{APP_VERSION}</span>
       </div>
 
       {/* Toast */}
