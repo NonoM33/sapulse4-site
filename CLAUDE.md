@@ -12,11 +12,39 @@ Créer un site vitrine one-page premium pour **BK Pulse** (anciennement SAPulse4
 - **Logo :** `/public/logo.png` (déjà présent — 3 personnages sur vague rose→orange)
 
 ## Tech
-- Next.js 14 + Tailwind CSS
+- Next.js 14 + Tailwind CSS (SSR standalone, `output: 'standalone'`)
+- PostgreSQL + Prisma 6 (contenu dynamique)
 - One-page scroll smooth (ancres)
-- Static export (`output: 'export'` dans next.config)
 - Responsive mobile-first
 - Animations subtiles au scroll (CSS ou framer-motion)
+
+## Architecture Back Office
+
+Le contenu du site est géré dynamiquement via une BDD PostgreSQL et un back office admin.
+
+### Fichiers clés
+- `src/app/home-client.tsx` — Client component, utilise `t(content, "clé", "fallback")` pour chaque texte
+- `src/app/page.tsx` — Server component, charge le contenu via `loadSiteContent()`
+- `src/lib/content.ts` — Service de chargement du contenu depuis Prisma
+- `src/app/admin/page.tsx` — Dashboard back office (édition contenu, gestion users, changement mdp)
+- `prisma/seed.ts` + `prisma/seed-prod.mjs` — Scripts de seed (même données, formats différents)
+- `src/app/api/admin/content/route.ts` — CRUD contenu (GET, PUT, PATCH)
+- `src/app/api/admin/users/route.ts` — CRUD utilisateurs (GET, POST, DELETE)
+- `src/app/api/auth/password/route.ts` — Changement de mot de passe
+
+### Règle CRITIQUE : synchroniser code et BDD
+
+Quand on modifie le site (ajout/suppression/renommage de texte) :
+
+1. **Modifier `home-client.tsx`** — ajouter/modifier l'appel `t(content, "nouvelle.clé", "fallback")`
+2. **Modifier les 2 seeds** — ajouter la clé dans `prisma/seed.ts` ET `prisma/seed-prod.mjs`
+3. **Ajouter en BDD** — soit relancer le seed, soit ajouter manuellement via le back office
+
+Le fallback garantit que le site ne casse jamais si une clé manque en BDD, mais le back office ne montre QUE les clés présentes en BDD. Un texte non seedé ne sera pas éditable par la chargée de com.
+
+### Rôles utilisateurs
+- **admin** : éditer le contenu + gérer les utilisateurs
+- **editor** : éditer le contenu uniquement
 
 ## Sections (dans l'ordre)
 1. **Hero** — Titre "L'ERP qui va à votre rythme", sous-titre accrocheur, CTA "Évaluez votre éligibilité", fond avec dégradé rose→orange subtil
@@ -69,5 +97,5 @@ Et si votre ERP devenait enfin un levier de croissance ?
 - Le site doit build avec `npm run build` sans erreur
 - Tester avec `npx next dev` que tout s'affiche
 - Utiliser le logo depuis /logo.png
-- TOUT le contenu doit être dans le code (pas de CMS)
+- Le contenu est géré via le back office (BDD) — les fallbacks restent dans le code
 - Le site doit être BEAU — niveau agence, pas template basique
