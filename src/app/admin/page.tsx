@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { APP_VERSION, RELEASES, type Release } from "@/lib/version";
@@ -489,7 +490,47 @@ export default function AdminDashboard() {
         <aside className="w-64 shrink-0">
           <nav className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden sticky top-20">
             <div className="p-4 border-b border-gray-100">
-              <h2 className="text-sm font-extrabold text-gray-900 uppercase tracking-wide">Contenu</h2>
+              <h2 className="text-sm font-extrabold text-gray-900 uppercase tracking-wide">CMS</h2>
+            </div>
+            <ul className="p-2">
+              <li>
+                <Link
+                  href="/admin/pages"
+                  className="block w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                >
+                  Pages
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/admin/media"
+                  className="block w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                >
+                  Médiathèque
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/admin/menus"
+                  className="block w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                >
+                  Menus
+                </Link>
+              </li>
+              {user?.role === "admin" && (
+                <li>
+                  <Link
+                    href="/admin/audit"
+                    className="block w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                  >
+                    Historique
+                  </Link>
+                </li>
+              )}
+            </ul>
+
+            <div className="p-4 border-t border-gray-100">
+              <h2 className="text-sm font-extrabold text-gray-900 uppercase tracking-wide">Page d&apos;accueil</h2>
             </div>
             <ul className="p-2">
               {SECTION_ORDER.filter((s) => sections[s]).map((sectionKey) => {

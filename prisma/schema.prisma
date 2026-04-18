@@ -22,13 +22,120 @@ model SiteContent {
 }
 
 model User {
+  id          String     @id @default(cuid())
+  email       String     @unique
+  password    String
+  name        String
+  role        String     @default("admin")
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  pagesCreated Page[]    @relation("PageAuthor")
+  auditLogs    AuditLog[]
+
+  @@map("users")
+}
+
+model Page {
+  id              String      @id @default(cuid())
+  slug            String      @unique
+  title           String
+  status          String      @default("draft")
+  template        String      @default("blank")
+  showInNav       Boolean     @default(false)
+  sortOrder       Int         @default(0)
+  metaTitle       String?
+  metaDescription String?
+  ogImageUrl      String?
+  authorId        String?
+  author          User?       @relation("PageAuthor", fields: [authorId], references: [id], onDelete: SetNull)
+  blocks          PageBlock[]
+  publishedAt     DateTime?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  @@index([status])
+  @@index([slug])
+  @@map("pages")
+}
+
+model PageBlock {
   id        String   @id @default(cuid())
-  email     String   @unique
-  password  String
-  name      String
-  role      String   @default("admin")
+  pageId    String
+  page      Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  type      String
+  sortOrder Int      @default(0)
+  data      Json
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@map("users")
+  @@index([pageId, sortOrder])
+  @@map("page_blocks")
+}
+
+model Media {
+  id        String   @id @default(cuid())
+  filename  String
+  url       String
+  storageKey String  @unique
+  driver    String
+  mimeType  String
+  sizeBytes Int
+  width     Int?
+  height    Int?
+  altText   String?
+  title     String?
+  folder    String   @default("")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([folder])
+  @@map("media")
+}
+
+model Menu {
+  id    String     @id @default(cuid())
+  key   String     @unique
+  label String
+  items MenuItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("menus")
+}
+
+model MenuItem {
+  id        String     @id @default(cuid())
+  menuId    String
+  menu      Menu       @relation(fields: [menuId], references: [id], onDelete: Cascade)
+  parentId  String?
+  parent    MenuItem?  @relation("MenuItemChildren", fields: [parentId], references: [id], onDelete: Cascade)
+  children  MenuItem[] @relation("MenuItemChildren")
+  label     String
+  url       String
+  target    String     @default("_self")
+  sortOrder Int        @default(0)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@index([menuId, sortOrder])
+  @@index([parentId])
+  @@map("menu_items")
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userEmail  String?
+  action     String
+  entityType String
+  entityId   String?
+  details    Json?
+  createdAt  DateTime @default(now())
+
+  @@index([entityType, entityId])
+  @@index([createdAt])
+  @@map("audit_logs")
 }
