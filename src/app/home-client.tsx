@@ -746,8 +746,8 @@ export default function HomeClient({ content }: HomeClientProps) {
           <div className="border-t border-white/10 pt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-gray-500">
             <p>{t(content, "footer.copyright", "© 2026 BK Pulse — BK Groupe. Tous droits réservés.")}</p>
             <div className="flex gap-6">
-              <a href="#" className="hover:text-gray-300 transition-colors">Mentions légales</a>
-              <a href="#" className="hover:text-gray-300 transition-colors">Politique de confidentialité</a>
+              <a href="/mentions-legales" className="hover:text-gray-300 transition-colors">Mentions légales</a>
+              <a href="/politique-de-confidentialite" className="hover:text-gray-300 transition-colors">Politique de confidentialité</a>
             </div>
           </div>
         </div>

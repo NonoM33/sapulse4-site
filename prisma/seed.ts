@@ -144,7 +144,145 @@ async function main() {
   });
 
   console.log(`  Admin user created: ${adminEmail}`);
+
+  await seedCmsDefaults();
+
   console.log("Seed complete.");
+}
+
+async function seedCmsDefaults() {
+  // Seed legal pages (only create if missing, don't overwrite user edits)
+  const legalPages: Array<{
+    slug: string;
+    title: string;
+    metaTitle: string;
+    metaDescription: string;
+    blocks: Array<{ type: string; data: unknown }>;
+  }> = [
+    {
+      slug: "mentions-legales",
+      title: "Mentions légales",
+      metaTitle: "Mentions légales — BK Pulse",
+      metaDescription: "Informations légales du site BK Pulse.",
+      blocks: [
+        {
+          type: "richtext",
+          data: {
+            html: `
+              <h1>Mentions légales</h1>
+              <h2>Éditeur du site</h2>
+              <p>BK Partners Group — à compléter.</p>
+              <h2>Hébergeur</h2>
+              <p>Hetzner Online GmbH — Industriestr. 25, 91710 Gunzenhausen, Allemagne.</p>
+              <h2>Propriété intellectuelle</h2>
+              <p>L'ensemble des contenus du site est protégé par le droit d'auteur.</p>
+              <h2>Contact</h2>
+              <p>contact@bkpulse.fr</p>
+            `.trim(),
+          },
+        },
+      ],
+    },
+    {
+      slug: "politique-de-confidentialite",
+      title: "Politique de confidentialité",
+      metaTitle: "Politique de confidentialité — BK Pulse",
+      metaDescription: "Protection des données personnelles sur le site BK Pulse.",
+      blocks: [
+        {
+          type: "richtext",
+          data: {
+            html: `
+              <h1>Politique de confidentialité</h1>
+              <p>Dernière mise à jour : ${new Date().toLocaleDateString("fr-FR")}</p>
+              <h2>Données collectées</h2>
+              <p>Nous collectons uniquement les données nécessaires au fonctionnement du site et à la mesure d'audience anonymisée.</p>
+              <h2>Vos droits</h2>
+              <p>Conformément au RGPD, vous disposez d'un droit d'accès, de rectification et de suppression de vos données.</p>
+              <h2>Contact DPO</h2>
+              <p>Pour toute demande : contact@bkpulse.fr</p>
+            `.trim(),
+          },
+        },
+      ],
+    },
+    {
+      slug: "cookies",
+      title: "Gestion des cookies",
+      metaTitle: "Cookies — BK Pulse",
+      metaDescription: "Gestion des cookies sur le site BK Pulse.",
+      blocks: [
+        {
+          type: "richtext",
+          data: {
+            html: `
+              <h1>Gestion des cookies</h1>
+              <p>Nous utilisons uniquement des cookies essentiels au fonctionnement du site et à la mesure d'audience anonyme (OpenPanel).</p>
+              <p>Vous pouvez refuser les cookies analytiques via la bannière de consentement affichée à votre première visite.</p>
+            `.trim(),
+          },
+        },
+      ],
+    },
+  ];
+
+  for (const legal of legalPages) {
+    const existing = await prisma.page.findUnique({ where: { slug: legal.slug } });
+    if (existing) continue;
+    await prisma.page.create({
+      data: {
+        slug: legal.slug,
+        title: legal.title,
+        status: "published",
+        template: "legal",
+        showInNav: false,
+        metaTitle: legal.metaTitle,
+        metaDescription: legal.metaDescription,
+        publishedAt: new Date(),
+        blocks: {
+          create: legal.blocks.map((b, i) => ({ type: b.type, sortOrder: i, data: b.data as object })),
+        },
+      },
+    });
+    console.log(`  Page légale créée : /${legal.slug}`);
+  }
+
+  // Seed main and footer menus if missing
+  const menusToCreate = [
+    {
+      key: "main",
+      label: "Menu principal",
+      items: [
+        { label: "Promesse", url: "/#promesse", target: "_self", sortOrder: 0 },
+        { label: "Pour qui", url: "/#pourQui", target: "_self", sortOrder: 1 },
+        { label: "Méthode", url: "/#methode", target: "_self", sortOrder: 2 },
+        { label: "Cloud SAP", url: "/#cloudSap", target: "_self", sortOrder: 3 },
+        { label: "Contact", url: "/#cta", target: "_self", sortOrder: 4 },
+      ],
+    },
+    {
+      key: "footer",
+      label: "Menu footer",
+      items: [
+        { label: "Mentions légales", url: "/mentions-legales", target: "_self", sortOrder: 0 },
+        { label: "Politique de confidentialité", url: "/politique-de-confidentialite", target: "_self", sortOrder: 1 },
+        { label: "Cookies", url: "/cookies", target: "_self", sortOrder: 2 },
+      ],
+    },
+  ];
+
+  for (const menu of menusToCreate) {
+    const existing = await prisma.menu.findUnique({ where: { key: menu.key } });
+    if (existing) continue;
+    await prisma.menu.create({
+      data: {
+        key: menu.key,
+        label: menu.label,
+        items: { create: menu.items },
+      },
+    });
+    console.log(`  Menu créé : ${menu.key}`);
+  }
 }
 
 main()
