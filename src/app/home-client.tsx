@@ -762,58 +762,74 @@ export default function HomeClient({ content }: HomeClientProps) {
               <span key={item} className="font-semibold">{item}</span>
             ))}
           </motion.div>
+
+          {/* Windsurf silhouette — transition vers le footer */}
+          <div className="flex justify-center py-32 md:py-40" aria-hidden="true">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/windsurfer.png"
+              alt=""
+              className="h-24 md:h-28 w-auto opacity-90 select-none"
+              draggable={false}
+            />
+          </div>
         </div>
 
-        <WaveSeparatorSolid color="#1a0a10" className="mt-16" />
       </section>
 
       {/* ═══════════════════ FOOTER ═══════════════════ */}
-      <footer
-        className="py-12 text-white -mt-px"
-        style={{ background: "linear-gradient(135deg, #1a0a10 0%, #1a0e06 100%)" }}
-      >
+      <footer className="bg-wave-pattern bg-gray-50/60 py-14 text-gray-700 relative">
+        <div
+          className="absolute inset-0 -z-10 pointer-events-none"
+          style={{
+            background:
+              "linear-gradient(135deg, rgba(194,24,91,0.05) 0%, rgba(234,88,12,0.05) 100%)",
+          }}
+        />
         <div className="max-w-6xl mx-auto px-6">
-          <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-8 mb-8">
-            <div className="flex flex-col items-center md:items-start">
+          <div className="flex flex-col md:flex-row md:items-end gap-10 md:gap-8 mb-8">
+            <div className="flex flex-col items-start gap-3 md:w-auto shrink-0">
               <Image
                 src="/logo.svg"
                 alt="BK Pulse"
                 width={120}
                 height={40}
-                className="h-10 w-auto mb-3 brightness-0 invert"
+                className="h-10 w-auto mb-1"
               />
-              <div className="text-gray-400 text-sm">
+              <div className="text-sm text-gray-600 leading-relaxed whitespace-nowrap">
                 <Rich value={t(content, "footer.description", "Partenaire SAP dédié à la performance des PME")} />
               </div>
-              <p className="text-gray-500 text-xs mt-1">{t(content, "footer.group", "BK Groupe")}</p>
+              <div className="text-sm text-gray-600">
+                <Rich value={t(content, "footer.group", "Filiale de BK Groupe")} />
+              </div>
             </div>
 
-            <div className="flex items-center gap-5">
+            <div className="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 md:items-end">
               <a
                 href={`mailto:${t(content, "footer.contact.email", "contact@bkpartners.fr")}`}
-                className="text-sm text-gray-400 hover:text-[#ea580c] transition-colors"
+                className="text-sm text-gray-700 hover:text-[#c2185b] transition-colors md:text-center"
               >
                 {t(content, "footer.contact.email", "contact@bkpartners.fr")}
               </a>
+              <div className="text-sm text-gray-700 md:text-center leading-relaxed">
+                <Rich value={t(content, "footer.address", "Tour Landscape,<br>6 Pl. des Degrés, 92800 Puteaux")} />
+              </div>
               <a
                 href={t(content, "footer.linkedin", "https://www.linkedin.com/company/bkpulse/about")}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-400 hover:text-[#ea580c] transition-colors"
-                aria-label="LinkedIn"
+                className="text-sm text-gray-700 hover:text-[#c2185b] transition-colors font-medium sm:text-right"
               >
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                </svg>
+                LinkedIn
               </a>
             </div>
           </div>
 
-          <div className="border-t border-white/10 pt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-gray-500">
-            <p>{t(content, "footer.copyright", "© 2026 BK Pulse — BK Groupe. Tous droits réservés.")}</p>
+          <div className="border-t border-gray-300/60 pt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-gray-500">
+            <p>{t(content, "footer.copyright", `© ${new Date().getFullYear()} BK Pulse — BK Partners Group. Tous droits réservés.`)}</p>
             <div className="flex gap-6">
-              <a href="/mentions-legales" className="hover:text-gray-300 transition-colors">Mentions légales</a>
-              <a href="/politique-de-confidentialite" className="hover:text-gray-300 transition-colors">Politique de confidentialité</a>
+              <a href="/mentions-legales" className="hover:text-[#c2185b] transition-colors">Mentions légales</a>
+              <a href="/politique-de-confidentialite" className="hover:text-[#c2185b] transition-colors">Politique de confidentialité</a>
             </div>
           </div>
         </div>

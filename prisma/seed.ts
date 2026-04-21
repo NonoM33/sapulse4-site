@@ -109,10 +109,11 @@ const contents: ContentEntry[] = [
 
   // ─── FOOTER ───
   { key: "footer.description", value: "Partenaire SAP dédié à la performance des PME", section: "footer", label: "Description entreprise", sortOrder: 1 },
-  { key: "footer.group", value: "BK Groupe", section: "footer", label: "Mention groupe", sortOrder: 2 },
+  { key: "footer.group", value: "Filiale de BK Groupe", section: "footer", label: "Mention groupe", sortOrder: 2 },
   { key: "footer.contact.email", value: "contact@bkpartners.fr", section: "footer", label: "Email de contact", sortOrder: 3 },
-  { key: "footer.linkedin", value: "https://www.linkedin.com/company/bkpulse/about", section: "footer", label: "Lien LinkedIn", sortOrder: 4 },
-  { key: "footer.copyright", value: "© 2026 BK Pulse — BK Groupe. Tous droits réservés.", section: "footer", label: "Copyright", sortOrder: 5 },
+  { key: "footer.address", value: "Tour Landscape,<br>6 Pl. des Degrés, 92800 Puteaux", section: "footer", label: "Adresse postale", sortOrder: 4 },
+  { key: "footer.linkedin", value: "https://www.linkedin.com/company/bkpulse/about", section: "footer", label: "Lien LinkedIn", sortOrder: 5 },
+  { key: "footer.copyright", value: "© 2026 BK Pulse — BK Partners Group. Tous droits réservés.", section: "footer", label: "Copyright", sortOrder: 6 },
 ];
 
 async function main() {
