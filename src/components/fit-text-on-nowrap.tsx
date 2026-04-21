@@ -12,22 +12,44 @@ export function FitTextOnNowrap() {
   useEffect(() => {
     const MIN_FONT_PX = 10;
 
-    function fitOne(el: HTMLElement) {
-      const parent = el.parentElement;
-      if (!parent) return;
+    function findWidthAncestor(start: HTMLElement): number {
+      let cur: HTMLElement | null = start.parentElement;
+      while (cur) {
+        const w = cur.clientWidth;
+        if (w > 0) return w;
+        cur = cur.parentElement;
+      }
+      return 0;
+    }
 
+    function measureNaturalWidth(el: HTMLElement): number {
+      const prevDisplay = el.style.display;
+      const prevMaxWidth = el.style.maxWidth;
+      const prevWhiteSpace = el.style.whiteSpace;
+      el.style.display = "inline-block";
+      el.style.maxWidth = "none";
+      el.style.whiteSpace = "nowrap";
+      const w = el.scrollWidth;
+      el.style.display = prevDisplay;
+      el.style.maxWidth = prevMaxWidth;
+      el.style.whiteSpace = prevWhiteSpace;
+      return w;
+    }
+
+    function fitOne(el: HTMLElement) {
       // Reset any previous inline font-size so we measure the natural size.
       el.style.fontSize = "";
 
-      const parentWidth = parent.clientWidth;
-      const textWidth = el.scrollWidth;
-      if (parentWidth <= 0 || textWidth <= 0) return;
-      if (textWidth <= parentWidth) return; // already fits
+      const containerWidth = findWidthAncestor(el);
+      if (containerWidth <= 0) return;
+
+      const textWidth = measureNaturalWidth(el);
+      if (textWidth <= 0 || textWidth <= containerWidth) return;
 
       const baseFontSize = parseFloat(window.getComputedStyle(el).fontSize);
       if (!Number.isFinite(baseFontSize) || baseFontSize <= 0) return;
 
-      const scale = parentWidth / textWidth;
+      const scale = containerWidth / textWidth;
       const next = Math.max(baseFontSize * scale * 0.98, MIN_FONT_PX);
       el.style.fontSize = `${next}px`;
     }
