@@ -7,7 +7,11 @@ import { Color } from "@tiptap/extension-color";
 import { Highlight } from "@tiptap/extension-highlight";
 import { TextAlign } from "@tiptap/extension-text-align";
 import { Heading } from "@tiptap/extension-heading";
+import { Placeholder } from "@tiptap/extension-placeholder";
 import { useEffect, useCallback } from "react";
+import { SlashCommand } from "./editor/slash-command";
+import "tippy.js/dist/tippy.css";
+import "tippy.js/themes/light.css";
 
 interface RichEditorProps {
   content: string;
@@ -55,6 +59,13 @@ export default function RichEditor({ content, onChange, label, contentKey }: Ric
       Color,
       Highlight.configure({ multicolor: true }),
       TextAlign.configure({ types: ["heading", "paragraph"] }),
+      Placeholder.configure({
+        placeholder: ({ node }) => {
+          if (node.type.name === "heading") return "Titre…";
+          return "Écrivez quelque chose… ou tapez / pour les commandes";
+        },
+      }),
+      SlashCommand,
     ],
     content,
     onUpdate: ({ editor: ed }) => {

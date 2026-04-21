@@ -50,10 +50,6 @@ const SECTION_ORDER = ["meta", "nav", "hero", "promesse", "cloudSap", "pourQui",
 
 type ActiveView = string; // section key or "__users" or "__password"
 
-function isLongText(value: string): boolean {
-  return value.length > 80 || value.includes("\n");
-}
-
 /** If Tiptap produced a bare <p>...</p> with no real formatting, store just the text. */
 function unwrapSimpleParagraph(value: string): string {
   const trimmed = value.trim();
@@ -684,7 +680,6 @@ export default function AdminDashboard() {
                 {currentItems.map((item) => {
                   const displayValue = getDisplayValue(item);
                   const isEdited = editedValues[item.key] !== undefined && editedValues[item.key] !== item.value;
-                  const useRichEditor = isLongText(item.value) || item.value.startsWith("<");
 
                   return (
                     <div
@@ -693,30 +688,12 @@ export default function AdminDashboard() {
                         isEdited ? "border-orange-300 shadow-md shadow-orange-100" : "border-gray-200"
                       }`}
                     >
-                      {useRichEditor ? (
-                        <RichEditor
-                          content={displayValue.startsWith("<") ? displayValue : `<p>${displayValue}</p>`}
-                          onChange={(html) => handleChange(item.key, unwrapSimpleParagraph(html))}
-                          label={item.label}
-                          contentKey={item.key}
-                        />
-                      ) : (
-                        <>
-                          <div className="flex items-start justify-between mb-2">
-                            <label htmlFor={item.key} className="text-sm font-bold text-gray-800">
-                              {item.label}
-                            </label>
-                            <span className="text-xs text-gray-400 font-mono">{item.key}</span>
-                          </div>
-                          <input
-                            id={item.key}
-                            type="text"
-                            value={displayValue}
-                            onChange={(e) => handleChange(item.key, e.target.value)}
-                            className="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#c2185b]/20 focus:border-[#c2185b] transition-all"
-                          />
-                        </>
-                      )}
+                      <RichEditor
+                        content={displayValue.startsWith("<") ? displayValue : `<p>${displayValue}</p>`}
+                        onChange={(html) => handleChange(item.key, unwrapSimpleParagraph(html))}
+                        label={item.label}
+                        contentKey={item.key}
+                      />
                       {isEdited && (
                         <div className="flex items-center gap-2 mt-2">
                           <span className="text-xs text-orange-500 font-medium">Modifié</span>
