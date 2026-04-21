@@ -119,91 +119,6 @@ function IconBadge({ icon: Icon }: { icon: ElementType }) {
   );
 }
 
-/* ─── Champ de points rebondissants ──────────────────
- * Inspiration directe du logo BK Pulse : les 3 personnages sont des points
- * colorés. On décline l'ADN visuel en un nuage de points qui flottent et
- * pulsent en douceur, à différentes tailles / couleurs / délais.
- */
-interface Dot {
-  top: string;
-  left: string;
-  size: number;
-  color: "pink" | "orange" | "mix";
-  delay: number;
-  duration: number;
-  driftX: number;
-  driftY: number;
-}
-
-const DOTS: Dot[] = [
-  // Grande diagonale gauche→droite, des + petits aux + gros
-  { top: "8%", left: "6%", size: 4, color: "pink", delay: 0, duration: 3.5, driftX: 8, driftY: 12 },
-  { top: "22%", left: "9%", size: 3, color: "orange", delay: 0.8, duration: 4.2, driftX: -6, driftY: 10 },
-  { top: "78%", left: "5%", size: 5, color: "pink", delay: 1.5, duration: 5, driftX: 10, driftY: -8 },
-  { top: "42%", left: "3%", size: 2, color: "mix", delay: 0.4, duration: 3.8, driftX: 5, driftY: 15 },
-  { top: "60%", left: "10%", size: 6, color: "orange", delay: 2.1, duration: 5.5, driftX: -12, driftY: 8 },
-  { top: "14%", left: "15%", size: 2, color: "pink", delay: 1.2, duration: 3.2, driftX: 4, driftY: 6 },
-  { top: "88%", left: "16%", size: 4, color: "mix", delay: 0.6, duration: 4.6, driftX: 9, driftY: -10 },
-  // Zone centrale
-  { top: "34%", left: "22%", size: 3, color: "pink", delay: 0.2, duration: 3.9, driftX: -7, driftY: 5 },
-  { top: "72%", left: "28%", size: 7, color: "orange", delay: 1.8, duration: 5.2, driftX: 11, driftY: -6 },
-  { top: "55%", left: "38%", size: 2, color: "mix", delay: 2.4, duration: 4.1, driftX: -5, driftY: 9 },
-  { top: "82%", left: "46%", size: 5, color: "pink", delay: 0.9, duration: 4.8, driftX: 8, driftY: -12 },
-  { top: "40%", left: "55%", size: 3, color: "orange", delay: 1.4, duration: 3.6, driftX: -6, driftY: 7 },
-  { top: "65%", left: "62%", size: 4, color: "mix", delay: 0.5, duration: 4.4, driftX: 7, driftY: -9 },
-  // Zone droite
-  { top: "14%", left: "80%", size: 3, color: "orange", delay: 1.1, duration: 3.8, driftX: 6, driftY: 10 },
-  { top: "30%", left: "87%", size: 5, color: "pink", delay: 0.7, duration: 4.9, driftX: -9, driftY: 8 },
-  { top: "48%", left: "92%", size: 2, color: "mix", delay: 2.2, duration: 3.4, driftX: 5, driftY: -7 },
-  { top: "68%", left: "85%", size: 6, color: "orange", delay: 0.3, duration: 5.3, driftX: -10, driftY: 11 },
-  { top: "86%", left: "78%", size: 4, color: "pink", delay: 1.7, duration: 4.3, driftX: 8, driftY: -6 },
-  { top: "22%", left: "72%", size: 3, color: "mix", delay: 2.6, duration: 3.7, driftX: -5, driftY: 12 },
-  // Points supplémentaires pour densifier
-  { top: "92%", left: "62%", size: 2, color: "pink", delay: 0.1, duration: 3.3, driftX: 4, driftY: -8 },
-  { top: "5%", left: "50%", size: 3, color: "orange", delay: 1.9, duration: 4.7, driftX: -7, driftY: 9 },
-  { top: "95%", left: "35%", size: 4, color: "mix", delay: 0.8, duration: 4.1, driftX: 6, driftY: -10 },
-  { top: "50%", left: "75%", size: 2, color: "pink", delay: 1.3, duration: 3.5, driftX: -4, driftY: 8 },
-];
-
-function BouncingDots() {
-  return (
-    <div className="absolute inset-0 -z-0 pointer-events-none overflow-hidden">
-      {DOTS.map((d, i) => {
-        const gradient =
-          d.color === "pink"
-            ? "radial-gradient(circle, #c2185b 0%, rgba(194,24,91,0.2) 70%, transparent 100%)"
-            : d.color === "orange"
-              ? "radial-gradient(circle, #ea580c 0%, rgba(234,88,12,0.2) 70%, transparent 100%)"
-              : "radial-gradient(circle, #d8336b 0%, rgba(216,51,107,0.15) 70%, transparent 100%)";
-        const shadow =
-          d.color === "pink"
-            ? "0 0 16px rgba(194,24,91,0.45)"
-            : d.color === "orange"
-              ? "0 0 16px rgba(234,88,12,0.45)"
-              : "0 0 18px rgba(216,51,107,0.45)";
-        return (
-          <div
-            key={i}
-            className="absolute rounded-full animate-dot-bounce"
-            style={{
-              top: d.top,
-              left: d.left,
-              width: `${d.size * 3}px`,
-              height: `${d.size * 3}px`,
-              background: gradient,
-              boxShadow: shadow,
-              animationDelay: `${d.delay}s`,
-              animationDuration: `${d.duration}s`,
-              ["--drift-x" as string]: `${d.driftX}px`,
-              ["--drift-y" as string]: `${d.driftY}px`,
-            } as React.CSSProperties}
-          />
-        );
-      })}
-    </div>
-  );
-}
-
 interface HomeClientProps {
   content: ContentMap;
 }
@@ -404,73 +319,42 @@ export default function HomeClient({ content }: HomeClientProps) {
       </nav>
 
       {/* ═══════════════════ HERO ═══════════════════ */}
-      <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Fond dégradé de base */}
+      <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden bg-white">
+        {/* Base blanche légèrement tintée — très discret, premium */}
         <div
           className="absolute inset-0 -z-10"
           style={{
             background:
-              "radial-gradient(ellipse at 15% 20%, rgba(194,24,91,0.22) 0%, transparent 55%), radial-gradient(ellipse at 85% 80%, rgba(234,88,12,0.24) 0%, transparent 55%), linear-gradient(135deg, #fff 0%, #fff5f8 40%, #fff3e8 70%, #fff 100%)",
+              "linear-gradient(180deg, #ffffff 0%, #fff9fb 60%, #ffffff 100%)",
           }}
         />
 
-        {/* Orbes radiaux flottants (ambiance de fond) */}
-        <div className="absolute inset-0 -z-0 overflow-hidden pointer-events-none">
+        {/* Stack halo + ondes parfaitement centré dans le hero.
+            Grid + place-items-center évite les calculs de transform et
+            centre pixel-perfect quelle que soit la hauteur du contenu. */}
+        <div className="absolute inset-0 grid place-items-center pointer-events-none">
+          {/* Halo principal qui respire derrière le titre — la signature */}
           <div
-            className="absolute -top-[20%] -left-[10%] w-[900px] h-[900px] rounded-full blur-3xl opacity-50 animate-drift-1"
-            style={{ background: "radial-gradient(circle, #c2185b 0%, transparent 60%)" }}
+            className="col-start-1 row-start-1 w-[900px] h-[900px] rounded-full blur-3xl animate-hero-breathe"
+            style={{
+              background:
+                "radial-gradient(circle, rgba(194,24,91,0.28) 0%, rgba(234,88,12,0.22) 45%, transparent 75%)",
+            }}
+          />
+          {/* 3 ondes concentriques qui pulsent en continu à intervalles décalés */}
+          <div
+            className="col-start-1 row-start-1 w-[180px] h-[180px] rounded-full border border-[#c2185b]/25 animate-hero-ripple"
+            style={{ animationDelay: "0s" }}
           />
           <div
-            className="absolute -bottom-[25%] -right-[10%] w-[800px] h-[800px] rounded-full blur-3xl opacity-45 animate-drift-2"
-            style={{ background: "radial-gradient(circle, #ea580c 0%, transparent 60%)" }}
+            className="col-start-1 row-start-1 w-[180px] h-[180px] rounded-full border border-[#d8336b]/25 animate-hero-ripple"
+            style={{ animationDelay: "1.6s" }}
+          />
+          <div
+            className="col-start-1 row-start-1 w-[180px] h-[180px] rounded-full border border-[#ea580c]/25 animate-hero-ripple"
+            style={{ animationDelay: "3.2s" }}
           />
         </div>
-
-        {/* Points rebondissants — inspiration logo BK Pulse (les 3 points = les 3 personnages) */}
-        <BouncingDots />
-
-        {/* 3 points "héros" à la position du logo, plus gros, pulsent en cœur */}
-        <div className="absolute inset-0 -z-0 pointer-events-none">
-          <div
-            className="absolute w-6 h-6 rounded-full animate-hero-dot-pulse"
-            style={{
-              left: "26%",
-              top: "18%",
-              background: "radial-gradient(circle, #c2185b 0%, #c2185b 60%, transparent 100%)",
-              boxShadow: "0 0 30px rgba(194,24,91,0.6)",
-              animationDelay: "0s",
-            }}
-          />
-          <div
-            className="absolute w-7 h-7 rounded-full animate-hero-dot-pulse"
-            style={{
-              left: "49%",
-              top: "10%",
-              background: "radial-gradient(circle, #d8336b 0%, #d8336b 60%, transparent 100%)",
-              boxShadow: "0 0 40px rgba(216,51,107,0.7)",
-              animationDelay: "0.3s",
-            }}
-          />
-          <div
-            className="absolute w-6 h-6 rounded-full animate-hero-dot-pulse"
-            style={{
-              left: "72%",
-              top: "18%",
-              background: "radial-gradient(circle, #ea580c 0%, #ea580c 60%, transparent 100%)",
-              boxShadow: "0 0 30px rgba(234,88,12,0.6)",
-              animationDelay: "0.6s",
-            }}
-          />
-        </div>
-
-        {/* Halo central subtil qui accentue le focus sur le titre */}
-        <div
-          className="absolute inset-0 -z-0 pointer-events-none"
-          style={{
-            background:
-              "radial-gradient(ellipse at 50% 50%, rgba(255,255,255,0.55) 0%, transparent 45%)",
-          }}
-        />
 
         <div className="relative z-10 max-w-5xl mx-auto px-6 text-center pt-36 pb-20">
           <motion.h1
