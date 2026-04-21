@@ -138,7 +138,8 @@ body {
   padding-left: 1.5em;
   margin: 0.3em 0;
 }
-.tiptap mark[data-color="gradient"] {
+.tiptap mark[data-color="gradient"],
+mark[data-color="gradient"] {
   background: linear-gradient(135deg, #c2185b 0%, #ea580c 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;

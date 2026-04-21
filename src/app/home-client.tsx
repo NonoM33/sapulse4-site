@@ -17,9 +17,40 @@ import {
 
 export type ContentMap = Record<string, string>;
 
-/** Helper: get content with fallback */
+/** Strip a single <p>...</p> wrapper when the inner text has no other tags. */
+function unwrapSimpleParagraph(value: string): string {
+  const trimmed = value.trim();
+  const match = trimmed.match(/^<p>([\s\S]*?)<\/p>$/);
+  if (match && !/<[a-z/]/i.test(match[1])) {
+    return match[1]
+      .replace(/&amp;/g, "&")
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      .replace(/&nbsp;/g, " ");
+  }
+  return value;
+}
+
+/** Helper: get content with fallback, auto-unwrapping editor-produced paragraphs. */
 function t(content: ContentMap, key: string, fallback: string): string {
-  return content[key] ?? fallback;
+  const raw = content[key] ?? fallback;
+  return unwrapSimpleParagraph(raw);
+}
+
+/** True if the given string contains real HTML tags (produced by the rich editor). */
+function hasHtml(value: string): boolean {
+  return /<[a-z/]/i.test(value);
+}
+
+/** Render arbitrary text that may contain HTML from the rich editor. */
+function Rich({ value }: { value: string }) {
+  return hasHtml(value) ? (
+    <span dangerouslySetInnerHTML={{ __html: value }} />
+  ) : (
+    <>{value}</>
+  );
 }
 
 const ease: Easing = "easeOut";
@@ -335,7 +366,7 @@ export default function HomeClient({ content }: HomeClientProps) {
             variants={blurUp}
             className="text-lg md:text-xl text-gray-500 max-w-3xl mx-auto leading-relaxed mb-10"
           >
-            {t(content, "hero.subtitle", "Partenaire certifié SAP PartnerEdge SELL, BK Pulse déploie SAP en quelques semaines grâce à une méthodologie agile et efficace. Nous sommes le moteur qui propulse la solution SAP ERP Cloud Public vers les entreprises du secteur de l'assurance, des mutuelles et des courtiers avec un accès direct aux dernières innovations Cloud et IA.")}
+            <Rich value={t(content, "hero.subtitle", "Partenaire certifié SAP PartnerEdge SELL, BK Pulse déploie SAP en quelques semaines grâce à une méthodologie agile et efficace. Nous sommes le moteur qui propulse la solution SAP ERP Cloud Public vers les entreprises du secteur de l'assurance, des mutuelles et des courtiers avec un accès direct aux dernières innovations Cloud et IA.")} />
           </motion.p>
 
           <motion.div
@@ -393,7 +424,7 @@ export default function HomeClient({ content }: HomeClientProps) {
               )[1] ?? ""}
             </h2>
             <p className="text-lg text-gray-500 max-w-2xl mx-auto">
-              {t(content, "promesse.subtitle", "Trois piliers pour transformer votre déploiement ERP en avantage concurrentiel.")}
+              <Rich value={t(content, "promesse.subtitle", "Trois piliers pour transformer votre déploiement ERP en avantage concurrentiel.")} />
             </p>
           </motion.div>
 
@@ -420,7 +451,7 @@ export default function HomeClient({ content }: HomeClientProps) {
                     <card.icon className="w-7 h-7 text-[#c2185b] transition-transform duration-500 group-hover:scale-110" />
                   </div>
                   <h3 className="text-xl font-bold text-gray-900 mb-3 transition-colors duration-300 group-hover:text-[#c2185b]">{card.title}</h3>
-                  <p className="text-gray-600 leading-relaxed">{card.desc}</p>
+                  <p className="text-gray-600 leading-relaxed"><Rich value={card.desc} /></p>
                 </div>
                 <div
                   className="absolute bottom-0 left-0 right-0 h-1 rounded-b-2xl transition-all duration-500 group-hover:h-1.5"
@@ -453,7 +484,7 @@ export default function HomeClient({ content }: HomeClientProps) {
                 <span className="gradient-brand-text">{t(content, "cloudSap.title.line2", "et accessible")}</span>
               </h2>
               <p className="text-lg text-gray-500 leading-relaxed mb-6">
-                {t(content, "cloudSap.description", "Le parcours GROW with SAP permet aux entreprises en croissance de déployer rapidement SAP. Alliez la puissance de l'intelligence artificielle aux meilleures pratiques sectorielles pour piloter votre activité avec agilité. Un déploiement maîtrisé, des processus automatisés et un soutien expert : tout est réuni pour stimuler votre innovation dès aujourd'hui.")}
+                <Rich value={t(content, "cloudSap.description", "Le parcours GROW with SAP permet aux entreprises en croissance de déployer rapidement SAP. Alliez la puissance de l'intelligence artificielle aux meilleures pratiques sectorielles pour piloter votre activité avec agilité. Un déploiement maîtrisé, des processus automatisés et un soutien expert : tout est réuni pour stimuler votre innovation dès aujourd'hui.")} />
               </p>
 
               <motion.div
@@ -472,8 +503,8 @@ export default function HomeClient({ content }: HomeClientProps) {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
                 <div className="absolute bottom-4 left-4">
-                  <p className="text-white font-bold text-sm">{t(content, "cloudSap.team.title", "Équipe certifiée SAP")}</p>
-                  <p className="text-white/80 text-xs">{t(content, "cloudSap.team.subtitle", "Experts assurance, mutuelles & courtage")}</p>
+                  <p className="text-white font-bold text-sm"><Rich value={t(content, "cloudSap.team.title", "Équipe certifiée SAP")} /></p>
+                  <p className="text-white/80 text-xs"><Rich value={t(content, "cloudSap.team.subtitle", "Experts assurance, mutuelles & courtage")} /></p>
                 </div>
               </motion.div>
 
@@ -508,7 +539,7 @@ export default function HomeClient({ content }: HomeClientProps) {
                     <h3 className="font-bold text-gray-900 text-base mb-2 leading-snug">
                       {item.title}
                     </h3>
-                    <p className="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
+                    <p className="text-gray-500 text-sm leading-relaxed"><Rich value={item.desc} /></p>
                   </motion.div>
                 );
               })}
@@ -535,7 +566,7 @@ export default function HomeClient({ content }: HomeClientProps) {
               <span className="gradient-brand-text">{t(content, "pourQui.title.line2", "pour vos enjeux")}</span>
             </h2>
             <p className="text-lg text-gray-500 max-w-4xl mx-auto">
-              {t(content, "pourQui.subtitle", "Quel que soit votre rôle, SAP ERP Cloud Public vous apporte des réponses concrètes.")}
+              <Rich value={t(content, "pourQui.subtitle", "Quel que soit votre rôle, SAP ERP Cloud Public vous apporte des réponses concrètes.")} />
             </p>
           </motion.div>
 
@@ -568,13 +599,13 @@ export default function HomeClient({ content }: HomeClientProps) {
                   {item.role}
                 </div>
                 <p className="text-gray-800 font-bold text-lg leading-snug mb-2">
-                  {item.benefit}
+                  <Rich value={item.benefit} />
                 </p>
                 {item.tagline && (
-                  <p className="text-[#c2185b] font-semibold text-sm mb-3">{item.tagline}</p>
+                  <p className="text-[#c2185b] font-semibold text-sm mb-3"><Rich value={item.tagline} /></p>
                 )}
                 {item.desc && (
-                  <p className="text-gray-500 text-sm leading-relaxed mb-5">{item.desc}</p>
+                  <p className="text-gray-500 text-sm leading-relaxed mb-5"><Rich value={item.desc} /></p>
                 )}
                 <ul className="space-y-2">
                   {item.points.map((pt) => (
@@ -621,7 +652,7 @@ export default function HomeClient({ content }: HomeClientProps) {
                   <span className="gradient-text-animated">{t(content, "methode.title.highlight", "18 semaines")}</span>
                 </h2>
                 <p className="text-white/70 text-lg max-w-md">
-                  {t(content, "methode.subtitle", "Pas de tunnel projet. Pas de complexité inutile. Juste de l'efficacité.")}
+                  <Rich value={t(content, "methode.subtitle", "Pas de tunnel projet. Pas de complexité inutile. Juste de l'efficacité.")} />
                 </p>
               </motion.div>
             </div>
@@ -663,7 +694,7 @@ export default function HomeClient({ content }: HomeClientProps) {
             variants={fadeUp}
             className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto leading-relaxed"
           >
-            {t(content, "cta.subtitle", "Évaluez votre éligibilité à un déploiement rapide en 15 minutes. Notre équipe d'experts vous accompagne à chaque étape.")}
+            <Rich value={t(content, "cta.subtitle", "Évaluez votre éligibilité à un déploiement rapide en 15 minutes. Notre équipe d'experts vous accompagne à chaque étape.")} />
           </motion.p>
 
           <motion.div
@@ -717,7 +748,7 @@ export default function HomeClient({ content }: HomeClientProps) {
                 className="h-10 w-auto mb-3 brightness-0 invert"
               />
               <p className="text-gray-400 text-sm">
-                {t(content, "footer.description", "Partenaire SAP dédié à la performance des PME")}
+                <Rich value={t(content, "footer.description", "Partenaire SAP dédié à la performance des PME")} />
               </p>
               <p className="text-gray-500 text-xs mt-1">{t(content, "footer.group", "BK Groupe")}</p>
             </div>

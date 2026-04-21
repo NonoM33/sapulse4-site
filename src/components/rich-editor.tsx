@@ -45,6 +45,7 @@ function ToolbarButton({
 
 export default function RichEditor({ content, onChange, label, contentKey }: RichEditorProps) {
   const editor = useEditor({
+    immediatelyRender: false,
     extensions: [
       StarterKit.configure({
         heading: false,

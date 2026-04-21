@@ -54,6 +54,22 @@ function isLongText(value: string): boolean {
   return value.length > 80 || value.includes("\n");
 }
 
+/** If Tiptap produced a bare <p>...</p> with no real formatting, store just the text. */
+function unwrapSimpleParagraph(value: string): string {
+  const trimmed = value.trim();
+  const match = trimmed.match(/^<p>([\s\S]*?)<\/p>$/);
+  if (match && !/<[a-z/]/i.test(match[1])) {
+    return match[1]
+      .replace(/&amp;/g, "&")
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      .replace(/&nbsp;/g, " ");
+  }
+  return value;
+}
+
 const TYPE_CONFIG: Record<Release["type"], { label: string; color: string; bg: string }> = {
   major: { label: "Majeure", color: "text-[#c2185b]", bg: "bg-rose-50 border-rose-200" },
   feature: { label: "Fonctionnalité", color: "text-blue-600", bg: "bg-blue-50 border-blue-200" },
@@ -680,7 +696,7 @@ export default function AdminDashboard() {
                       {useRichEditor ? (
                         <RichEditor
                           content={displayValue.startsWith("<") ? displayValue : `<p>${displayValue}</p>`}
-                          onChange={(html) => handleChange(item.key, html)}
+                          onChange={(html) => handleChange(item.key, unwrapSimpleParagraph(html))}
                           label={item.label}
                           contentKey={item.key}
                         />

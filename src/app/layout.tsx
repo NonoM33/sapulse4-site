@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Nunito } from "next/font/google";
 import "./globals.css";
 import { loadSiteContent, c } from "@/lib/content";
@@ -29,27 +30,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr" className="scroll-smooth">
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.op=window.op||function(){var n=[];return new Proxy(function(){arguments.length&&n.push([].slice.call(arguments))},{get:function(t,r){return"q"===r?n:function(){n.push([r].concat([].slice.call(arguments)))}},has:function(t,r){return"q"===r}})}();
-              var consent = localStorage.getItem('bkpulse_cookie_consent');
-              if (consent !== 'refused') {
-                window.op('init', {
-                  apiUrl: '/api/t/op',
-                  clientId: 'fc4b026a-f705-44d6-8f86-627bb3481d0f',
-                  trackScreenViews: true,
-                  trackOutgoingLinks: true,
-                  trackAttributes: true,
-                });
-              }
-            `,
-          }}
-        />
-        <script src="https://openpanel.dev/op1.js" defer async />
-      </head>
       <body className={`${nunito.variable} font-nunito antialiased bg-white text-gray-900`}>
+        <Script id="openpanel-init" strategy="beforeInteractive">
+          {`window.op=window.op||function(){var n=[];return new Proxy(function(){arguments.length&&n.push([].slice.call(arguments))},{get:function(t,r){return"q"===r?n:function(){n.push([r].concat([].slice.call(arguments)))}},has:function(t,r){return"q"===r}})}();var consent=localStorage.getItem('bkpulse_cookie_consent');if(consent!=='refused'){window.op('init',{apiUrl:'/api/t/op',clientId:'fc4b026a-f705-44d6-8f86-627bb3481d0f',trackScreenViews:true,trackOutgoingLinks:true,trackAttributes:true});}`}
+        </Script>
+        <Script src="https://openpanel.dev/op1.js" strategy="afterInteractive" />
         {children}
         <CookieConsent />
       </body>
