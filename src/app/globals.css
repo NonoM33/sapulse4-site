@@ -56,6 +56,44 @@ body {
   50% { transform: translate3d(-30px, -12px, 0) scaleY(1.04); }
 }
 
+/* Chaque point rebondit sur place + dérive légèrement sur X/Y.
+   Les valeurs --drift-x / --drift-y sont fournies en inline style pour
+   que chaque point ait son propre trajet. */
+@keyframes dot-bounce {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.7;
+  }
+  25% {
+    transform: translate3d(calc(var(--drift-x, 0px) * 0.5), calc(var(--drift-y, 0px) * -1), 0) scale(1.35);
+    opacity: 1;
+  }
+  50% {
+    transform: translate3d(var(--drift-x, 0px), calc(var(--drift-y, 0px) * -0.4), 0) scale(0.9);
+    opacity: 0.85;
+  }
+  75% {
+    transform: translate3d(calc(var(--drift-x, 0px) * 0.5), calc(var(--drift-y, 0px) * -0.8), 0) scale(1.15);
+    opacity: 1;
+  }
+}
+
+/* Pulse plus marqué pour les 3 points héros (comme le cœur de la marque). */
+@keyframes hero-dot-pulse {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.85;
+  }
+  30% {
+    transform: translate3d(0, -18px, 0) scale(1.5);
+    opacity: 1;
+  }
+  60% {
+    transform: translate3d(0, -8px, 0) scale(1.1);
+    opacity: 0.9;
+  }
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
@@ -116,6 +154,18 @@ body {
     transform-origin: center bottom;
     animation: hero-wave 7s ease-in-out infinite;
     animation-delay: -1.5s;
+  }
+
+  .animate-dot-bounce {
+    animation-name: dot-bounce;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    will-change: transform, opacity;
+  }
+
+  .animate-hero-dot-pulse {
+    animation: hero-dot-pulse 3.2s ease-in-out infinite;
+    will-change: transform, opacity;
   }
 
   .bg-wave-pattern {
