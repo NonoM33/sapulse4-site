@@ -7,11 +7,25 @@ import { Color } from "@tiptap/extension-color";
 import { Highlight } from "@tiptap/extension-highlight";
 import { TextAlign } from "@tiptap/extension-text-align";
 import { Heading } from "@tiptap/extension-heading";
+import { FontSize } from "@tiptap/extension-font-size";
 import { Placeholder } from "@tiptap/extension-placeholder";
 import { useEffect, useCallback } from "react";
 import { SlashCommand } from "./editor/slash-command";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/themes/light.css";
+
+const FONT_SIZES = [
+  { label: "Auto", value: "" },
+  { label: "XS", value: "0.75rem" },
+  { label: "S", value: "0.875rem" },
+  { label: "M", value: "1rem" },
+  { label: "L", value: "1.25rem" },
+  { label: "XL", value: "1.5rem" },
+  { label: "2XL", value: "2rem" },
+  { label: "3XL", value: "2.5rem" },
+  { label: "4XL", value: "3rem" },
+  { label: "5XL", value: "4rem" },
+];
 
 interface RichEditorProps {
   content: string;
@@ -56,6 +70,7 @@ export default function RichEditor({ content, onChange, label, contentKey }: Ric
       }),
       Heading.configure({ levels: [1, 2, 3] }),
       TextStyle,
+      FontSize,
       Color,
       Highlight.configure({ multicolor: true }),
       TextAlign.configure({ types: ["heading", "paragraph"] }),
@@ -147,6 +162,29 @@ export default function RichEditor({ content, onChange, label, contentKey }: Ric
         >
           H3
         </ToolbarButton>
+
+        <div className="w-px h-5 bg-gray-300 mx-1" />
+
+        {/* Font size */}
+        <select
+          value={editor.getAttributes("textStyle").fontSize ?? ""}
+          onChange={(e) => {
+            const size = e.target.value;
+            if (size) {
+              editor.chain().focus().setFontSize(size).run();
+            } else {
+              editor.chain().focus().unsetFontSize().run();
+            }
+          }}
+          className="text-xs font-medium text-gray-600 border border-transparent rounded px-1.5 py-0.5 hover:bg-gray-100 focus:outline-none focus:border-gray-200 cursor-pointer"
+          title="Taille du texte (sur la sélection)"
+        >
+          {FONT_SIZES.map((size) => (
+            <option key={size.label} value={size.value}>
+              {size.label}
+            </option>
+          ))}
+        </select>
 
         <div className="w-px h-5 bg-gray-300 mx-1" />
 
