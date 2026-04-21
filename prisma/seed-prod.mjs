@@ -97,9 +97,12 @@ async function main() {
   console.log("Seeding site content...");
 
   for (const entry of contents) {
+    // IMPORTANT: do NOT overwrite `value` on re-seed — the chargée de com
+    // edits content from the back office and reseeding must not destroy her
+    // work. We only refresh the metadata (section, label, sortOrder).
     await prisma.siteContent.upsert({
       where: { key: entry.key },
-      update: { value: entry.value, section: entry.section, label: entry.label, sortOrder: entry.sortOrder },
+      update: { section: entry.section, label: entry.label, sortOrder: entry.sortOrder },
       create: entry,
     });
   }

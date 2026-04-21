@@ -119,9 +119,10 @@ async function main() {
   console.log("Seeding site content...");
 
   for (const entry of contents) {
+    // Don't overwrite an existing `value` so admin edits survive re-seeds.
     await prisma.siteContent.upsert({
       where: { key: entry.key },
-      update: { value: entry.value, section: entry.section, label: entry.label, sortOrder: entry.sortOrder },
+      update: { section: entry.section, label: entry.label, sortOrder: entry.sortOrder },
       create: entry,
     });
   }
