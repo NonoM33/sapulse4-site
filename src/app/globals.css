@@ -184,6 +184,19 @@ mark[data-color="gradient"] {
   font-weight: 800;
 }
 
+/* Single-line marker: forces nowrap + ellipsis truncation on a specific
+   paragraph or heading. Works both inside the Tiptap editor (.tiptap) and
+   inside rendered content on the public site (.rich-content). */
+.tiptap [data-nowrap="true"],
+.rich-content [data-nowrap="true"],
+[data-nowrap="true"] {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  max-width: 100%;
+}
+
 /* Rich content rendered on the public site via the Rich component.
    Needs to re-enable bullets/headings defaults that Tailwind preflight resets. */
 .rich-content h1 {

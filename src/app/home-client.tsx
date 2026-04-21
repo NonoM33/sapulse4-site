@@ -44,14 +44,39 @@ function hasHtml(value: string): boolean {
   return /<[a-z/]/i.test(value);
 }
 
+/** If the string is a SINGLE top-level <p>…</p> block, strip or convert it.
+ *  - Bare <p>X</p>                → X                (inline content)
+ *  - <p attr="v">X</p>            → <span attr="v">X</span> (preserve attrs)
+ *  If the content has multiple top-level paragraphs or nested <p>, leave
+ *  it untouched so we don't corrupt content like
+ *  "<p>Accélérez.</p><p>Simplifiez. Pilotez.</p>".
+ */
+function normalizeRootParagraph(html: string): string {
+  const trimmed = html.trim();
+  const openMatch = trimmed.match(/^<p(\s[^>]*)?>/i);
+  if (!openMatch || !trimmed.endsWith("</p>")) return html;
+  const innerStart = openMatch[0].length;
+  const innerEnd = trimmed.length - "</p>".length;
+  const inner = trimmed.slice(innerStart, innerEnd);
+  // Inner must NOT contain another <p> opening tag — otherwise there are
+  // multiple top-level paragraphs and stripping would mangle the output.
+  if (/<p(\s|>)/i.test(inner)) return html;
+  const attrs = openMatch[1] ?? "";
+  return attrs ? `<span${attrs}>${inner}</span>` : inner;
+}
+
 /** Render arbitrary text that may contain HTML from the rich editor.
- *  Strips a single outer <p> wrapper so inserting inside h1/h2/… stays valid HTML.
- *  Uses a span with the `rich-content` class so bullets/headings render correctly
- *  despite Tailwind's preflight reset. */
+ *  Uses a <div> when the content contains block-level tags (so multiple
+ *  paragraphs aren't mangled by the browser auto-fixing invalid span>p),
+ *  <span> otherwise. */
 function Rich({ value }: { value: string }) {
   if (!hasHtml(value)) return <>{value}</>;
-  const stripped = value.trim().replace(/^<p(?:\s[^>]*)?>([\s\S]*)<\/p>$/, "$1");
-  return <span className="rich-content" dangerouslySetInnerHTML={{ __html: stripped }} />;
+  const normalized = normalizeRootParagraph(value);
+  const isBlock = /<(p|div|h[1-6]|ul|ol|li|blockquote|hr|pre)[\s>]/i.test(normalized);
+  if (isBlock) {
+    return <div className="rich-content" dangerouslySetInnerHTML={{ __html: normalized }} />;
+  }
+  return <span className="rich-content" dangerouslySetInnerHTML={{ __html: normalized }} />;
 }
 
 const ease: Easing = "easeOut";
@@ -414,14 +439,22 @@ export default function HomeClient({ content }: HomeClientProps) {
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">
-              {t(content, "promesse.title", "Accélérez. Simplifiez. Pilotez.").replace(
-                t(content, "promesse.title.highlight", "Simplifiez."),
-                ""
-              ).split(t(content, "promesse.title.highlight", "Simplifiez.") ? "" : "|||")[0]}
-              <span className="gradient-brand-text">{t(content, "promesse.title.highlight", "Simplifiez.")}</span>{" "}
-              {t(content, "promesse.title", "Accélérez. Simplifiez. Pilotez.").split(
-                t(content, "promesse.title.highlight", "Simplifiez.")
-              )[1] ?? ""}
+              {(() => {
+                const title = t(content, "promesse.title", "Accélérez. Simplifiez. Pilotez.");
+                const highlight = t(content, "promesse.title.highlight", "Simplifiez.");
+                if (!highlight || !title.includes(highlight)) {
+                  return <Rich value={title} />;
+                }
+                const [before, ...rest] = title.split(highlight);
+                const after = rest.join(highlight);
+                return (
+                  <>
+                    <Rich value={before} />
+                    <span className="gradient-brand-text"><Rich value={highlight} /></span>
+                    <Rich value={after} />
+                  </>
+                );
+              })()}
             </h2>
             <div className="text-lg text-gray-500 max-w-2xl mx-auto">
               <Rich value={t(content, "promesse.subtitle", "Trois piliers pour transformer votre déploiement ERP en avantage concurrentiel.")} />

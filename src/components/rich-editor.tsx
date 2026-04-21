@@ -11,6 +11,7 @@ import { FontSize } from "@tiptap/extension-font-size";
 import { Placeholder } from "@tiptap/extension-placeholder";
 import { useEffect, useCallback } from "react";
 import { SlashCommand } from "./editor/slash-command";
+import { NowrapAttribute } from "./editor/nowrap-attribute";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/themes/light.css";
 
@@ -80,6 +81,7 @@ export default function RichEditor({ content, onChange, label, contentKey }: Ric
           return "Écrivez quelque chose… ou tapez / pour les commandes";
         },
       }),
+      NowrapAttribute,
       SlashCommand,
     ],
     content,
@@ -206,6 +208,34 @@ export default function RichEditor({ content, onChange, label, contentKey }: Ric
           title="Couleur par défaut"
         >
           <span className="text-gray-900">A</span>
+        </ToolbarButton>
+
+        <div className="w-px h-5 bg-gray-300 mx-1" />
+
+        {/* Line break helpers */}
+        <ToolbarButton
+          onClick={() => editor.chain().focus().setHardBreak().run()}
+          title="Retour à la ligne (Maj+Entrée) — sans créer de nouveau paragraphe"
+        >
+          ↵
+        </ToolbarButton>
+        <ToolbarButton
+          onClick={() => {
+            const type = editor.isActive("heading") ? "heading" : "paragraph";
+            const current = editor.getAttributes(type).nowrap;
+            editor
+              .chain()
+              .focus()
+              .updateAttributes(type, { nowrap: current ? null : true })
+              .run();
+          }}
+          active={
+            Boolean(editor.getAttributes("paragraph").nowrap) ||
+            Boolean(editor.getAttributes("heading").nowrap)
+          }
+          title="Forcer une seule ligne (tronque avec … si trop long)"
+        >
+          1L
         </ToolbarButton>
 
         <div className="w-px h-5 bg-gray-300 mx-1" />
