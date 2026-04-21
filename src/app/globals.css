@@ -184,15 +184,20 @@ mark[data-color="gradient"] {
   font-weight: 800;
 }
 
-/* Single-line marker: forces nowrap + ellipsis truncation on a specific
-   paragraph or heading. Works both inside the Tiptap editor (.tiptap) and
-   inside rendered content on the public site (.rich-content). */
-.tiptap [data-nowrap="true"],
-.rich-content [data-nowrap="true"],
-[data-nowrap="true"] {
+/* Single-line marker: forces nowrap. On the public site, the client-side
+   FitTextOnNowrap hook also auto-shrinks the font-size so the whole text
+   stays readable instead of being ellipsed. In the editor we keep the
+   classic ellipsis fallback. */
+.tiptap [data-nowrap="true"] {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  display: block;
+  max-width: 100%;
+}
+.rich-content [data-nowrap="true"],
+[data-nowrap="true"] {
+  white-space: nowrap;
   display: block;
   max-width: 100%;
 }

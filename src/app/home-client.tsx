@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState, useId, useEffect, type ElementType } from "react";
 import { motion, type Variants, type Easing } from "framer-motion";
 import dynamic from "next/dynamic";
+import { FitTextOnNowrap } from "@/components/fit-text-on-nowrap";
 const TypeformWidget = dynamic(
   () => import("@typeform/embed-react").then((mod) => mod.Widget),
   { ssr: false, loading: () => <div className="w-full h-[500px] flex items-center justify-center text-gray-400">Chargement du formulaire...</div> }
@@ -273,6 +274,7 @@ export default function HomeClient({ content }: HomeClientProps) {
 
   return (
     <main className="font-nunito">
+      <FitTextOnNowrap />
       {/* NAV */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100 shadow-sm">
         {/* Surfer progress indicator */}

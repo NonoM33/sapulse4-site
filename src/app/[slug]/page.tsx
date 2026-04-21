@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getPublishedPageBySlug } from "@/lib/cms/pages";
 import { PageRenderer } from "@/components/blocks/page-renderer";
+import { FitTextOnNowrap } from "@/components/fit-text-on-nowrap";
 
 export const dynamic = "force-dynamic";
 
@@ -32,6 +33,7 @@ export default async function DynamicPage({ params }: PageProps) {
 
   return (
     <main className="min-h-screen bg-white">
+      <FitTextOnNowrap />
       <header className="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-gray-100">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 font-bold text-gray-900">
