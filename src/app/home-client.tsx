@@ -119,6 +119,51 @@ function IconBadge({ icon: Icon }: { icon: ElementType }) {
   );
 }
 
+/* ─── Language toggle pill ────────────────────────────
+ * FR / EN côte à côte, l'actif en capsule rose→orange,
+ * l'inactif en texte léger. Clic sur l'inactif → bascule. */
+function LanguageToggle({
+  currentLang,
+  onToggle,
+  compact = false,
+}: {
+  currentLang: "fr" | "en";
+  onToggle: () => void;
+  compact?: boolean;
+}) {
+  const size = compact ? "text-[11px] px-2 py-1" : "text-xs px-2.5 py-1.5";
+  return (
+    <div
+      className="notranslate flex items-center rounded-full bg-gray-100/70 p-0.5 select-none"
+      translate="no"
+    >
+      {(["fr", "en"] as const).map((lang) => {
+        const active = currentLang === lang;
+        return (
+          <button
+            key={lang}
+            type="button"
+            onClick={active ? undefined : onToggle}
+            aria-pressed={active}
+            className={`${size} font-bold uppercase rounded-full tracking-wide transition-all duration-300 ${
+              active
+                ? "text-white shadow-sm"
+                : "text-gray-500 hover:text-gray-800 cursor-pointer"
+            }`}
+            style={
+              active
+                ? { background: "linear-gradient(135deg, #c2185b, #ea580c)" }
+                : undefined
+            }
+          >
+            {lang.toUpperCase()}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 interface HomeClientProps {
   content: ContentMap;
 }
@@ -300,15 +345,7 @@ export default function HomeClient({ content }: HomeClientProps) {
                 {link.label}
               </a>
             ))}
-            <button
-              onClick={toggleLanguage}
-              aria-label={currentLang === "fr" ? "Translate to English" : "Traduire en français"}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-200 text-xs font-bold text-gray-700 hover:border-[#c2185b] hover:text-[#c2185b] transition-all notranslate"
-              translate="no"
-            >
-              <span aria-hidden="true">🌐</span>
-              <span>{currentLang === "fr" ? "EN" : "FR"}</span>
-            </button>
+            <LanguageToggle currentLang={currentLang} onToggle={toggleLanguage} />
             <a
               href="#cta"
               className="px-5 py-2.5 rounded-full text-white font-bold text-sm hover:shadow-lg hover:shadow-rose-500/20 hover:scale-105 transition-all duration-300"
@@ -320,15 +357,7 @@ export default function HomeClient({ content }: HomeClientProps) {
 
           {/* Mobile — langue + hamburger */}
           <div className="md:hidden flex items-center gap-2">
-            <button
-              onClick={toggleLanguage}
-              aria-label={currentLang === "fr" ? "Translate to English" : "Traduire en français"}
-              className="flex items-center gap-1 px-2.5 py-1.5 rounded-full border border-gray-200 text-xs font-bold text-gray-700 notranslate"
-              translate="no"
-            >
-              <span aria-hidden="true">🌐</span>
-              <span>{currentLang === "fr" ? "EN" : "FR"}</span>
-            </button>
+            <LanguageToggle currentLang={currentLang} onToggle={toggleLanguage} compact />
             <button
               className="p-2 rounded-lg text-gray-600 hover:text-[#c2185b] transition-colors"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
