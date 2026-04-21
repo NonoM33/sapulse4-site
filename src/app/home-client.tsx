@@ -127,6 +127,7 @@ export default function HomeClient({ content }: HomeClientProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [currentLang, setCurrentLang] = useState<"fr" | "en">("fr");
 
   useEffect(() => {
     const handleScroll = () => {
@@ -139,6 +140,31 @@ export default function HomeClient({ content }: HomeClientProps) {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Détecte si Google Translate a déjà été initialisé (cookie googtrans)
+  useEffect(() => {
+    const match = document.cookie.match(/googtrans=\/fr\/(\w+)/);
+    if (match && match[1] === "en") {
+      setCurrentLang("en");
+    }
+  }, []);
+
+  function toggleLanguage() {
+    const next = currentLang === "fr" ? "en" : "fr";
+    // Google Translate lit le cookie `googtrans` au chargement.
+    // Le chemin / le domaine doivent matcher exactement pour que la réécriture s'applique.
+    const host = window.location.hostname;
+    const cookieValue = next === "en" ? "/fr/en" : "/fr/fr";
+    const expires = new Date(Date.now() + 365 * 24 * 3600 * 1000).toUTCString();
+    document.cookie = `googtrans=${cookieValue}; expires=${expires}; path=/`;
+    // Cookie avec le domaine parent pour couvrir sous-domaines
+    if (host.includes(".")) {
+      const parentDomain = host.replace(/^[^.]+\./, ".");
+      document.cookie = `googtrans=${cookieValue}; expires=${expires}; path=/; domain=${parentDomain}`;
+    }
+    setCurrentLang(next);
+    window.location.reload();
+  }
 
   const navLinks = [
     { href: "#promesse", label: t(content, "nav.link1", "Promesse") },
@@ -274,6 +300,15 @@ export default function HomeClient({ content }: HomeClientProps) {
                 {link.label}
               </a>
             ))}
+            <button
+              onClick={toggleLanguage}
+              aria-label={currentLang === "fr" ? "Translate to English" : "Traduire en français"}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-200 text-xs font-bold text-gray-700 hover:border-[#c2185b] hover:text-[#c2185b] transition-all notranslate"
+              translate="no"
+            >
+              <span aria-hidden="true">🌐</span>
+              <span>{currentLang === "fr" ? "EN" : "FR"}</span>
+            </button>
             <a
               href="#cta"
               className="px-5 py-2.5 rounded-full text-white font-bold text-sm hover:shadow-lg hover:shadow-rose-500/20 hover:scale-105 transition-all duration-300"
@@ -283,14 +318,25 @@ export default function HomeClient({ content }: HomeClientProps) {
             </a>
           </div>
 
-          {/* Mobile hamburger */}
-          <button
-            className="md:hidden p-2 rounded-lg text-gray-600 hover:text-[#c2185b] transition-colors"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+          {/* Mobile — langue + hamburger */}
+          <div className="md:hidden flex items-center gap-2">
+            <button
+              onClick={toggleLanguage}
+              aria-label={currentLang === "fr" ? "Translate to English" : "Traduire en français"}
+              className="flex items-center gap-1 px-2.5 py-1.5 rounded-full border border-gray-200 text-xs font-bold text-gray-700 notranslate"
+              translate="no"
+            >
+              <span aria-hidden="true">🌐</span>
+              <span>{currentLang === "fr" ? "EN" : "FR"}</span>
+            </button>
+            <button
+              className="p-2 rounded-lg text-gray-600 hover:text-[#c2185b] transition-colors"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile menu */}
@@ -545,7 +591,7 @@ export default function HomeClient({ content }: HomeClientProps) {
                     viewport={{ once: true, margin: "-60px" }}
                     custom={i}
                     variants={fadeUp}
-                    className="bg-gradient-to-br from-gray-50 to-white border border-gray-100 rounded-2xl p-8 hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5"
+                    className="group relative bg-gradient-to-br from-gray-50 to-white border border-gray-200 rounded-2xl p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-rose-500/10 hover:border-rose-200 cursor-default overflow-hidden"
                   >
                     <div
                       className="w-12 h-12 rounded-full flex items-center justify-center mb-4"
@@ -596,7 +642,7 @@ export default function HomeClient({ content }: HomeClientProps) {
                 viewport={{ once: true, margin: "-80px" }}
                 custom={i}
                 variants={fadeUp}
-                className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 border border-gray-100"
+                className="group relative bg-white rounded-2xl overflow-hidden shadow-md border border-gray-200 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-rose-500/10 hover:border-rose-200 cursor-default"
               >
                 <div className="relative h-36 w-full">
                   <Image

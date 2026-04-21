@@ -35,6 +35,18 @@ export default function RootLayout({
           {`window.op=window.op||function(){var n=[];return new Proxy(function(){arguments.length&&n.push([].slice.call(arguments))},{get:function(t,r){return"q"===r?n:function(){n.push([r].concat([].slice.call(arguments)))}},has:function(t,r){return"q"===r}})}();var consent=localStorage.getItem('bkpulse_cookie_consent');if(consent!=='refused'){window.op('init',{apiUrl:'/api/t/op',clientId:'fc4b026a-f705-44d6-8f86-627bb3481d0f',trackScreenViews:true,trackOutgoingLinks:true,trackAttributes:true});}`}
         </Script>
         <Script src="https://openpanel.dev/op1.js" strategy="afterInteractive" />
+
+        {/* Google Translate Widget : invisible, activé via le bouton FR/EN du header.
+            Lit le cookie `googtrans` pour appliquer la langue choisie. */}
+        <div id="google_translate_element" className="hidden" aria-hidden="true" />
+        <Script id="google-translate-init" strategy="afterInteractive">
+          {`function googleTranslateElementInit(){new google.translate.TranslateElement({pageLanguage:'fr',includedLanguages:'en,fr',layout:google.translate.TranslateElement.InlineLayout.SIMPLE,autoDisplay:false},'google_translate_element');}`}
+        </Script>
+        <Script
+          src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+          strategy="afterInteractive"
+        />
+
         {children}
         <CookieConsent />
       </body>

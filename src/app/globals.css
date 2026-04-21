@@ -365,6 +365,27 @@ mark[data-color="gradient"] {
 .rich-content strong { font-weight: 700; }
 .rich-content em { font-style: italic; }
 
+/* Google Translate : masquer la bannière "Translated from French" qui
+   s'insère en top du body et décale le layout. On garde le widget
+   fonctionnel, mais on retire le chrome visuel moche. */
+.goog-te-banner-frame.skiptranslate,
+.goog-te-gadget-icon,
+.goog-logo-link,
+#goog-gt-tt,
+.goog-te-balloon-frame {
+  display: none !important;
+}
+body {
+  top: 0 !important;
+}
+#google_translate_element {
+  display: none !important;
+}
+.goog-te-gadget {
+  height: 0;
+  overflow: hidden;
+}
+
 /* Tippy theme override for slash menu */
 .tippy-box[data-theme~="light"] {
   background: transparent;
