@@ -148,13 +148,16 @@ interface HomeClientProps {
 export default function HomeClient({ content }: HomeClientProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.scrollY;
       const docHeight = document.documentElement.scrollHeight - window.innerHeight;
       setScrollProgress(docHeight > 0 ? scrollTop / docHeight : 0);
+      setIsScrolled(scrollTop > 80);
     };
+    handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -264,7 +267,13 @@ export default function HomeClient({ content }: HomeClientProps) {
     <main className="font-nunito">
       <FitTextOnNowrap />
       {/* NAV */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100 shadow-sm">
+      <nav
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+          isScrolled
+            ? "bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm"
+            : "bg-transparent border-b border-transparent"
+        }`}
+      >
         {/* Surfer progress indicator */}
         <div className="absolute bottom-0 left-0 right-0">
           <div
@@ -333,86 +342,69 @@ export default function HomeClient({ content }: HomeClientProps) {
 
       {/* ═══════════════════ HERO ═══════════════════ */}
       <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Fond dégradé de base */}
+        {/* Fond dégradé de base — plus vibrant pour l'effet whaou */}
         <div
           className="absolute inset-0 -z-10"
           style={{
             background:
-              "radial-gradient(ellipse at 20% 20%, rgba(194,24,91,0.18) 0%, transparent 55%), radial-gradient(ellipse at 80% 80%, rgba(234,88,12,0.20) 0%, transparent 55%), linear-gradient(135deg, #fff 0%, #fff5f8 50%, #fff7ed 100%)",
+              "radial-gradient(ellipse at 15% 15%, rgba(194,24,91,0.30) 0%, transparent 55%), radial-gradient(ellipse at 85% 85%, rgba(234,88,12,0.32) 0%, transparent 55%), radial-gradient(ellipse at 50% 60%, rgba(234,88,12,0.08) 0%, transparent 60%), linear-gradient(135deg, #fff 0%, #ffeaf1 35%, #fff0e0 70%, #fff 100%)",
           }}
         />
 
-        {/* Orbes radiaux flottants */}
+        {/* Orbes radiaux flottants — taille + opacité boostées */}
         <div className="absolute inset-0 -z-0 overflow-hidden pointer-events-none">
           <div
-            className="absolute -top-[25%] -left-[10%] w-[900px] h-[900px] rounded-full blur-3xl opacity-40 animate-drift-1"
+            className="absolute -top-[20%] -left-[10%] w-[1000px] h-[1000px] rounded-full blur-3xl opacity-60 animate-drift-1"
             style={{ background: "radial-gradient(circle, #c2185b 0%, transparent 60%)" }}
           />
           <div
-            className="absolute -bottom-[25%] -right-[10%] w-[800px] h-[800px] rounded-full blur-3xl opacity-30 animate-drift-2"
+            className="absolute -bottom-[25%] -right-[10%] w-[900px] h-[900px] rounded-full blur-3xl opacity-55 animate-drift-2"
             style={{ background: "radial-gradient(circle, #ea580c 0%, transparent 60%)" }}
           />
           <div
-            className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full blur-3xl opacity-20 animate-drift-1"
+            className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[700px] h-[700px] rounded-full blur-3xl opacity-35 animate-drift-1"
             style={{
               animationDelay: "-4s",
               background: "radial-gradient(circle, #ea580c 0%, #c2185b 40%, transparent 70%)",
             }}
           />
+          <div
+            className="absolute top-[60%] -left-[5%] w-[400px] h-[400px] rounded-full blur-3xl opacity-40 animate-drift-2"
+            style={{ animationDelay: "-7s", background: "radial-gradient(circle, #c2185b 0%, transparent 65%)" }}
+          />
+          <div
+            className="absolute -top-[10%] right-[15%] w-[500px] h-[500px] rounded-full blur-3xl opacity-45 animate-drift-1"
+            style={{ animationDelay: "-10s", background: "radial-gradient(circle, #ea580c 0%, transparent 65%)" }}
+          />
         </div>
 
-        {/* Vagues SVG empilées en parallaxe (fond très immersif) */}
-        <div className="absolute inset-x-0 bottom-0 -z-0 pointer-events-none">
-          <svg
-            viewBox="0 0 1440 400"
-            preserveAspectRatio="none"
-            className="w-full h-[60vh]"
-            aria-hidden="true"
-          >
-            <defs>
-              <linearGradient id="heroWave1" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="#c2185b" stopOpacity="0.35" />
-                <stop offset="100%" stopColor="#ea580c" stopOpacity="0.35" />
-              </linearGradient>
-              <linearGradient id="heroWave2" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="#ea580c" stopOpacity="0.25" />
-                <stop offset="100%" stopColor="#c2185b" stopOpacity="0.25" />
-              </linearGradient>
-              <linearGradient id="heroWave3" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="#c2185b" stopOpacity="0.18" />
-                <stop offset="100%" stopColor="#ea580c" stopOpacity="0.18" />
-              </linearGradient>
-            </defs>
-            <path
-              d="M0,280 C240,200 480,340 720,280 C960,220 1200,340 1440,280 L1440,400 L0,400 Z"
-              fill="url(#heroWave3)"
-              className="animate-hero-wave-slow"
-            />
-            <path
-              d="M0,320 C240,260 480,380 720,320 C960,260 1200,380 1440,320 L1440,400 L0,400 Z"
-              fill="url(#heroWave2)"
-              className="animate-hero-wave-med"
-            />
-            <path
-              d="M0,360 C240,310 480,400 720,360 C960,320 1200,400 1440,360 L1440,400 L0,400 Z"
-              fill="url(#heroWave1)"
-              className="animate-hero-wave-fast"
-            />
-          </svg>
-        </div>
-
-        {/* Vagues signature de marque en arrière-plan */}
+        {/* Vagues signature — grandes, en fond, à différentes profondeurs */}
         <div className="absolute inset-0 -z-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-[15%] left-0 w-[200%] animate-wave-flow">
-            <BrandWave className="w-full h-auto" opacity={0.06} />
+          <div className="absolute top-[10%] left-0 w-[220%] animate-wave-flow" style={{ animationDuration: "40s" }}>
+            <BrandWave className="w-full h-auto" opacity={0.09} />
           </div>
           <div
-            className="absolute bottom-[35%] left-0 w-[200%] animate-wave-flow"
-            style={{ animationDelay: "-12s", animationDuration: "32s" }}
+            className="absolute top-[45%] left-0 w-[200%] animate-wave-flow"
+            style={{ animationDelay: "-15s", animationDuration: "50s" }}
           >
-            <BrandWave className="w-full h-auto" opacity={0.04} />
+            <BrandWave className="w-full h-auto" opacity={0.07} />
+          </div>
+          <div
+            className="absolute bottom-[15%] left-0 w-[240%] animate-wave-flow"
+            style={{ animationDelay: "-8s", animationDuration: "35s" }}
+          >
+            <BrandWave className="w-full h-auto" opacity={0.1} />
           </div>
         </div>
+
+        {/* Halo central subtil qui accentue le focus sur le titre */}
+        <div
+          className="absolute inset-0 -z-0 pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(ellipse at 50% 45%, rgba(255,255,255,0.45) 0%, transparent 45%)",
+          }}
+        />
 
         <div className="relative z-10 max-w-5xl mx-auto px-6 text-center pt-36 pb-20">
           <motion.h1
