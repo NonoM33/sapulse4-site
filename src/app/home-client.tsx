@@ -410,8 +410,13 @@ export default function HomeClient({ content }: HomeClientProps) {
             variants={blurUp}
             className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-[1] tracking-tight mb-6 text-gray-900"
           >
-            <Rich value={t(content, "hero.title.line1", "Donnez une nouvelle impulsion")} />{" "}
-            <Rich value={t(content, "hero.title.line2", "à votre entreprise avec SAP")} />
+            <Rich
+              value={`${t(content, "hero.title.line1", "Donnez une nouvelle impulsion")} ${t(
+                content,
+                "hero.title.line2",
+                "à votre entreprise avec SAP"
+              )}`}
+            />
           </motion.h1>
 
           <motion.div
