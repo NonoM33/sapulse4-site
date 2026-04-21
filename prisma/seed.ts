@@ -165,22 +165,29 @@ async function seedCmsDefaults() {
       slug: "mentions-legales",
       title: "Mentions légales",
       metaTitle: "Mentions légales — BK Pulse",
-      metaDescription: "Informations légales du site BK Pulse.",
+      metaDescription: "Mentions légales du site BK Pulse : éditeur, hébergement, propriété intellectuelle, contact.",
       blocks: [
         {
           type: "richtext",
           data: {
-            html: `
-              <h1>Mentions légales</h1>
-              <h2>Éditeur du site</h2>
-              <p>BK Partners Group — à compléter.</p>
-              <h2>Hébergeur</h2>
-              <p>Hetzner Online GmbH — Industriestr. 25, 91710 Gunzenhausen, Allemagne.</p>
-              <h2>Propriété intellectuelle</h2>
-              <p>L'ensemble des contenus du site est protégé par le droit d'auteur.</p>
-              <h2>Contact</h2>
-              <p>contact@bkpulse.fr</p>
-            `.trim(),
+            html: `<h1>Mentions légales</h1>
+<h2>Éditeur du site</h2>
+<p>Le site <strong>bkpulse.fr</strong> est édité par <strong>BK Pulse</strong>, marque de la société <strong>BK Partners Group</strong>.</p>
+<p>Adresse : Tour Landscape, 6 Place des Degrés, 92800 Puteaux, France.<br>Email : <a href="mailto:contact@bkpartners.fr">contact@bkpartners.fr</a>.<br>Directeur de la publication : Renaud Cosson.</p>
+<h2>Hébergement</h2>
+<p>Le site est hébergé par <strong>Hetzner Online GmbH</strong>, Industriestr. 25, 91710 Gunzenhausen, Allemagne. Téléphone : +49 9831 505-0. Site : <a href="https://www.hetzner.com" target="_blank" rel="noopener noreferrer">hetzner.com</a>.</p>
+<h2>Propriété intellectuelle</h2>
+<p>L'ensemble des éléments du site (textes, images, logos, graphismes, vidéos, icônes, sons, codes) est protégé par le droit d'auteur, le droit des marques et le droit des brevets. Toute reproduction, représentation, diffusion ou exploitation, totale ou partielle, sans autorisation écrite préalable de BK Pulse est strictement interdite.</p>
+<h2>Responsabilité</h2>
+<p>BK Pulse s'efforce d'assurer l'exactitude et la mise à jour des informations publiées sur ce site, mais ne peut garantir que ces informations soient complètes et exemptes d'erreurs. BK Pulse décline toute responsabilité pour tout dommage direct ou indirect résultant de l'utilisation de ce site.</p>
+<h2>Données personnelles</h2>
+<p>Le traitement de vos données personnelles est décrit dans notre <a href="/politique-de-confidentialite">politique de confidentialité</a>.</p>
+<h2>Cookies</h2>
+<p>La gestion des cookies est détaillée dans notre page <a href="/cookies">Gestion des cookies</a>.</p>
+<h2>Droit applicable et litiges</h2>
+<p>Les présentes mentions sont régies par le droit français. En cas de litige, et après recherche d'une solution amiable, les tribunaux français seront seuls compétents.</p>
+<h2>Contact</h2>
+<p>Pour toute question relative aux présentes mentions : <a href="mailto:contact@bkpartners.fr">contact@bkpartners.fr</a>.</p>`,
           },
         },
       ],
@@ -189,21 +196,58 @@ async function seedCmsDefaults() {
       slug: "politique-de-confidentialite",
       title: "Politique de confidentialité",
       metaTitle: "Politique de confidentialité — BK Pulse",
-      metaDescription: "Protection des données personnelles sur le site BK Pulse.",
+      metaDescription: "Politique de confidentialité de BK Pulse conforme au RGPD : données collectées, finalités, droits, CNIL.",
       blocks: [
         {
           type: "richtext",
           data: {
-            html: `
-              <h1>Politique de confidentialité</h1>
-              <p>Dernière mise à jour : ${new Date().toLocaleDateString("fr-FR")}</p>
-              <h2>Données collectées</h2>
-              <p>Nous collectons uniquement les données nécessaires au fonctionnement du site et à la mesure d'audience anonymisée.</p>
-              <h2>Vos droits</h2>
-              <p>Conformément au RGPD, vous disposez d'un droit d'accès, de rectification et de suppression de vos données.</p>
-              <h2>Contact DPO</h2>
-              <p>Pour toute demande : contact@bkpulse.fr</p>
-            `.trim(),
+            html: `<h1>Politique de confidentialité</h1>
+<p><em>Dernière mise à jour : ${new Date().toLocaleDateString("fr-FR")}</em></p>
+<h2>1. Introduction</h2>
+<p>BK Pulse, marque de BK Partners Group, attache une importance particulière à la protection de vos données personnelles. La présente politique décrit la manière dont nous collectons, utilisons, conservons et protégeons vos données dans le cadre de votre navigation sur <strong>bkpulse.fr</strong>.</p>
+<h2>2. Responsable de traitement</h2>
+<p><strong>BK Partners Group</strong><br>Tour Landscape, 6 Place des Degrés, 92800 Puteaux.<br>Email : <a href="mailto:contact@bkpartners.fr">contact@bkpartners.fr</a>.</p>
+<h2>3. Données collectées</h2>
+<ul>
+<li><strong>Formulaire de contact</strong> : nom, prénom, email, téléphone, société, message — uniquement lorsque vous choisissez de nous contacter.</li>
+<li><strong>Données de navigation anonymisées</strong> : pages vues, durée, source de trafic, type d'appareil, collectées via OpenPanel (analytics respectueux de la vie privée), uniquement si vous acceptez les cookies statistiques.</li>
+</ul>
+<h2>4. Finalités et bases légales</h2>
+<ul>
+<li>Répondre à vos demandes de contact — <em>exécution de mesures précontractuelles à votre demande</em>.</li>
+<li>Mesurer l'audience du site et l'améliorer — <em>intérêt légitime</em> pour les statistiques anonymes, <em>consentement</em> pour tout traitement identifiant.</li>
+<li>Remplir nos obligations légales, fiscales et comptables — <em>obligation légale</em>.</li>
+</ul>
+<h2>5. Durées de conservation</h2>
+<ul>
+<li>Données de contact : 3 ans à compter du dernier échange.</li>
+<li>Données d'audience anonymisées : 13 mois maximum.</li>
+<li>Données à caractère comptable ou fiscal : 10 ans.</li>
+</ul>
+<h2>6. Destinataires</h2>
+<p>Vos données sont destinées à nos équipes internes et à nos sous-traitants techniques (hébergeur Hetzner, mesure d'audience OpenPanel). Elles ne sont jamais vendues ni cédées à des tiers à des fins commerciales.</p>
+<h2>7. Transferts hors UE</h2>
+<p>Nos sous-traitants sont principalement situés dans l'Union européenne. Tout transfert éventuel hors UE serait encadré par les clauses contractuelles types adoptées par la Commission européenne ou un mécanisme équivalent de garantie.</p>
+<h2>8. Vos droits</h2>
+<p>Conformément au Règlement Général sur la Protection des Données (RGPD) et à la loi Informatique et Libertés, vous disposez des droits suivants :</p>
+<ul>
+<li>Droit d'<strong>accès</strong> à vos données.</li>
+<li>Droit de <strong>rectification</strong>.</li>
+<li>Droit à l'<strong>effacement</strong> (« droit à l'oubli »).</li>
+<li>Droit à la <strong>limitation</strong> du traitement.</li>
+<li>Droit à la <strong>portabilité</strong> de vos données.</li>
+<li>Droit d'<strong>opposition</strong> au traitement.</li>
+<li>Droit de définir des <strong>directives post-mortem</strong>.</li>
+</ul>
+<h2>9. Exercer vos droits</h2>
+<p>Pour exercer vos droits ou pour toute question, écrivez-nous à <a href="mailto:contact@bkpartners.fr">contact@bkpartners.fr</a>. Une réponse vous sera apportée sous 30 jours.</p>
+<p>Vous disposez également du droit d'introduire une réclamation auprès de la <a href="https://www.cnil.fr" target="_blank" rel="noopener noreferrer">Commission Nationale de l'Informatique et des Libertés (CNIL)</a>.</p>
+<h2>10. Sécurité</h2>
+<p>Nous mettons en œuvre les mesures techniques et organisationnelles appropriées pour protéger vos données contre la perte, l'accès non autorisé, la divulgation, l'altération ou la destruction : chiffrement en transit (HTTPS/TLS), sauvegardes régulières, accès restreint, authentification renforcée.</p>
+<h2>11. Cookies</h2>
+<p>Le détail des cookies utilisés figure dans notre page <a href="/cookies">Gestion des cookies</a>.</p>
+<h2>12. Évolutions de la présente politique</h2>
+<p>La présente politique est susceptible d'évoluer. Toute modification substantielle sera signalée sur cette page avec la date de mise à jour indiquée en en-tête.</p>`,
           },
         },
       ],
@@ -212,16 +256,41 @@ async function seedCmsDefaults() {
       slug: "cookies",
       title: "Gestion des cookies",
       metaTitle: "Cookies — BK Pulse",
-      metaDescription: "Gestion des cookies sur le site BK Pulse.",
+      metaDescription: "Gestion des cookies sur le site BK Pulse : cookies techniques et cookies de mesure d'audience.",
       blocks: [
         {
           type: "richtext",
           data: {
-            html: `
-              <h1>Gestion des cookies</h1>
-              <p>Nous utilisons uniquement des cookies essentiels au fonctionnement du site et à la mesure d'audience anonyme (OpenPanel).</p>
-              <p>Vous pouvez refuser les cookies analytiques via la bannière de consentement affichée à votre première visite.</p>
-            `.trim(),
+            html: `<h1>Gestion des cookies</h1>
+<p><em>Dernière mise à jour : ${new Date().toLocaleDateString("fr-FR")}</em></p>
+<h2>Qu'est-ce qu'un cookie ?</h2>
+<p>Un cookie est un petit fichier déposé sur votre terminal (ordinateur, tablette, smartphone) lors de votre visite sur un site. Il permet de stocker des informations relatives à votre navigation.</p>
+<h2>Cookies utilisés sur bkpulse.fr</h2>
+<h3>Cookies techniques (strictement nécessaires)</h3>
+<p>Ces cookies sont indispensables au bon fonctionnement du site et ne nécessitent pas votre consentement.</p>
+<ul>
+<li><code>bkpulse_cookie_consent</code> — mémorise votre choix concernant les cookies analytiques (durée : 6 mois).</li>
+</ul>
+<h3>Cookies de mesure d'audience (avec consentement)</h3>
+<p>Nous utilisons <strong>OpenPanel</strong>, un outil d'analytics respectueux de la vie privée, pour comprendre comment notre site est utilisé :</p>
+<ul>
+<li>Statistiques anonymisées (pages vues, durée, source de trafic).</li>
+<li>Aucune collecte de données personnelles identifiantes.</li>
+<li>Données hébergées dans l'Union européenne.</li>
+<li>Durée de conservation : 13 mois maximum.</li>
+</ul>
+<h2>Gérer vos préférences</h2>
+<p>Vous pouvez accepter ou refuser les cookies analytiques via la bannière de consentement affichée à votre première visite. Votre choix peut être modifié à tout moment en supprimant les données de ce site depuis les paramètres de votre navigateur.</p>
+<h2>Paramètres du navigateur</h2>
+<p>Vous pouvez configurer votre navigateur pour refuser tous les cookies :</p>
+<ul>
+<li><a href="https://support.google.com/chrome/answer/95647" target="_blank" rel="noopener noreferrer">Google Chrome</a></li>
+<li><a href="https://support.mozilla.org/fr/kb/effacer-cookies-pc-mac-linux" target="_blank" rel="noopener noreferrer">Mozilla Firefox</a></li>
+<li><a href="https://support.apple.com/fr-fr/guide/safari/sfri11471/mac" target="_blank" rel="noopener noreferrer">Safari</a></li>
+<li><a href="https://support.microsoft.com/fr-fr/microsoft-edge" target="_blank" rel="noopener noreferrer">Microsoft Edge</a></li>
+</ul>
+<h2>Contact</h2>
+<p>Pour toute question : <a href="mailto:contact@bkpartners.fr">contact@bkpartners.fr</a>.</p>`,
           },
         },
       ],
@@ -229,8 +298,28 @@ async function seedCmsDefaults() {
   ];
 
   for (const legal of legalPages) {
+    // Legal pages are regenerated from code on every seed to stay compliant.
+    // The chargée de com can still edit them via the admin; her edits will be
+    // overwritten on the next deploy — that's intentional for legal content.
     const existing = await prisma.page.findUnique({ where: { slug: legal.slug } });
-    if (existing) continue;
+    if (existing) {
+      await prisma.pageBlock.deleteMany({ where: { pageId: existing.id } });
+      await prisma.page.update({
+        where: { id: existing.id },
+        data: {
+          title: legal.title,
+          metaTitle: legal.metaTitle,
+          metaDescription: legal.metaDescription,
+          status: "published",
+          publishedAt: existing.publishedAt ?? new Date(),
+          blocks: {
+            create: legal.blocks.map((b, i) => ({ type: b.type, sortOrder: i, data: b.data as object })),
+          },
+        },
+      });
+      console.log(`  Page légale mise à jour : /${legal.slug}`);
+      continue;
+    }
     await prisma.page.create({
       data: {
         slug: legal.slug,

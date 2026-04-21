@@ -351,7 +351,7 @@ export default function HomeClient({ content }: HomeClientProps) {
             src="/images/hero-meeting.jpg"
             alt=""
             fill
-            className="object-cover opacity-[0.07]"
+            className="object-cover object-top opacity-[0.07]"
             priority
           />
         </div>
@@ -534,7 +534,7 @@ export default function HomeClient({ content }: HomeClientProps) {
                   alt="Équipe BK Pulse en collaboration"
                   width={600}
                   height={340}
-                  className="w-full h-48 object-cover"
+                  className="w-full h-48 object-cover object-top"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
                 <div className="absolute bottom-4 left-4">
@@ -621,7 +621,7 @@ export default function HomeClient({ content }: HomeClientProps) {
                     src={item.image}
                     alt={item.role}
                     fill
-                    className="object-cover"
+                    className="object-cover object-top"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-white via-white/20 to-transparent" />
                 </div>
@@ -769,7 +769,7 @@ export default function HomeClient({ content }: HomeClientProps) {
             <img
               src="/images/windsurfer.png"
               alt=""
-              className="h-24 md:h-28 w-auto opacity-90 select-none"
+              className="h-12 md:h-14 w-auto opacity-90 select-none"
               draggable={false}
             />
           </div>
@@ -787,16 +787,16 @@ export default function HomeClient({ content }: HomeClientProps) {
           }}
         />
         <div className="max-w-6xl mx-auto px-6">
-          <div className="flex flex-col md:flex-row md:items-end gap-10 md:gap-8 mb-8">
-            <div className="flex flex-col items-start gap-3 md:w-auto shrink-0">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-10 md:gap-8 mb-8">
+            <div className="flex flex-col items-start gap-2 min-w-0">
               <Image
                 src="/logo.svg"
                 alt="BK Pulse"
                 width={120}
                 height={40}
-                className="h-10 w-auto mb-1"
+                className="h-10 w-auto"
               />
-              <div className="text-sm text-gray-600 leading-relaxed whitespace-nowrap">
+              <div className="text-sm text-gray-600 leading-relaxed">
                 <Rich value={t(content, "footer.description", "Partenaire SAP dédié à la performance des PME")} />
               </div>
               <div className="text-sm text-gray-600">
@@ -804,25 +804,23 @@ export default function HomeClient({ content }: HomeClientProps) {
               </div>
             </div>
 
-            <div className="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 md:items-end">
-              <a
-                href={`mailto:${t(content, "footer.contact.email", "contact@bkpartners.fr")}`}
-                className="text-sm text-gray-700 hover:text-[#c2185b] transition-colors md:text-center"
-              >
-                {t(content, "footer.contact.email", "contact@bkpartners.fr")}
-              </a>
-              <div className="text-sm text-gray-700 md:text-center leading-relaxed">
-                <Rich value={t(content, "footer.address", "Tour Landscape,<br>6 Pl. des Degrés, 92800 Puteaux")} />
-              </div>
-              <a
-                href={t(content, "footer.linkedin", "https://www.linkedin.com/company/bkpulse/about")}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm text-gray-700 hover:text-[#c2185b] transition-colors font-medium sm:text-right"
-              >
-                LinkedIn
-              </a>
+            <div className="text-sm text-gray-700 leading-relaxed text-left">
+              <Rich value={t(content, "footer.address", "Tour Landscape,<br>6 Pl. des Degrés, 92800 Puteaux")} />
             </div>
+            <a
+              href={`mailto:${t(content, "footer.contact.email", "contact@bkpartners.fr")}`}
+              className="text-sm text-gray-700 hover:text-[#c2185b] transition-colors text-left"
+            >
+              {t(content, "footer.contact.email", "contact@bkpartners.fr")}
+            </a>
+            <a
+              href={t(content, "footer.linkedin", "https://www.linkedin.com/company/bkpulse/about")}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-gray-700 hover:text-[#c2185b] transition-colors font-medium text-left md:text-right"
+            >
+              LinkedIn
+            </a>
           </div>
 
           <div className="border-t border-gray-300/60 pt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-gray-500">
