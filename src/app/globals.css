@@ -51,6 +51,11 @@ body {
   100% { transform: translateX(-50%); }
 }
 
+@keyframes hero-wave {
+  0%, 100% { transform: translate3d(0, 0, 0) scaleY(1); }
+  50% { transform: translate3d(-30px, -12px, 0) scaleY(1.04); }
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
@@ -94,6 +99,23 @@ body {
 
   .animate-wave-flow {
     animation: wave-flow 25s linear infinite;
+  }
+
+  .animate-hero-wave-slow {
+    transform-origin: center bottom;
+    animation: hero-wave 14s ease-in-out infinite;
+  }
+
+  .animate-hero-wave-med {
+    transform-origin: center bottom;
+    animation: hero-wave 10s ease-in-out infinite;
+    animation-delay: -3s;
+  }
+
+  .animate-hero-wave-fast {
+    transform-origin: center bottom;
+    animation: hero-wave 7s ease-in-out infinite;
+    animation-delay: -1.5s;
   }
 
   .bg-wave-pattern {

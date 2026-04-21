@@ -108,18 +108,6 @@ const blurUp: Variants = {
   }),
 };
 
-/* ─── Wave SVG Components ──────────────────────────── */
-
-function WaveSeparatorSolid({ color = "white", className = "" }: { color?: string; className?: string }) {
-  return (
-    <div className={`w-full overflow-hidden leading-[0] ${className}`}>
-      <svg viewBox="0 0 1440 80" preserveAspectRatio="none" className="w-full h-12 md:h-20">
-        <path d="M0,30 C360,80 720,0 1080,40 C1260,55 1380,45 1440,30 L1440,80 L0,80 Z" fill={color} />
-      </svg>
-    </div>
-  );
-}
-
 /* ─── Brand wave symbol (pulse pattern) ──────────── */
 function BrandWave({ className = "", opacity = 0.08 }: { className?: string; opacity?: number }) {
   const id = useId();
@@ -344,33 +332,85 @@ export default function HomeClient({ content }: HomeClientProps) {
       </nav>
 
       {/* ═══════════════════ HERO ═══════════════════ */}
-      <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden bg-white">
-        {/* Background photo */}
-        <div className="absolute inset-0 -z-0">
-          <Image
-            src="/images/hero-meeting.jpg"
-            alt=""
-            fill
-            className="object-cover object-top opacity-[0.07]"
-            priority
+      <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Fond dégradé de base */}
+        <div
+          className="absolute inset-0 -z-10"
+          style={{
+            background:
+              "radial-gradient(ellipse at 20% 20%, rgba(194,24,91,0.18) 0%, transparent 55%), radial-gradient(ellipse at 80% 80%, rgba(234,88,12,0.20) 0%, transparent 55%), linear-gradient(135deg, #fff 0%, #fff5f8 50%, #fff7ed 100%)",
+          }}
+        />
+
+        {/* Orbes radiaux flottants */}
+        <div className="absolute inset-0 -z-0 overflow-hidden pointer-events-none">
+          <div
+            className="absolute -top-[25%] -left-[10%] w-[900px] h-[900px] rounded-full blur-3xl opacity-40 animate-drift-1"
+            style={{ background: "radial-gradient(circle, #c2185b 0%, transparent 60%)" }}
+          />
+          <div
+            className="absolute -bottom-[25%] -right-[10%] w-[800px] h-[800px] rounded-full blur-3xl opacity-30 animate-drift-2"
+            style={{ background: "radial-gradient(circle, #ea580c 0%, transparent 60%)" }}
+          />
+          <div
+            className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full blur-3xl opacity-20 animate-drift-1"
+            style={{
+              animationDelay: "-4s",
+              background: "radial-gradient(circle, #ea580c 0%, #c2185b 40%, transparent 70%)",
+            }}
           />
         </div>
 
-        {/* Decorative elements */}
-        <div className="absolute inset-0 -z-0 overflow-hidden">
-          <div
-            className="absolute -top-[30%] -left-[15%] w-[700px] h-[700px] rounded-full opacity-[0.08] animate-drift-1"
-            style={{ background: "radial-gradient(circle, #c2185b, transparent 65%)" }}
-          />
-          <div
-            className="absolute -bottom-[20%] -right-[10%] w-[600px] h-[600px] rounded-full opacity-[0.06] animate-drift-2"
-            style={{ background: "radial-gradient(circle, #ea580c, transparent 65%)" }}
-          />
-          <div className="absolute bottom-[10%] left-0 w-[200%] animate-wave-flow">
-            <BrandWave className="w-full h-auto" opacity={0.05} />
+        {/* Vagues SVG empilées en parallaxe (fond très immersif) */}
+        <div className="absolute inset-x-0 bottom-0 -z-0 pointer-events-none">
+          <svg
+            viewBox="0 0 1440 400"
+            preserveAspectRatio="none"
+            className="w-full h-[60vh]"
+            aria-hidden="true"
+          >
+            <defs>
+              <linearGradient id="heroWave1" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#c2185b" stopOpacity="0.35" />
+                <stop offset="100%" stopColor="#ea580c" stopOpacity="0.35" />
+              </linearGradient>
+              <linearGradient id="heroWave2" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#ea580c" stopOpacity="0.25" />
+                <stop offset="100%" stopColor="#c2185b" stopOpacity="0.25" />
+              </linearGradient>
+              <linearGradient id="heroWave3" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#c2185b" stopOpacity="0.18" />
+                <stop offset="100%" stopColor="#ea580c" stopOpacity="0.18" />
+              </linearGradient>
+            </defs>
+            <path
+              d="M0,280 C240,200 480,340 720,280 C960,220 1200,340 1440,280 L1440,400 L0,400 Z"
+              fill="url(#heroWave3)"
+              className="animate-hero-wave-slow"
+            />
+            <path
+              d="M0,320 C240,260 480,380 720,320 C960,260 1200,380 1440,320 L1440,400 L0,400 Z"
+              fill="url(#heroWave2)"
+              className="animate-hero-wave-med"
+            />
+            <path
+              d="M0,360 C240,310 480,400 720,360 C960,320 1200,400 1440,360 L1440,400 L0,400 Z"
+              fill="url(#heroWave1)"
+              className="animate-hero-wave-fast"
+            />
+          </svg>
+        </div>
+
+        {/* Vagues signature de marque en arrière-plan */}
+        <div className="absolute inset-0 -z-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-[15%] left-0 w-[200%] animate-wave-flow">
+            <BrandWave className="w-full h-auto" opacity={0.06} />
           </div>
-          <div className="absolute top-[20%] left-0 w-[200%] animate-wave-flow" style={{ animationDelay: "-8s", animationDuration: "30s" }}>
-            <BrandWave className="w-full h-auto" opacity={0.03} />
+          <div
+            className="absolute bottom-[35%] left-0 w-[200%] animate-wave-flow"
+            style={{ animationDelay: "-12s", animationDuration: "32s" }}
+          >
+            <BrandWave className="w-full h-auto" opacity={0.04} />
           </div>
         </div>
 
