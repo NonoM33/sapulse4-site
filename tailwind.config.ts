@@ -6,6 +6,14 @@ const config: Config = {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  future: {
+    // Les utilitaires hover: ne s'appliquent que sur les devices qui
+    // supportent vraiment le hover (souris/trackpad). Sur mobile/tactile,
+    // évite les hover sticky après tap qui font clignoter les cards
+    // quand on scrolle : shadow, translate, border et gradient overlays
+    // restaient "collés" le temps d'un frame au release du doigt.
+    hoverOnlyWhenSupported: true,
+  },
   theme: {
     extend: {
       colors: {
