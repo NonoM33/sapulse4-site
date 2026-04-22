@@ -11,12 +11,19 @@
 
 html {
   scroll-behavior: smooth;
+  /* Coupe tout scroll horizontal accidentel (halos, emoji surfer qui sort
+     de la nav, ombres, etc.). `clip` préserve position:sticky contrairement
+     à overflow-x:hidden. Fallback hidden pour anciens navigateurs. */
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
   font-family: "Nunito", sans-serif;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 @keyframes float {
@@ -303,6 +310,17 @@ mark[data-color="gradient"] {
   white-space: nowrap;
   display: block;
   max-width: 100%;
+}
+
+/* Mobile : on libère le nowrap pour laisser le texte wrapper naturellement
+   plutôt que de dépendre du shrink JS (qui peut ne pas s'exécuter à temps
+   et produire un débordement visible). Au-dessus de sm (640px), on revient
+   au comportement nowrap + auto-fit classique. */
+@media (max-width: 640px) {
+  .rich-content [data-nowrap="true"],
+  [data-nowrap="true"] {
+    white-space: normal;
+  }
 }
 
 /* Rich content rendered on the public site via the Rich component.
