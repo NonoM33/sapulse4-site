@@ -333,9 +333,9 @@ export default function HomeClient({ content }: HomeClientProps) {
           </div>
         </div>
 
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <a href="#hero">
-            <Image src="/logo.svg" alt="BK Pulse" width={120} height={40} className="h-10 w-auto" />
+        <div className="max-w-6xl mx-auto px-5 sm:px-6 py-3.5 sm:py-4 flex items-center justify-between">
+          <a href="#hero" className="shrink-0">
+            <Image src="/logo.svg" alt="BK Pulse" width={120} height={40} className="h-9 sm:h-10 w-auto" priority />
           </a>
 
           {/* Desktop nav */}
@@ -369,14 +369,18 @@ export default function HomeClient({ content }: HomeClientProps) {
         </div>
 
         {/* Mobile menu */}
-        {isMenuOpen && (
-          <div className="md:hidden bg-white border-t border-gray-100 px-6 py-4 flex flex-col gap-3">
+        <div
+          className={`md:hidden overflow-hidden transition-[max-height,opacity] duration-300 ease-out ${
+            isMenuOpen ? "max-h-[420px] opacity-100" : "max-h-0 opacity-0"
+          }`}
+        >
+          <div className="bg-white/98 backdrop-blur-md border-t border-gray-100 px-5 py-4 flex flex-col gap-1 shadow-sm">
             {navLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
                 onClick={() => setIsMenuOpen(false)}
-                className="text-gray-700 font-semibold hover:text-[#c2185b] transition-colors py-1"
+                className="text-gray-700 font-semibold hover:text-[#c2185b] active:text-[#c2185b] active:bg-rose-50/60 transition-colors py-3 px-2 rounded-lg"
               >
                 {link.label}
               </a>
@@ -384,17 +388,17 @@ export default function HomeClient({ content }: HomeClientProps) {
             <a
               href="#cta"
               onClick={() => setIsMenuOpen(false)}
-              className="px-5 py-2.5 rounded-full text-white font-bold text-sm text-center mt-1 hover:shadow-lg transition-all duration-300"
+              className="px-5 py-3 rounded-full text-white font-bold text-sm text-center mt-2 shadow-md shadow-rose-500/20 transition-all duration-300 active:scale-[0.98]"
               style={{ background: "linear-gradient(135deg, #c2185b, #ea580c)" }}
             >
               {t(content, "nav.cta", "Prendre contact")}
             </a>
           </div>
-        )}
+        </div>
       </nav>
 
       {/* ═══════════════════ HERO ═══════════════════ */}
-      <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden bg-white">
+      <section id="hero" className="relative min-h-[100svh] flex items-center justify-center overflow-hidden bg-white">
         {/* Base blanche légèrement tintée — très discret, premium */}
         <div
           className="absolute inset-0 -z-10"
@@ -408,9 +412,11 @@ export default function HomeClient({ content }: HomeClientProps) {
             Grid + place-items-center évite les calculs de transform et
             centre pixel-perfect quelle que soit la hauteur du contenu. */}
         <div className="absolute inset-0 grid place-items-center pointer-events-none">
-          {/* Halo principal qui respire derrière le titre — la signature */}
+          {/* Halo principal qui respire derrière le titre — la signature.
+              Sur mobile on le borne à 140vw pour éviter qu'il déborde et
+              crée une impression de masse écrasante sur petits écrans. */}
           <div
-            className="col-start-1 row-start-1 w-[900px] h-[900px] rounded-full blur-3xl animate-hero-breathe"
+            className="col-start-1 row-start-1 rounded-full blur-3xl animate-hero-breathe w-[min(900px,140vw)] h-[min(900px,140vw)]"
             style={{
               background:
                 "radial-gradient(circle, rgba(194,24,91,0.28) 0%, rgba(234,88,12,0.22) 45%, transparent 75%)",
@@ -418,26 +424,26 @@ export default function HomeClient({ content }: HomeClientProps) {
           />
           {/* 3 ondes concentriques qui pulsent en continu à intervalles décalés */}
           <div
-            className="col-start-1 row-start-1 w-[180px] h-[180px] rounded-full border border-[#c2185b]/25 animate-hero-ripple"
+            className="col-start-1 row-start-1 w-[150px] h-[150px] sm:w-[180px] sm:h-[180px] rounded-full border border-[#c2185b]/25 animate-hero-ripple"
             style={{ animationDelay: "0s" }}
           />
           <div
-            className="col-start-1 row-start-1 w-[180px] h-[180px] rounded-full border border-[#d8336b]/25 animate-hero-ripple"
+            className="col-start-1 row-start-1 w-[150px] h-[150px] sm:w-[180px] sm:h-[180px] rounded-full border border-[#d8336b]/25 animate-hero-ripple"
             style={{ animationDelay: "1.6s" }}
           />
           <div
-            className="col-start-1 row-start-1 w-[180px] h-[180px] rounded-full border border-[#ea580c]/25 animate-hero-ripple"
+            className="col-start-1 row-start-1 w-[150px] h-[150px] sm:w-[180px] sm:h-[180px] rounded-full border border-[#ea580c]/25 animate-hero-ripple"
             style={{ animationDelay: "3.2s" }}
           />
         </div>
 
-        <div className="relative z-10 max-w-5xl mx-auto px-6 text-center pt-36 pb-20">
+        <div className="relative z-10 max-w-5xl mx-auto px-5 sm:px-6 text-center pt-28 pb-16 sm:pt-32 sm:pb-20 md:pt-36">
           <motion.h1
             initial="hidden"
             animate="visible"
             custom={1}
             variants={blurUp}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-[1] tracking-tight mb-6 text-gray-900"
+            className="text-[2.25rem] sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-[1.05] sm:leading-[1] tracking-tight mb-5 sm:mb-6 text-gray-900 text-balance"
           >
             <Rich
               value={`${t(content, "hero.title.line1", "Donnez une nouvelle impulsion")} ${t(
@@ -453,7 +459,7 @@ export default function HomeClient({ content }: HomeClientProps) {
             animate="visible"
             custom={2}
             variants={blurUp}
-            className="text-lg md:text-xl text-gray-500 max-w-3xl mx-auto leading-relaxed mb-10"
+            className="text-base sm:text-lg md:text-xl text-gray-500 max-w-3xl mx-auto leading-relaxed mb-8 sm:mb-10"
           >
             <Rich value={t(content, "hero.subtitle", "Partenaire certifié SAP PartnerEdge SELL, BK Pulse déploie SAP en quelques semaines grâce à une méthodologie agile et efficace. Nous sommes le moteur qui propulse la solution SAP ERP Cloud Public vers les entreprises du secteur de l'assurance, des mutuelles et des courtiers avec un accès direct aux dernières innovations Cloud et IA.")} />
           </motion.div>
@@ -463,11 +469,11 @@ export default function HomeClient({ content }: HomeClientProps) {
             animate="visible"
             custom={3}
             variants={blurUp}
-            className="flex flex-col sm:flex-row gap-5 justify-center items-center"
+            className="flex flex-col sm:flex-row gap-4 sm:gap-5 justify-center items-center"
           >
             <a
               href="#cta"
-              className="px-10 py-5 rounded-full text-white font-extrabold text-lg transition-all duration-500 hover:scale-105 hero-cta-glow"
+              className="w-full sm:w-auto px-8 py-4 sm:px-10 sm:py-5 rounded-full text-white font-extrabold text-base sm:text-lg transition-all duration-500 hover:scale-105 active:scale-[0.98] hero-cta-glow"
               style={{ background: "linear-gradient(135deg, #c2185b, #ea580c)" }}
             >
               {t(content, "hero.cta", "Prendre contact")}
@@ -479,7 +485,7 @@ export default function HomeClient({ content }: HomeClientProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 2, duration: 1 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-10"
+          className="hidden sm:flex absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2 z-10"
         >
           <span className="text-[10px] font-bold text-gray-300 uppercase tracking-[0.2em]">{t(content, "hero.scroll", "Scroll")}</span>
           <div className="w-5 h-8 rounded-full border-2 border-gray-300/60 flex justify-center pt-2">
@@ -493,16 +499,16 @@ export default function HomeClient({ content }: HomeClientProps) {
       </section>
 
       {/* ═══════════════════ PROMESSE ═══════════════════ */}
-      <section id="promesse" className="py-24 relative overflow-hidden bg-wave-pattern bg-gray-50/60">
-        <div className="max-w-6xl mx-auto px-6 relative">
+      <section id="promesse" className="py-16 sm:py-20 md:py-24 relative overflow-hidden bg-wave-pattern bg-gray-50/60">
+        <div className="max-w-6xl mx-auto px-5 sm:px-6 relative">
           <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
             variants={fadeUp}
-            className="text-center mb-16"
+            className="text-center mb-10 sm:mb-14 md:mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 mb-3 sm:mb-4 text-balance">
               {(() => {
                 const title = t(content, "promesse.title", "Accélérez. Simplifiez. Pilotez.");
                 const highlight = t(content, "promesse.title.highlight", "Simplifiez.");
@@ -520,12 +526,12 @@ export default function HomeClient({ content }: HomeClientProps) {
                 );
               })()}
             </h2>
-            <div className="text-lg text-gray-500 max-w-2xl mx-auto">
+            <div className="text-base sm:text-lg text-gray-500 max-w-2xl mx-auto px-2">
               <Rich value={t(content, "promesse.subtitle", "Trois piliers pour transformer votre déploiement ERP en avantage concurrentiel.")} />
             </div>
           </motion.div>
 
-          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8">
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-5 sm:gap-6 md:gap-8">
             {promesseCards.map((card, i) => (
               <motion.div
                 key={card.title}
@@ -534,7 +540,7 @@ export default function HomeClient({ content }: HomeClientProps) {
                 viewport={{ once: true, margin: "-80px" }}
                 custom={i}
                 variants={fadeUp}
-                className={`group relative bg-gradient-to-br ${card.gradient} border border-gray-200 rounded-2xl p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-rose-500/10 hover:border-rose-200 cursor-default overflow-hidden`}
+                className={`group relative bg-gradient-to-br ${card.gradient} border border-gray-200 rounded-2xl p-6 md:p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-rose-500/10 hover:border-rose-200 cursor-default overflow-hidden`}
               >
                 <div
                   className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"
@@ -547,8 +553,8 @@ export default function HomeClient({ content }: HomeClientProps) {
                   >
                     <card.icon className="w-7 h-7 text-[#c2185b] transition-transform duration-500 group-hover:scale-110" />
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-3 transition-colors duration-300 group-hover:text-[#c2185b]">{card.title}</h3>
-                  <div className="text-gray-600 leading-relaxed"><Rich value={card.desc} /></div>
+                  <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2.5 sm:mb-3 transition-colors duration-300 group-hover:text-[#c2185b] leading-snug">{card.title}</h3>
+                  <div className="text-gray-600 leading-relaxed text-[15px] sm:text-base"><Rich value={card.desc} /></div>
                 </div>
                 <div
                   className="absolute bottom-0 left-0 right-0 h-1 rounded-b-2xl transition-all duration-500 group-hover:h-1.5"
@@ -561,9 +567,9 @@ export default function HomeClient({ content }: HomeClientProps) {
       </section>
 
       {/* ═══════════════════ CLOUD SAP ═══════════════════ */}
-      <section id="cloud-sap" className="py-28 relative overflow-hidden bg-wave-pattern">
-        <div className="max-w-6xl mx-auto px-6 relative">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+      <section id="cloud-sap" className="py-16 sm:py-20 md:py-28 relative overflow-hidden bg-wave-pattern">
+        <div className="max-w-6xl mx-auto px-5 sm:px-6 relative">
+          <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
             <motion.div
               initial="hidden"
               whileInView="visible"
@@ -571,16 +577,16 @@ export default function HomeClient({ content }: HomeClientProps) {
               variants={fadeUp}
             >
               <span
-                className="inline-block px-4 py-1.5 rounded-full text-sm font-bold text-white mb-6"
+                className="inline-block px-4 py-1.5 rounded-full text-xs sm:text-sm font-bold text-white mb-4 sm:mb-6"
                 style={{ background: "linear-gradient(135deg, #c2185b, #ea580c)" }}
               >
                 {t(content, "cloudSap.badge", "Technologie SAP")}
               </span>
-              <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-6 leading-tight">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 sm:mb-6 leading-tight text-balance">
                 {t(content, "cloudSap.title.line1", "SAP facile")}{" "}
                 <span className="gradient-brand-text">{t(content, "cloudSap.title.line2", "et accessible")}</span>
               </h2>
-              <div className="text-lg text-gray-500 leading-relaxed mb-6">
+              <div className="text-base sm:text-lg text-gray-500 leading-relaxed mb-5 sm:mb-6">
                 <Rich value={t(content, "cloudSap.description", "Le parcours GROW with SAP permet aux entreprises en croissance de déployer rapidement SAP. Alliez la puissance de l'intelligence artificielle aux meilleures pratiques sectorielles pour piloter votre activité avec agilité. Un déploiement maîtrisé, des processus automatisés et un soutien expert : tout est réuni pour stimuler votre innovation dès aujourd'hui.")} />
               </div>
 
@@ -589,17 +595,17 @@ export default function HomeClient({ content }: HomeClientProps) {
                 whileInView="visible"
                 viewport={{ once: true }}
                 variants={fadeIn}
-                className="relative mb-8 rounded-2xl overflow-hidden shadow-lg"
+                className="relative mb-6 sm:mb-8 rounded-2xl overflow-hidden shadow-lg"
               >
                 <Image
                   src="/images/team-collaboration.jpg"
                   alt="Équipe BK Pulse en collaboration"
                   width={600}
                   height={340}
-                  className="w-full h-48 object-cover object-top"
+                  className="w-full h-40 sm:h-48 object-cover object-top"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-                <div className="absolute bottom-4 left-4">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                <div className="absolute bottom-4 left-4 right-4">
                   <div className="text-white font-bold text-sm"><Rich value={t(content, "cloudSap.team.title", "Équipe certifiée SAP")} /></div>
                   <div className="text-white/80 text-xs"><Rich value={t(content, "cloudSap.team.subtitle", "Experts assurance, mutuelles & courtage")} /></div>
                 </div>
@@ -607,14 +613,14 @@ export default function HomeClient({ content }: HomeClientProps) {
 
               <a
                 href="#cta"
-                className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full text-white font-bold hover:shadow-lg hover:shadow-rose-500/20 hover:scale-105 transition-all duration-300"
+                className="inline-flex items-center gap-2 px-6 py-3 sm:px-7 sm:py-3.5 rounded-full text-white font-bold text-sm sm:text-base hover:shadow-lg hover:shadow-rose-500/20 hover:scale-105 active:scale-[0.98] transition-all duration-300"
                 style={{ background: "linear-gradient(135deg, #c2185b, #ea580c)" }}
               >
                 {t(content, "cloudSap.cta", "En savoir plus →")}
               </a>
             </motion.div>
 
-            <div className="grid grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
               {cloudSapCards.map((item, i) => {
                 const Icon = item.icon;
                 return (
@@ -625,15 +631,15 @@ export default function HomeClient({ content }: HomeClientProps) {
                     viewport={{ once: true, margin: "-60px" }}
                     custom={i}
                     variants={fadeUp}
-                    className="group relative bg-gradient-to-br from-gray-50 to-white border border-gray-200 rounded-2xl p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-rose-500/10 hover:border-rose-200 cursor-default overflow-hidden"
+                    className="group relative bg-gradient-to-br from-gray-50 to-white border border-gray-200 rounded-2xl p-5 sm:p-6 md:p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-rose-500/10 hover:border-rose-200 cursor-default overflow-hidden"
                   >
                     <div
-                      className="w-12 h-12 rounded-full flex items-center justify-center mb-4"
+                      className="w-11 h-11 sm:w-12 sm:h-12 rounded-full flex items-center justify-center mb-3 sm:mb-4"
                       style={{ background: "linear-gradient(135deg, rgba(194,24,91,0.12), rgba(234,88,12,0.12))" }}
                     >
-                      <Icon className="w-6 h-6 text-[#c2185b]" />
+                      <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-[#c2185b]" />
                     </div>
-                    <h3 className="font-bold text-gray-900 text-base mb-2 leading-snug">
+                    <h3 className="font-bold text-gray-900 text-base mb-1.5 sm:mb-2 leading-snug">
                       {item.title}
                     </h3>
                     <div className="text-gray-500 text-sm leading-relaxed"><Rich value={item.desc} /></div>
@@ -648,26 +654,26 @@ export default function HomeClient({ content }: HomeClientProps) {
       {/* ═══════════════════ POUR QUI ═══════════════════ */}
       <section
         id="pour-qui"
-        className="py-20 relative overflow-hidden bg-wave-pattern bg-gray-50/60"
+        className="py-16 sm:py-20 relative overflow-hidden bg-wave-pattern bg-gray-50/60"
       >
-        <div className="max-w-6xl mx-auto px-6 relative">
+        <div className="max-w-6xl mx-auto px-5 sm:px-6 relative">
           <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
             variants={fadeIn}
-            className="text-center mb-16"
+            className="text-center mb-10 sm:mb-14 md:mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 mb-3 sm:mb-4 text-balance">
               {t(content, "pourQui.title.line1", "Une approche pensée")}{" "}
               <span className="gradient-brand-text">{t(content, "pourQui.title.line2", "pour vos enjeux")}</span>
             </h2>
-            <div className="text-lg text-gray-500 max-w-4xl mx-auto">
+            <div className="text-base sm:text-lg text-gray-500 max-w-4xl mx-auto px-2">
               <Rich value={t(content, "pourQui.subtitle", "Quel que soit votre rôle, SAP ERP Cloud Public vous apporte des réponses concrètes.")} />
             </div>
           </motion.div>
 
-          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8">
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-5 sm:gap-6 md:gap-8">
             {personas.map((item, i) => (
               <motion.div
                 key={item.role}
@@ -678,7 +684,7 @@ export default function HomeClient({ content }: HomeClientProps) {
                 variants={fadeUp}
                 className="group relative bg-white rounded-2xl overflow-hidden shadow-md border border-gray-200 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-rose-500/10 hover:border-rose-200 cursor-default"
               >
-                <div className="relative h-36 w-full">
+                <div className="relative h-32 sm:h-36 w-full">
                   <Image
                     src={item.image}
                     alt={item.role}
@@ -687,28 +693,28 @@ export default function HomeClient({ content }: HomeClientProps) {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-white via-white/20 to-transparent" />
                 </div>
-                <div className="px-8 pt-4 pb-8">
+                <div className="px-6 sm:px-8 pt-4 pb-6 sm:pb-8">
                 <IconBadge icon={item.icon} />
                 <div
-                  className="inline-block px-3 py-1 rounded-full text-sm font-bold text-white mb-4"
+                  className="inline-block px-3 py-1 rounded-full text-xs sm:text-sm font-bold text-white mb-3 sm:mb-4"
                   style={{ background: "linear-gradient(135deg, #c2185b, #ea580c)" }}
                 >
                   {item.role}
                 </div>
-                <div className="text-gray-800 font-bold text-lg leading-snug mb-2">
+                <div className="text-gray-800 font-bold text-base sm:text-lg leading-snug mb-2">
                   <Rich value={item.benefit} />
                 </div>
                 {item.tagline && (
                   <div className="text-[#c2185b] font-semibold text-sm mb-3"><Rich value={item.tagline} /></div>
                 )}
                 {item.desc && (
-                  <div className="text-gray-500 text-sm leading-relaxed mb-5"><Rich value={item.desc} /></div>
+                  <div className="text-gray-500 text-sm leading-relaxed mb-4 sm:mb-5"><Rich value={item.desc} /></div>
                 )}
                 <ul className="space-y-2">
                   {item.points.map((pt) => (
                     <li key={pt} className="flex items-start gap-2 text-gray-600 text-sm">
                       <span className="mt-0.5 text-[#c2185b] font-bold shrink-0">✓</span>
-                      {pt}
+                      <span>{pt}</span>
                     </li>
                   ))}
                 </ul>
@@ -722,33 +728,35 @@ export default function HomeClient({ content }: HomeClientProps) {
       {/* ═══════════════════ MÉTHODE ═══════════════════ */}
       <section id="methode" className="relative overflow-hidden">
         <div className="relative">
-          <div className="relative h-[320px] md:h-[420px] overflow-hidden">
+          <div className="relative h-[340px] sm:h-[380px] md:h-[420px] overflow-hidden">
             <Image
               src="/images/surfeuse.jpg"
               alt="Surfez sur la vague de la transformation"
               fill
               className="object-cover object-center"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-gray-900/80 via-gray-900/50 to-transparent" />
+            {/* Sur mobile on assombrit plus fortement à la verticale pour garantir la lisibilité du texte
+                qui occupe presque toute la largeur. Sur desktop on garde le dégradé horizontal d'origine. */}
+            <div className="absolute inset-0 bg-gradient-to-b from-gray-900/80 via-gray-900/60 to-gray-900/60 md:bg-gradient-to-r md:from-gray-900/80 md:via-gray-900/50 md:to-transparent" />
             <div className="absolute inset-0 flex items-center">
               <motion.div
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, margin: "-80px" }}
                 variants={fadeUp}
-                className="max-w-6xl mx-auto px-6 w-full"
+                className="max-w-6xl mx-auto px-5 sm:px-6 w-full"
               >
                 <span
-                  className="inline-block px-4 py-1.5 rounded-full text-sm font-bold text-white mb-4"
+                  className="inline-block px-4 py-1.5 rounded-full text-xs sm:text-sm font-bold text-white mb-3 sm:mb-4"
                   style={{ background: "linear-gradient(135deg, #c2185b, #ea580c)" }}
                 >
                   {t(content, "methode.badge", "La méthode BK Pulse")}
                 </span>
-                <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-3 leading-tight max-w-lg">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white mb-3 leading-tight max-w-lg text-balance">
                   {t(content, "methode.title.line1", "Votre ERP déployé en")}{" "}
                   <span className="gradient-text-animated">{t(content, "methode.title.highlight", "18 semaines")}</span>
                 </h2>
-                <div className="text-white/70 text-lg max-w-md">
+                <div className="text-white/80 text-base sm:text-lg max-w-md">
                   <Rich value={t(content, "methode.subtitle", "Pas de tunnel projet. Pas de complexité inutile. Juste de l'efficacité.")} />
                 </div>
               </motion.div>
@@ -758,7 +766,7 @@ export default function HomeClient({ content }: HomeClientProps) {
       </section>
 
       {/* ═══════════════════ CTA FINAL ═══════════════════ */}
-      <section id="cta" className="pt-32 pb-0 relative overflow-hidden bg-wave-pattern bg-gray-50/60">
+      <section id="cta" className="pt-20 sm:pt-24 md:pt-32 pb-0 relative overflow-hidden bg-wave-pattern bg-gray-50/60">
         <div
           className="absolute inset-0 -z-10"
           style={{
@@ -771,13 +779,13 @@ export default function HomeClient({ content }: HomeClientProps) {
           style={{ background: "radial-gradient(circle, #c2185b, transparent)" }}
         />
 
-        <div className="max-w-4xl mx-auto px-6 text-center">
+        <div className="max-w-4xl mx-auto px-5 sm:px-6 text-center">
           <motion.h2
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
             variants={fadeUp}
-            className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-6 leading-tight"
+            className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 sm:mb-6 leading-tight text-balance"
           >
             {t(content, "cta.title.line1", "Et si votre ERP devenait enfin")}{" "}
             <span className="gradient-brand-text">{t(content, "cta.title.line2", "un levier de croissance\u00a0?")}</span>
@@ -789,7 +797,7 @@ export default function HomeClient({ content }: HomeClientProps) {
             viewport={{ once: true, margin: "-80px" }}
             custom={1}
             variants={fadeUp}
-            className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto leading-relaxed"
+            className="text-base sm:text-lg md:text-xl text-gray-600 mb-8 sm:mb-12 max-w-2xl mx-auto leading-relaxed"
           >
             <Rich value={t(content, "cta.subtitle", "Évaluez votre éligibilité à un déploiement rapide en 15 minutes. Notre équipe d'experts vous accompagne à chaque étape.")} />
           </motion.div>
@@ -800,13 +808,13 @@ export default function HomeClient({ content }: HomeClientProps) {
             viewport={{ once: true, margin: "-80px" }}
             custom={2}
             variants={fadeUp}
-            className="max-w-3xl mx-auto mb-12"
+            className="max-w-3xl mx-auto mb-8 sm:mb-12"
           >
-            <div className="border border-gray-200 rounded-3xl bg-white shadow-lg p-8 md:p-12">
-              <div className="rounded-2xl overflow-hidden mb-8">
+            <div className="border border-gray-200 rounded-2xl sm:rounded-3xl bg-white shadow-lg p-3 sm:p-8 md:p-12">
+              <div className="rounded-xl sm:rounded-2xl overflow-hidden">
                 <TypeformWidget
                   id={t(content, "cta.typeformId", "kMV1RSpR")}
-                  style={{ width: "100%", height: "500px" }}
+                  style={{ width: "100%", height: "560px" }}
                 />
               </div>
             </div>
@@ -818,7 +826,7 @@ export default function HomeClient({ content }: HomeClientProps) {
             viewport={{ once: true, margin: "-60px" }}
             custom={3}
             variants={fadeUp}
-            className="flex flex-wrap gap-6 justify-center text-sm text-gray-500"
+            className="flex flex-wrap gap-x-5 gap-y-2 sm:gap-6 justify-center text-xs sm:text-sm text-gray-500"
           >
             {trustBadges.map((item) => (
               <span key={item} className="font-semibold">{item}</span>
@@ -826,12 +834,12 @@ export default function HomeClient({ content }: HomeClientProps) {
           </motion.div>
 
           {/* Windsurf silhouette — transition vers le footer */}
-          <div className="flex justify-center py-32 md:py-40" aria-hidden="true">
+          <div className="flex justify-center py-16 sm:py-24 md:py-40" aria-hidden="true">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/images/windsurfer.png"
               alt=""
-              className="h-12 md:h-14 w-auto opacity-90 select-none"
+              className="h-10 sm:h-12 md:h-14 w-auto opacity-90 select-none"
               draggable={false}
             />
           </div>
@@ -840,7 +848,7 @@ export default function HomeClient({ content }: HomeClientProps) {
       </section>
 
       {/* ═══════════════════ FOOTER ═══════════════════ */}
-      <footer className="bg-wave-pattern bg-gray-50/60 py-14 text-gray-700 relative">
+      <footer className="bg-wave-pattern bg-gray-50/60 py-10 sm:py-14 text-gray-700 relative">
         <div
           className="absolute inset-0 -z-10 pointer-events-none"
           style={{
@@ -848,8 +856,8 @@ export default function HomeClient({ content }: HomeClientProps) {
               "linear-gradient(135deg, rgba(194,24,91,0.05) 0%, rgba(234,88,12,0.05) 100%)",
           }}
         />
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-10 md:gap-8 mb-8">
+        <div className="max-w-6xl mx-auto px-5 sm:px-6">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-8 md:gap-8 mb-8">
             <div className="flex flex-col items-start gap-2 min-w-0">
               <Image
                 src="/logo.svg"
@@ -866,30 +874,34 @@ export default function HomeClient({ content }: HomeClientProps) {
               </div>
             </div>
 
-            <div className="text-sm text-gray-700 leading-relaxed text-left">
-              <Rich value={t(content, "footer.address", "Tour Landscape,<br>6 Pl. des Degrés, 92800 Puteaux")} />
+            {/* Sur mobile on regroupe adresse/email/LinkedIn dans une grille lisible,
+                sur desktop on garde le comportement d'origine (items séparés sur la ligne flex). */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 md:contents gap-3 sm:gap-6">
+              <div className="text-sm text-gray-700 leading-relaxed">
+                <Rich value={t(content, "footer.address", "Tour Landscape,<br>6 Pl. des Degrés, 92800 Puteaux")} />
+              </div>
+              <a
+                href={`mailto:${t(content, "footer.contact.email", "contact@bkpartners.fr")}`}
+                className="text-sm text-gray-700 hover:text-[#c2185b] active:text-[#c2185b] transition-colors break-all sm:break-normal"
+              >
+                {t(content, "footer.contact.email", "contact@bkpartners.fr")}
+              </a>
+              <a
+                href={t(content, "footer.linkedin", "https://www.linkedin.com/company/bkpulse/about")}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-gray-700 hover:text-[#c2185b] active:text-[#c2185b] transition-colors font-medium md:text-right"
+              >
+                LinkedIn
+              </a>
             </div>
-            <a
-              href={`mailto:${t(content, "footer.contact.email", "contact@bkpartners.fr")}`}
-              className="text-sm text-gray-700 hover:text-[#c2185b] transition-colors text-left"
-            >
-              {t(content, "footer.contact.email", "contact@bkpartners.fr")}
-            </a>
-            <a
-              href={t(content, "footer.linkedin", "https://www.linkedin.com/company/bkpulse/about")}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm text-gray-700 hover:text-[#c2185b] transition-colors font-medium text-left md:text-right"
-            >
-              LinkedIn
-            </a>
           </div>
 
-          <div className="border-t border-gray-300/60 pt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-gray-500">
+          <div className="border-t border-gray-300/60 pt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-gray-500 text-center md:text-left">
             <p>{t(content, "footer.copyright", `© ${new Date().getFullYear()} BK Pulse — BK Partners Group. Tous droits réservés.`)}</p>
-            <div className="flex gap-6">
-              <a href="/mentions-legales" className="hover:text-[#c2185b] transition-colors">Mentions légales</a>
-              <a href="/politique-de-confidentialite" className="hover:text-[#c2185b] transition-colors">Politique de confidentialité</a>
+            <div className="flex flex-wrap justify-center gap-x-5 gap-y-2 sm:gap-6">
+              <a href="/mentions-legales" className="hover:text-[#c2185b] active:text-[#c2185b] transition-colors">Mentions légales</a>
+              <a href="/politique-de-confidentialite" className="hover:text-[#c2185b] active:text-[#c2185b] transition-colors">Politique de confidentialité</a>
             </div>
           </div>
         </div>
