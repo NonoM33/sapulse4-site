@@ -323,11 +323,21 @@ export default function HomeClient({ content }: HomeClientProps) {
             : "bg-transparent border-b border-transparent"
         }`}
       >
-        {/* Surfer progress indicator */}
-        <div className="absolute bottom-0 left-0 right-0">
+        {/* Surfer progress indicator
+            - Mobile : toujours centré horizontalement (cohérent avec un nav étroit).
+            - Desktop (md+) : suit la progression du scroll de gauche à droite. */}
+        <div className="pointer-events-none absolute bottom-0 left-0 right-0 max-w-6xl mx-auto px-5 sm:px-6">
+          {/* Mobile : centré */}
+          <div className="absolute -top-5 left-1/2 -translate-x-1/2 md:hidden">
+            <span className="text-2xl leading-none drop-shadow-sm" role="img" aria-label="surfeur">🏄</span>
+          </div>
+          {/* Desktop : suit le scroll */}
           <div
-            className="absolute -top-5 transition-none"
-            style={{ left: `calc(${scrollProgress * 100}% - 10px)` }}
+            className="absolute -top-5 transition-none hidden md:block"
+            style={{
+              left: `calc(1.5rem + (100% - 3rem) * ${scrollProgress})`,
+              transform: "translateX(-50%)",
+            }}
           >
             <span className="text-2xl leading-none drop-shadow-sm" role="img" aria-label="surfeur">🏄</span>
           </div>
@@ -409,9 +419,11 @@ export default function HomeClient({ content }: HomeClientProps) {
         />
 
         {/* Stack halo + ondes parfaitement centré dans le hero.
-            Grid + place-items-center évite les calculs de transform et
-            centre pixel-perfect quelle que soit la hauteur du contenu. */}
-        <div className="absolute inset-0 grid place-items-center pointer-events-none">
+            place-content-center centre la cellule dans le conteneur (sinon
+            elle prend la taille du halo 140vw et se cale à gauche → décalage
+            visible des ondes vers la droite sur mobile).
+            place-items-center centre les éléments à l'intérieur de la cellule. */}
+        <div className="absolute inset-0 grid place-content-center place-items-center pointer-events-none">
           {/* Halo principal qui respire derrière le titre — la signature.
               Sur mobile on le borne à 140vw pour éviter qu'il déborde et
               crée une impression de masse écrasante sur petits écrans. */}
