@@ -323,19 +323,14 @@ export default function HomeClient({ content }: HomeClientProps) {
             : "bg-transparent border-b border-transparent"
         }`}
       >
-        {/* Surfer progress indicator
-            - Mobile : toujours centré horizontalement (cohérent avec un nav étroit).
-            - Desktop (md+) : suit la progression du scroll de gauche à droite. */}
+        {/* Surfer progress indicator — démarre à gauche, finit à droite, suit
+            le scroll. Bornée à l'intérieur du conteneur (max-w-6xl + padding)
+            pour ne jamais sortir de la zone visible, sur mobile comme desktop. */}
         <div className="pointer-events-none absolute bottom-0 left-0 right-0 max-w-6xl mx-auto px-5 sm:px-6">
-          {/* Mobile : centré */}
-          <div className="absolute -top-5 left-1/2 -translate-x-1/2 md:hidden">
-            <span className="text-2xl leading-none drop-shadow-sm" role="img" aria-label="surfeur">🏄</span>
-          </div>
-          {/* Desktop : suit le scroll */}
           <div
-            className="absolute -top-5 transition-none hidden md:block"
+            className="absolute -top-5 transition-none"
             style={{
-              left: `calc(1.5rem + (100% - 3rem) * ${scrollProgress})`,
+              left: `calc(1.25rem + (100% - 2.5rem) * ${scrollProgress})`,
               transform: "translateX(-50%)",
             }}
           >
