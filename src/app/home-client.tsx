@@ -480,7 +480,7 @@ export default function HomeClient({ content }: HomeClientProps) {
           >
             <a
               href="#cta"
-              className="w-full sm:w-auto px-8 py-4 sm:px-10 sm:py-5 rounded-full text-white font-extrabold text-base sm:text-lg transition-all duration-500 hover:scale-105 active:scale-[0.98] hero-cta-glow"
+              className="px-7 py-3 sm:px-10 sm:py-5 rounded-full text-white font-bold sm:font-extrabold text-sm sm:text-lg transition-all duration-500 hover:scale-105 active:scale-[0.98] hero-cta-glow"
               style={{ background: "linear-gradient(135deg, #c2185b, #ea580c)" }}
             >
               {t(content, "hero.cta", "Prendre contact")}
