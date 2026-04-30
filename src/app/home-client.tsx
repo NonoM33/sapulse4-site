@@ -323,15 +323,17 @@ export default function HomeClient({ content }: HomeClientProps) {
             : "bg-transparent border-b border-transparent"
         }`}
       >
-        {/* Surfer progress indicator — démarre à gauche, finit à droite, suit
-            le scroll. Bornée à l'intérieur du conteneur (max-w-6xl + padding)
-            pour ne jamais sortir de la zone visible, sur mobile comme desktop. */}
-        <div className="pointer-events-none absolute bottom-0 left-0 right-0 max-w-6xl mx-auto px-5 sm:px-6">
+        {/* Surfer progress indicator — bord à bord viewport.
+            scrollProgress=0  → bord gauche du surfeur calé au bord gauche écran.
+            scrollProgress=1  → bord droit du surfeur calé au bord droit écran.
+            On combine left:N% et translateX:-N% pour que l'emoji reste
+            entièrement visible aux deux extrémités. */}
+        <div className="pointer-events-none absolute bottom-0 left-0 right-0">
           <div
             className="absolute -top-5 transition-none"
             style={{
-              left: `calc(1.25rem + (100% - 2.5rem) * ${scrollProgress})`,
-              transform: "translateX(-50%)",
+              left: `${scrollProgress * 100}%`,
+              transform: `translateX(${-scrollProgress * 100}%)`,
             }}
           >
             <span className="text-2xl leading-none drop-shadow-sm" role="img" aria-label="surfeur">🏄</span>
