@@ -177,6 +177,10 @@ export default function HomeClient({ content }: HomeClientProps) {
       pour permettre de ré-déclencher l'anim si on clique plusieurs fois. */
   const [tricks, setTricks] = useState(0);
   const [aloha, setAloha] = useState(false);
+  /** Easter egg #2 : clic sur le windsurfer en bas → backflip 720° + une
+      phrase de surfeur tirée au hasard dans la liste. */
+  const [windTricks, setWindTricks] = useState(0);
+  const [windPhrase, setWindPhrase] = useState<string | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -870,15 +874,52 @@ export default function HomeClient({ content }: HomeClientProps) {
             ))}
           </motion.div>
 
-          {/* Windsurf silhouette — transition vers le footer */}
-          <div className="flex justify-center py-16 sm:py-24 md:py-40" aria-hidden="true">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/images/windsurfer.png"
-              alt=""
-              className="h-10 sm:h-12 md:h-14 w-auto opacity-90 select-none"
-              draggable={false}
-            />
+          {/* Windsurf silhouette — transition vers le footer.
+              Easter egg #2 : clic sur le surfeur → backflip 720° + bulle
+              avec une phrase de surfeur tirée au hasard. */}
+          <div className="flex justify-center py-16 sm:py-24 md:py-40">
+            <button
+              type="button"
+              onClick={() => {
+                const phrases = [
+                  "Cowabunga ! 🌊",
+                  "Surf's up ! 🏄",
+                  "Hang ten ! 🤙",
+                  "Gnarly ! 🤘",
+                  "Stoked ! 🔥",
+                  "Tubular ! 🌀",
+                  "Mahalo ! 🌺",
+                  "Radical ! 🚀",
+                  "Wipeout ! 💥",
+                  "Bro vibes ! 🦈",
+                  "Charging it ! ⚡",
+                  "Sendy ! 🌴",
+                ];
+                setWindTricks((n) => n + 1);
+                setWindPhrase(phrases[Math.floor(Math.random() * phrases.length)]);
+                window.setTimeout(() => setWindPhrase(null), 1800);
+              }}
+              aria-label="Easter egg windsurfer"
+              className="relative bg-transparent border-0 p-0 cursor-pointer select-none"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                key={windTricks}
+                src="/images/windsurfer.png"
+                alt=""
+                aria-hidden="true"
+                className={`h-10 sm:h-12 md:h-14 w-auto opacity-90 select-none ${windTricks > 0 ? "animate-windsurfer-trick" : ""}`}
+                draggable={false}
+              />
+              {windPhrase && (
+                <span
+                  className="pointer-events-none absolute left-1/2 -top-3 -translate-x-1/2 -translate-y-full whitespace-nowrap text-sm sm:text-base font-extrabold text-white px-3 py-1.5 rounded-full shadow-lg animate-aloha-pop"
+                  style={{ background: "linear-gradient(135deg, #c2185b, #ea580c)" }}
+                >
+                  {windPhrase}
+                </span>
+              )}
+            </button>
           </div>
         </div>
 

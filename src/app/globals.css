@@ -225,6 +225,13 @@ body {
     animation: surfer-trick 700ms cubic-bezier(0.34, 1.56, 0.64, 1);
     transform-origin: center;
   }
+  /* Easter egg windsurfer (bas de page) : backflip 720° plus chaotique
+     avec un saut latéral aléatoire ; volontairement plus dramatique que
+     le surfeur de la nav. */
+  .animate-windsurfer-trick {
+    animation: windsurfer-trick 1100ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform-origin: center;
+  }
   /* Bulle "Aloha 🤙" qui apparaît au-dessus du surfeur lors du clic. */
   .animate-aloha-pop {
     animation: aloha-pop 1.4s ease-out forwards;
@@ -236,6 +243,15 @@ body {
   35%  { transform: rotate(180deg) translateY(-14px) scale(1.25); }
   70%  { transform: rotate(330deg) translateY(-4px) scale(1.05); }
   100% { transform: rotate(360deg) translateY(0) scale(1); }
+}
+
+@keyframes windsurfer-trick {
+  0%   { transform: rotate(0deg) translate(0, 0) scale(1); }
+  20%  { transform: rotate(220deg) translate(-12px, -28px) scale(1.15); }
+  45%  { transform: rotate(440deg) translate(0, -48px) scale(1.25); }
+  70%  { transform: rotate(640deg) translate(12px, -22px) scale(1.1); }
+  90%  { transform: rotate(720deg) translate(0, 4px) scale(0.95); }
+  100% { transform: rotate(720deg) translate(0, 0) scale(1); }
 }
 
 @keyframes aloha-pop {
