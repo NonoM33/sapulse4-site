@@ -173,6 +173,10 @@ export default function HomeClient({ content }: HomeClientProps) {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isScrolled, setIsScrolled] = useState(false);
   const [currentLang, setCurrentLang] = useState<"fr" | "en">("fr");
+  /** Easter egg : clic sur 🏄 → kickflip + Aloha 🤙. `tricks` est un compteur
+      pour permettre de ré-déclencher l'anim si on clique plusieurs fois. */
+  const [tricks, setTricks] = useState(0);
+  const [aloha, setAloha] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -327,7 +331,8 @@ export default function HomeClient({ content }: HomeClientProps) {
             scrollProgress=0  → bord gauche du surfeur calé au bord gauche écran.
             scrollProgress=1  → bord droit du surfeur calé au bord droit écran.
             On combine left:N% et translateX:-N% pour que l'emoji reste
-            entièrement visible aux deux extrémités. */}
+            entièrement visible aux deux extrémités.
+            Easter egg : clic → kickflip 360° + bulle "Aloha 🤙". */}
         <div className="pointer-events-none absolute bottom-0 left-0 right-0">
           <div
             className="absolute -top-5 transition-none"
@@ -336,7 +341,30 @@ export default function HomeClient({ content }: HomeClientProps) {
               transform: `translateX(${-scrollProgress * 100}%)`,
             }}
           >
-            <span className="text-2xl leading-none drop-shadow-sm" role="img" aria-label="surfeur">🏄</span>
+            <button
+              type="button"
+              onClick={() => {
+                setTricks((n) => n + 1);
+                setAloha(true);
+                window.setTimeout(() => setAloha(false), 1400);
+              }}
+              aria-label="Easter egg surfeur"
+              className="pointer-events-auto relative inline-block bg-transparent border-0 p-0 cursor-pointer select-none"
+            >
+              <span
+                key={tricks}
+                className={`text-2xl leading-none drop-shadow-sm inline-block ${tricks > 0 ? "animate-surfer-trick" : ""}`}
+                role="img"
+                aria-label="surfeur"
+              >
+                🏄
+              </span>
+              {aloha && (
+                <span className="pointer-events-none absolute -top-7 left-1/2 -translate-x-1/2 whitespace-nowrap text-[11px] font-extrabold text-white px-2.5 py-1 rounded-full shadow-md animate-aloha-pop" style={{ background: "linear-gradient(135deg, #c2185b, #ea580c)" }}>
+                  Aloha 🤙
+                </span>
+              )}
+            </button>
           </div>
         </div>
 
