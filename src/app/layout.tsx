@@ -4,6 +4,7 @@ import { Nunito } from "next/font/google";
 import "./globals.css";
 import { loadSiteContent, c } from "@/lib/content";
 import CookieConsent from "@/components/cookie-consent";
+import StagingBadge from "@/components/staging-badge";
 
 const nunito = Nunito({
   subsets: ["latin"],
@@ -47,6 +48,7 @@ export default function RootLayout({
           strategy="afterInteractive"
         />
 
+        <StagingBadge />
         {children}
         <CookieConsent />
       </body>
