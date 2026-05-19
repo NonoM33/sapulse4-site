@@ -374,7 +374,7 @@ export default function HomeClient({ content }: HomeClientProps) {
 
         <div className="max-w-6xl mx-auto px-5 sm:px-6 py-3.5 sm:py-4 flex items-center justify-between">
           <a href="#hero" className="shrink-0">
-            <Image src="/logo.svg" alt="BK Pulse" width={120} height={40} className="h-9 sm:h-10 w-auto" priority />
+            <Image src={t(content, "media.logo.bk", "/logo.svg")} alt="BK Pulse" width={120} height={40} className="h-9 sm:h-10 w-auto" priority unoptimized />
           </a>
 
           {/* Desktop nav */}
@@ -939,18 +939,20 @@ export default function HomeClient({ content }: HomeClientProps) {
             <div className="flex flex-col items-start gap-2 min-w-0">
               <div className="flex items-center gap-4">
                 <Image
-                  src="/logo.svg"
+                  src={t(content, "media.logo.bk", "/logo.svg")}
                   alt="BK Pulse"
                   width={120}
                   height={40}
                   className="h-10 w-auto"
+                  unoptimized
                 />
                 <Image
-                  src="/sap-partner.svg"
+                  src={t(content, "media.logo.sap", "/sap-partner.svg")}
                   alt="SAP Partner"
                   width={68}
                   height={40}
                   className="h-10 w-auto"
+                  unoptimized
                 />
               </div>
               <div className="text-sm text-gray-600 leading-relaxed">

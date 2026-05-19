@@ -114,6 +114,9 @@ const contents: ContentEntry[] = [
   { key: "footer.address", value: "Tour Landscape,<br>6 Pl. des Degrés, 92800 Puteaux", section: "footer", label: "Adresse postale", sortOrder: 4 },
   { key: "footer.linkedin", value: "https://www.linkedin.com/company/bkpulse/about", section: "footer", label: "Lien LinkedIn", sortOrder: 5 },
   { key: "footer.copyright", value: "© 2026 BK Pulse — BK Partners Group. Tous droits réservés.", section: "footer", label: "Copyright", sortOrder: 6 },
+  // MEDIA / LOGOS
+  { key: "media.logo.bk", value: "/logo.svg", section: "media", label: "Logo BK Pulse (header + footer)", sortOrder: 1 },
+  { key: "media.logo.sap", value: "/sap-partner.svg", section: "media", label: "Logo SAP Partner (footer)", sortOrder: 2 },
 ];
 
 async function main() {

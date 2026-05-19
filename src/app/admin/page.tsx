@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { APP_VERSION, RELEASES, type Release } from "@/lib/version";
+import { MediaPickerButton } from "@/components/admin/media-picker";
 
 const RichEditor = dynamic(() => import("@/components/rich-editor"), { ssr: false });
 
@@ -44,9 +45,10 @@ const SECTION_LABELS: Record<string, string> = {
   methode: "Méthode",
   cta: "Appel à l'action",
   footer: "Footer",
+  media: "Médias / Logos",
 };
 
-const SECTION_ORDER = ["meta", "nav", "hero", "promesse", "cloudSap", "pourQui", "methode", "cta", "footer"];
+const SECTION_ORDER = ["meta", "nav", "hero", "promesse", "cloudSap", "pourQui", "methode", "cta", "footer", "media"];
 
 type ActiveView = string; // section key or "__users" or "__password"
 
@@ -680,6 +682,7 @@ export default function AdminDashboard() {
                 {currentItems.map((item) => {
                   const displayValue = getDisplayValue(item);
                   const isEdited = editedValues[item.key] !== undefined && editedValues[item.key] !== item.value;
+                  const isMediaField = item.key.startsWith("media.");
 
                   return (
                     <div
@@ -688,12 +691,41 @@ export default function AdminDashboard() {
                         isEdited ? "border-orange-300 shadow-md shadow-orange-100" : "border-gray-200"
                       }`}
                     >
-                      <RichEditor
-                        content={displayValue.startsWith("<") ? displayValue : `<p>${displayValue}</p>`}
-                        onChange={(html) => handleChange(item.key, unwrapSimpleParagraph(html))}
-                        label={item.label}
-                        contentKey={item.key}
-                      />
+                      {isMediaField ? (
+                        <div>
+                          <label className="block text-sm font-bold text-gray-700 mb-2">{item.label}</label>
+                          <div className="flex items-center gap-4">
+                            <div className="w-24 h-16 rounded-lg border border-gray-200 bg-gray-50 flex items-center justify-center overflow-hidden shrink-0">
+                              {displayValue ? (
+                                // eslint-disable-next-line @next/next/no-img-element
+                                <img src={displayValue} alt={item.label} className="max-w-full max-h-full object-contain" />
+                              ) : (
+                                <span className="text-xs text-gray-400">vide</span>
+                              )}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <input
+                                type="text"
+                                value={displayValue}
+                                onChange={(e) => handleChange(item.key, e.target.value)}
+                                placeholder="URL de l'image"
+                                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm font-mono"
+                              />
+                              <div className="text-xs text-gray-400 mt-1">
+                                Colle une URL ou clique « Choisir » pour ouvrir la médiathèque.
+                              </div>
+                            </div>
+                            <MediaPickerButton onSelect={(url) => handleChange(item.key, url)} />
+                          </div>
+                        </div>
+                      ) : (
+                        <RichEditor
+                          content={displayValue.startsWith("<") ? displayValue : `<p>${displayValue}</p>`}
+                          onChange={(html) => handleChange(item.key, unwrapSimpleParagraph(html))}
+                          label={item.label}
+                          contentKey={item.key}
+                        />
+                      )}
                       {isEdited && (
                         <div className="flex items-center gap-2 mt-2">
                           <span className="text-xs text-orange-500 font-medium">Modifié</span>
