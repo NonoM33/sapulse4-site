@@ -132,9 +132,41 @@ async function main() {
 
   console.log(`  Admin user created: ${adminEmail}`);
 
+  await seedStaticMedia();
   await seedCmsDefaults();
 
   console.log("Seed complete.");
+}
+
+async function seedStaticMedia() {
+  const staticMedia = [
+    {
+      storageKey: "static:logo.svg",
+      filename: "logo.svg",
+      url: "/logo.svg",
+      mimeType: "image/svg+xml",
+      sizeBytes: 5970,
+      altText: "Logo BK Pulse",
+      title: "Logo BK Pulse",
+    },
+    {
+      storageKey: "static:sap-partner.svg",
+      filename: "sap-partner.svg",
+      url: "/sap-partner.svg",
+      mimeType: "image/svg+xml",
+      sizeBytes: 3768,
+      altText: "Logo SAP Partner",
+      title: "Logo SAP Partner",
+    },
+  ];
+  for (const m of staticMedia) {
+    await prisma.media.upsert({
+      where: { storageKey: m.storageKey },
+      update: {},
+      create: { ...m, driver: "static" },
+    });
+  }
+  console.log(`  ${staticMedia.length} static media entries seeded.`);
 }
 
 async function seedCmsDefaults() {

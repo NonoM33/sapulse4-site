@@ -50,7 +50,7 @@ const SECTION_LABELS: Record<string, string> = {
   methode: "Méthode",
   cta: "Appel à l'action",
   footer: "Footer",
-  media: "Médias / Logos",
+  media: "Logos du site",
 };
 
 const SECTION_ORDER = ["meta", "nav", "hero", "promesse", "cloudSap", "pourQui", "methode", "cta", "footer", "media"];
