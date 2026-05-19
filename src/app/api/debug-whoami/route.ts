@@ -11,6 +11,7 @@ export async function GET() {
 
   let userCount = 0;
   let adminHashPrefix: string | null = null;
+  let users: { email: string; role: string }[] = [];
   try {
     userCount = await prisma.user.count();
     const admin = await prisma.user.findFirst({
@@ -20,9 +21,10 @@ export async function GET() {
     if (admin) {
       adminHashPrefix = admin.password.slice(0, 20);
     }
+    users = await prisma.user.findMany({ select: { email: true, role: true } });
   } catch (e) {
     return NextResponse.json({ error: String(e), dbHost, appEnv, jwtPrefix }, { status: 500 });
   }
 
-  return NextResponse.json({ dbHost, appEnv, jwtPrefix, userCount, adminHashPrefix });
+  return NextResponse.json({ dbHost, appEnv, jwtPrefix, userCount, adminHashPrefix, users });
 }
