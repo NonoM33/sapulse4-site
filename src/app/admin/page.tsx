@@ -6,7 +6,12 @@ import Link from "next/link";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { APP_VERSION, RELEASES, type Release } from "@/lib/version";
-import { MediaPickerButton } from "@/components/admin/media-picker";
+import { MediaField } from "@/components/admin/media-field";
+
+const MEDIA_DEFAULTS: Record<string, string> = {
+  "media.logo.bk": "/logo.svg",
+  "media.logo.sap": "/sap-partner.svg",
+};
 
 const RichEditor = dynamic(() => import("@/components/rich-editor"), { ssr: false });
 
@@ -684,6 +689,35 @@ export default function AdminDashboard() {
                   const isEdited = editedValues[item.key] !== undefined && editedValues[item.key] !== item.value;
                   const isMediaField = item.key.startsWith("media.");
 
+                  if (isMediaField) {
+                    return (
+                      <div key={item.key} className={`rounded-2xl transition-all ${isEdited ? "ring-2 ring-orange-300 shadow-md shadow-orange-100" : ""}`}>
+                        <MediaField
+                          label={item.label}
+                          value={displayValue}
+                          defaultValue={MEDIA_DEFAULTS[item.key] ?? item.value}
+                          onChange={(url) => handleChange(item.key, url)}
+                        />
+                        {isEdited && (
+                          <div className="flex items-center gap-2 mt-2 px-2">
+                            <span className="text-xs text-orange-500 font-medium">Modifié — pense à enregistrer</span>
+                            <button
+                              onClick={() => {
+                                setEditedValues((prev) => {
+                                  const next = { ...prev };
+                                  delete next[item.key];
+                                  return next;
+                                });
+                              }}
+                              className="text-xs text-gray-400 hover:text-red-500 transition-colors"
+                            >
+                              Annuler
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  }
                   return (
                     <div
                       key={item.key}
@@ -691,41 +725,12 @@ export default function AdminDashboard() {
                         isEdited ? "border-orange-300 shadow-md shadow-orange-100" : "border-gray-200"
                       }`}
                     >
-                      {isMediaField ? (
-                        <div>
-                          <label className="block text-sm font-bold text-gray-700 mb-2">{item.label}</label>
-                          <div className="flex items-center gap-4">
-                            <div className="w-24 h-16 rounded-lg border border-gray-200 bg-gray-50 flex items-center justify-center overflow-hidden shrink-0">
-                              {displayValue ? (
-                                // eslint-disable-next-line @next/next/no-img-element
-                                <img src={displayValue} alt={item.label} className="max-w-full max-h-full object-contain" />
-                              ) : (
-                                <span className="text-xs text-gray-400">vide</span>
-                              )}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <input
-                                type="text"
-                                value={displayValue}
-                                onChange={(e) => handleChange(item.key, e.target.value)}
-                                placeholder="URL de l'image"
-                                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm font-mono"
-                              />
-                              <div className="text-xs text-gray-400 mt-1">
-                                Colle une URL ou clique « Choisir » pour ouvrir la médiathèque.
-                              </div>
-                            </div>
-                            <MediaPickerButton onSelect={(url) => handleChange(item.key, url)} />
-                          </div>
-                        </div>
-                      ) : (
-                        <RichEditor
-                          content={displayValue.startsWith("<") ? displayValue : `<p>${displayValue}</p>`}
-                          onChange={(html) => handleChange(item.key, unwrapSimpleParagraph(html))}
-                          label={item.label}
-                          contentKey={item.key}
-                        />
-                      )}
+                      <RichEditor
+                        content={displayValue.startsWith("<") ? displayValue : `<p>${displayValue}</p>`}
+                        onChange={(html) => handleChange(item.key, unwrapSimpleParagraph(html))}
+                        label={item.label}
+                        contentKey={item.key}
+                      />
                       {isEdited && (
                         <div className="flex items-center gap-2 mt-2">
                           <span className="text-xs text-orange-500 font-medium">Modifié</span>
