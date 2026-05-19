@@ -937,13 +937,22 @@ export default function HomeClient({ content }: HomeClientProps) {
         <div className="max-w-6xl mx-auto px-5 sm:px-6">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-8 md:gap-8 mb-8">
             <div className="flex flex-col items-start gap-2 min-w-0">
-              <Image
-                src="/logo.svg"
-                alt="BK Pulse"
-                width={120}
-                height={40}
-                className="h-10 w-auto"
-              />
+              <div className="flex items-center gap-4">
+                <Image
+                  src="/logo.svg"
+                  alt="BK Pulse"
+                  width={120}
+                  height={40}
+                  className="h-10 w-auto"
+                />
+                <Image
+                  src="/sap-partner.svg"
+                  alt="SAP Partner"
+                  width={68}
+                  height={40}
+                  className="h-10 w-auto"
+                />
+              </div>
               <div className="text-sm text-gray-600 leading-relaxed">
                 <Rich value={t(content, "footer.description", "Partenaire SAP dédié à la performance des PME")} />
               </div>
