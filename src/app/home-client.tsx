@@ -392,11 +392,41 @@ export default function HomeClient({ content }: HomeClientProps) {
             >
               {t(content, "nav.cta", "Prendre contact")}
             </a>
+            {/* Logo SAP Partner — toujours visible, droite du CTA */}
+            <a
+              href="#cta"
+              aria-label="Partenaire SAP certifié"
+              className="shrink-0 inline-flex items-center rounded-xl bg-white/90 backdrop-blur-sm border border-gray-100 px-2 py-1 shadow-sm hover:shadow-md hover:shadow-rose-500/10 hover:-translate-y-0.5 transition-all duration-300"
+            >
+              <Image
+                src={t(content, "media.logo.sap", "/sap-partner.svg")}
+                alt="SAP Partner"
+                width={68}
+                height={40}
+                className="h-7 lg:h-8 w-auto"
+                unoptimized
+              />
+            </a>
           </div>
 
-          {/* Mobile — langue + hamburger */}
+          {/* Mobile — langue + SAP + hamburger */}
           <div className="md:hidden flex items-center gap-2">
             <LanguageToggle currentLang={currentLang} onToggle={toggleLanguage} compact />
+            {/* Logo SAP Partner — visible sur mobile aussi */}
+            <a
+              href="#cta"
+              aria-label="Partenaire SAP certifié"
+              className="shrink-0 inline-flex items-center rounded-lg bg-white/90 backdrop-blur-sm border border-gray-100 px-1.5 py-0.5 shadow-sm"
+            >
+              <Image
+                src={t(content, "media.logo.sap", "/sap-partner.svg")}
+                alt="SAP Partner"
+                width={68}
+                height={40}
+                className="h-5 w-auto"
+                unoptimized
+              />
+            </a>
             <button
               className="p-2 rounded-lg text-gray-600 hover:text-[#c2185b] transition-colors"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
