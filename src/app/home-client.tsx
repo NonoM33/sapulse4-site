@@ -393,40 +393,28 @@ export default function HomeClient({ content }: HomeClientProps) {
               {t(content, "nav.cta", "Prendre contact")}
             </a>
             {/* Logo SAP Partner — toujours visible, droite du CTA (non cliquable) */}
-            <div
-              role="img"
-              aria-label="Partenaire SAP certifié"
-              className="shrink-0 inline-flex items-center rounded-xl bg-white/90 backdrop-blur-sm border border-gray-100 px-2 py-1 shadow-sm"
-            >
-              <Image
-                src={t(content, "media.logo.sap", "/sap-partner.svg")}
-                alt="SAP Partner"
-                width={68}
-                height={40}
-                className="h-7 lg:h-8 w-auto"
-                unoptimized
-              />
-            </div>
+            <Image
+              src={t(content, "media.logo.sap", "/sap-partner.svg")}
+              alt="Partenaire SAP certifié"
+              width={68}
+              height={40}
+              className="shrink-0 h-8 lg:h-9 w-auto select-none pointer-events-none"
+              unoptimized
+            />
           </div>
 
           {/* Mobile — langue + SAP + hamburger */}
           <div className="md:hidden flex items-center gap-2">
             <LanguageToggle currentLang={currentLang} onToggle={toggleLanguage} compact />
             {/* Logo SAP Partner — visible sur mobile aussi (non cliquable) */}
-            <div
-              role="img"
-              aria-label="Partenaire SAP certifié"
-              className="shrink-0 inline-flex items-center rounded-lg bg-white/90 backdrop-blur-sm border border-gray-100 px-1.5 py-0.5 shadow-sm"
-            >
-              <Image
-                src={t(content, "media.logo.sap", "/sap-partner.svg")}
-                alt="SAP Partner"
-                width={68}
-                height={40}
-                className="h-5 w-auto"
-                unoptimized
-              />
-            </div>
+            <Image
+              src={t(content, "media.logo.sap", "/sap-partner.svg")}
+              alt="Partenaire SAP certifié"
+              width={68}
+              height={40}
+              className="shrink-0 h-6 w-auto select-none pointer-events-none"
+              unoptimized
+            />
             <button
               className="p-2 rounded-lg text-gray-600 hover:text-[#c2185b] transition-colors"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
