@@ -168,6 +168,26 @@ interface HomeClientProps {
   content: ContentMap;
 }
 
+/* Pilote directement le widget Google Translate déjà initialisé en changeant
+   la valeur du <select.goog-te-combo> qu'il injecte, puis en émettant `change`.
+   Plus fiable que l'ancienne approche cookie + reload (qui ne traduisait plus
+   rien au rechargement). `lang === "fr"` (valeur "") restaure l'original.
+   Réessaie tant que le widget n'est pas monté (script chargé en afterInteractive). */
+function applyGoogleTranslate(lang: "fr" | "en") {
+  let tries = 0;
+  const run = () => {
+    const combo = document.querySelector<HTMLSelectElement>(".goog-te-combo");
+    if (!combo) return false;
+    combo.value = lang === "fr" ? "" : lang;
+    combo.dispatchEvent(new Event("change"));
+    return true;
+  };
+  if (run()) return;
+  const interval = window.setInterval(() => {
+    if (run() || ++tries > 40) window.clearInterval(interval);
+  }, 150);
+}
+
 export default function HomeClient({ content }: HomeClientProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -194,29 +214,25 @@ export default function HomeClient({ content }: HomeClientProps) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Détecte si Google Translate a déjà été initialisé (cookie googtrans)
+  // Restaure la langue choisie au chargement : si le cookie demande EN, on
+  // bascule l'état du toggle et on (re)pilote le widget une fois prêt.
   useEffect(() => {
     const match = document.cookie.match(/googtrans=\/fr\/(\w+)/);
     if (match && match[1] === "en") {
       setCurrentLang("en");
+      applyGoogleTranslate("en");
     }
   }, []);
 
   function toggleLanguage() {
     const next = currentLang === "fr" ? "en" : "fr";
-    // Google Translate lit le cookie `googtrans` au chargement.
-    // Le chemin / le domaine doivent matcher exactement pour que la réécriture s'applique.
-    const host = window.location.hostname;
-    const cookieValue = next === "en" ? "/fr/en" : "/fr/fr";
-    const expires = new Date(Date.now() + 365 * 24 * 3600 * 1000).toUTCString();
-    document.cookie = `googtrans=${cookieValue}; expires=${expires}; path=/`;
-    // Cookie avec le domaine parent pour couvrir sous-domaines
-    if (host.includes(".")) {
-      const parentDomain = host.replace(/^[^.]+\./, ".");
-      document.cookie = `googtrans=${cookieValue}; expires=${expires}; path=/; domain=${parentDomain}`;
-    }
     setCurrentLang(next);
-    window.location.reload();
+    // Persiste le choix (cookie host-only : `domain=.fr` était un suffixe public
+    // rejeté par le navigateur, d'où l'ancien bug de non-persistance).
+    const expires = new Date(Date.now() + 365 * 24 * 3600 * 1000).toUTCString();
+    document.cookie = `googtrans=/fr/${next}; expires=${expires}; path=/`;
+    // Traduit en place, sans rechargement.
+    applyGoogleTranslate(next);
   }
 
   const navLinks = [

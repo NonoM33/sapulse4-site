@@ -37,11 +37,12 @@ export default function RootLayout({
         </Script>
         <Script src="https://openpanel.dev/op1.js" strategy="afterInteractive" />
 
-        {/* Google Translate Widget : invisible, activé via le bouton FR/EN du header.
-            Lit le cookie `googtrans` pour appliquer la langue choisie. */}
+        {/* Google Translate Widget : invisible, piloté par le bouton FR/EN du header.
+            La fonction d'init doit être définie AVANT le chargement de element.js
+            (qui l'appelle via ?cb=), sinon le widget ne s'initialise jamais. */}
         <div id="google_translate_element" className="hidden" aria-hidden="true" />
-        <Script id="google-translate-init" strategy="afterInteractive">
-          {`function googleTranslateElementInit(){new google.translate.TranslateElement({pageLanguage:'fr',includedLanguages:'en,fr',layout:google.translate.TranslateElement.InlineLayout.SIMPLE,autoDisplay:false},'google_translate_element');}`}
+        <Script id="google-translate-init" strategy="beforeInteractive">
+          {`window.googleTranslateElementInit=function(){new google.translate.TranslateElement({pageLanguage:'fr',includedLanguages:'en,fr',layout:google.translate.TranslateElement.InlineLayout.SIMPLE,autoDisplay:false},'google_translate_element');};`}
         </Script>
         <Script
           src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
