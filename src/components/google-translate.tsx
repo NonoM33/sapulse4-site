@@ -27,6 +27,19 @@ const SCRIPT_SRC =
  * script chargé manuellement via document.createElement fonctionne. On reproduit
  * donc ce chargement manuel ici, en définissant le callback d'init AVANT
  * d'injecter le script (element.js l'appelle via ?cb=). */
+
+/* Filet de sécurité : Google Translate ré-injecte son bandeau (iframe en haut)
+ * et décale le <body> après chaque traduction, parfois avec des noms de classe
+ * obfusqués que le CSS ne couvre pas. On le masque donc aussi en JS. */
+function hideGoogleTranslateChrome() {
+  if (document.body.style.top !== "0px") document.body.style.top = "0px";
+  document
+    .querySelectorAll<HTMLElement>("iframe.skiptranslate, .goog-te-banner-frame")
+    .forEach((el) => {
+      el.style.display = "none";
+    });
+}
+
 export default function GoogleTranslate() {
   useEffect(() => {
     window.googleTranslateElementInit = () => {
@@ -48,6 +61,12 @@ export default function GoogleTranslate() {
       // Script déjà chargé (navigation client) : (ré)initialise le widget.
       window.googleTranslateElementInit();
     }
+
+    // Masque le bandeau dès qu'il (ré)apparaît dans le DOM.
+    hideGoogleTranslateChrome();
+    const observer = new MutationObserver(hideGoogleTranslateChrome);
+    observer.observe(document.body, { childList: true, subtree: true, attributes: true });
+    return () => observer.disconnect();
   }, []);
 
   return <div id="google_translate_element" className="hidden" aria-hidden="true" />;

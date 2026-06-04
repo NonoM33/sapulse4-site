@@ -461,18 +461,24 @@ body {
    On utilise le widget pour traduire FR/EN via notre propre bouton, mais on
    ne veut pas son bandeau « Traduit · Afficher l'original » en haut, ni le
    décalage du <body> qu'il applique, ni le tooltip au survol. */
-.goog-te-banner-frame.skiptranslate,
+/* Le bandeau est une <iframe> injectée en haut. Selon la version du widget,
+   sa classe varie (goog-te-banner-frame, skiptranslate, ou classes obfusquées
+   VIpgJd-*). On cible donc l'iframe directement (iframe.skiptranslate) ET les
+   conteneurs connus, sans sélecteur composé (qui ne matchait pas). */
+iframe.skiptranslate,
+iframe.goog-te-banner-frame,
+.goog-te-banner-frame,
+.VIpgJd-ZVi9od-ORHb-OEVmcd,
 .goog-te-gadget,
 #goog-gt-tt,
 .goog-te-balloon-frame,
 .goog-tooltip {
   display: none !important;
-}
-.skiptranslate iframe {
-  display: none !important;
   visibility: hidden !important;
+  height: 0 !important;
 }
-/* Google Translate pousse le body vers le bas pour son bandeau : on annule. */
+/* Google Translate pousse le body vers le bas pour son bandeau : on annule
+   (le style inline est battu par !important). */
 body {
   top: 0 !important;
   position: static !important;
