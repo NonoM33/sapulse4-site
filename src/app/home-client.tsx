@@ -66,6 +66,18 @@ function normalizeRootParagraph(html: string): string {
   return attrs ? `<span${attrs}>${inner}</span>` : inner;
 }
 
+/* Les mots colorés sont des <span> insérés dans le texte. Google Translate
+ * rogne les espaces situés en bordure de ces balises inline, ce qui colle les
+ * mots en anglais ("Give anew impetus"). On remplace donc ces espaces de
+ * bordure par des espaces insécables (U+00A0) que GT ne supprime pas — rendu
+ * visuellement identique en français, mais préservé après traduction.
+ * Réservé au contenu INLINE : sur du contenu bloc, les sauts de ligne entre
+ * balises deviendraient des nbsp parasites. */
+function protectInlineSpacing(html: string): string {
+  // \u00A0 = espace inécable, non rogné par Google Translate.
+  return html.replace(/ +(?=<)/g, "\u00A0").replace(/(?<=>) +/g, "\u00A0");
+}
+
 /** Render arbitrary text that may contain HTML from the rich editor.
  *  Uses a <div> when the content contains block-level tags (so multiple
  *  paragraphs aren't mangled by the browser auto-fixing invalid span>p),
@@ -77,7 +89,12 @@ function Rich({ value }: { value: string }) {
   if (isBlock) {
     return <div className="rich-content" dangerouslySetInnerHTML={{ __html: normalized }} />;
   }
-  return <span className="rich-content" dangerouslySetInnerHTML={{ __html: normalized }} />;
+  return (
+    <span
+      className="rich-content"
+      dangerouslySetInnerHTML={{ __html: protectInlineSpacing(normalized) }}
+    />
+  );
 }
 
 const ease: Easing = "easeOut";
