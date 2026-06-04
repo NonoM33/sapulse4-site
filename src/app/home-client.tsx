@@ -74,8 +74,10 @@ function normalizeRootParagraph(html: string): string {
  * Réservé au contenu INLINE : sur du contenu bloc, les sauts de ligne entre
  * balises deviendraient des nbsp parasites. */
 function protectInlineSpacing(html: string): string {
-  // \u00A0 = espace inécable, non rogné par Google Translate.
-  return html.replace(/ +(?=<)/g, "\u00A0").replace(/(?<=>) +/g, "\u00A0");
+  // Espace insécable (U+00A0), non rogné par Google Translate. On évite
+  // lookahead/lookbehind (Safari < 16.4 ne sait pas parser le lookbehind
+  // et planterait tout le bundle) : groupes de capture uniquement.
+  return html.replace(/ +(<)/g, "\u00A0$1").replace(/(>) +/g, "$1\u00A0");
 }
 
 /** Render arbitrary text that may contain HTML from the rich editor.
