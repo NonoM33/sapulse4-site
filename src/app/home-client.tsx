@@ -188,6 +188,22 @@ function applyGoogleTranslate(lang: "fr" | "en") {
   }, 150);
 }
 
+/* Efface le cookie `googtrans` sur TOUTES les variantes de domaine/chemin.
+   Google Translate (et l'ancienne version du site) le posait aussi sur le
+   domaine parent (.bkpulse.fr) ; un effacement host-only laissait ce résidu,
+   d'où le retour FR qui re-traduisait en anglais au rechargement. */
+function clearGoogtransCookie() {
+  const past = "Thu, 01 Jan 1970 00:00:00 GMT";
+  const host = window.location.hostname;
+  const domains = ["", host, `.${host}`];
+  const parts = host.split(".");
+  if (parts.length > 2) domains.push(`.${parts.slice(-2).join(".")}`);
+  for (const domain of domains) {
+    const suffix = domain ? `; domain=${domain}` : "";
+    document.cookie = `googtrans=; expires=${past}; path=/${suffix}`;
+  }
+}
+
 export default function HomeClient({ content }: HomeClientProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -236,9 +252,9 @@ export default function HomeClient({ content }: HomeClientProps) {
     } else {
       // Retour au français = texte original. Google Translate n'expose pas
       // d'option fiable pour revenir à la langue SOURCE (le français est exclu
-      // du menu), donc on efface le cookie et on recharge : la page se ré-affiche
-      // en français natif, sans traduction.
-      document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+      // du menu), donc on efface le cookie (toutes variantes de domaine) et on
+      // recharge : la page se ré-affiche en français natif, sans traduction.
+      clearGoogtransCookie();
       window.location.reload();
     }
   }
