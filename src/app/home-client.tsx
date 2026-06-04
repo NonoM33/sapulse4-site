@@ -66,18 +66,18 @@ function normalizeRootParagraph(html: string): string {
   return attrs ? `<span${attrs}>${inner}</span>` : inner;
 }
 
-/* Les mots colorés sont des <span> insérés dans le texte. Google Translate
- * rogne les espaces situés en bordure de ces balises inline, ce qui colle les
- * mots en anglais ("Give anew impetus"). On remplace donc ces espaces de
- * bordure par des espaces insécables (U+00A0) que GT ne supprime pas — rendu
- * visuellement identique en français, mais préservé après traduction.
- * Réservé au contenu INLINE : sur du contenu bloc, les sauts de ligne entre
- * balises deviendraient des nbsp parasites. */
+/* Les mots colorés sont des balises inline (<mark>, <span>...) insérées dans
+ * le texte. Google Translate rogne les espaces situés juste au bord de ces
+ * balises, ce qui colle les mots en anglais ("Give anew impetus"). On remplace
+ * ces seuls espaces de bordure par des espaces insécables (U+00A0), que GT ne
+ * supprime pas — rendu identique en français. On ne vise QUE les balises inline
+ * d'emphase (jamais <p>/<div>...), pour ne pas transformer les espaces entre
+ * blocs. Pas de lookbehind (Safari < 16.4 planterait sur le parsing). */
+const INLINE_EMPHASIS = "mark|span|b|strong|em|i|u|a|small|sub|sup";
 function protectInlineSpacing(html: string): string {
-  // Espace insécable (U+00A0), non rogné par Google Translate. On évite
-  // lookahead/lookbehind (Safari < 16.4 ne sait pas parser le lookbehind
-  // et planterait tout le bundle) : groupes de capture uniquement.
-  return html.replace(/ +(<)/g, "\u00A0$1").replace(/(>) +/g, "$1\u00A0");
+  const beforeOpen = new RegExp(` +(<(?:${INLINE_EMPHASIS})[\\s>])`, "gi");
+  const afterClose = new RegExp(`(</(?:${INLINE_EMPHASIS})>) +`, "gi");
+  return html.replace(beforeOpen, "\\u00A0$1").replace(afterClose, "$1\\u00A0");
 }
 
 /** Render arbitrary text that may contain HTML from the rich editor.
@@ -89,7 +89,12 @@ function Rich({ value }: { value: string }) {
   const normalized = normalizeRootParagraph(value);
   const isBlock = /<(p|div|h[1-6]|ul|ol|li|blockquote|hr|pre)[\s>]/i.test(normalized);
   if (isBlock) {
-    return <div className="rich-content" dangerouslySetInnerHTML={{ __html: normalized }} />;
+    return (
+      <div
+        className="rich-content"
+        dangerouslySetInnerHTML={{ __html: protectInlineSpacing(normalized) }}
+      />
+    );
   }
   return (
     <span
