@@ -227,12 +227,20 @@ export default function HomeClient({ content }: HomeClientProps) {
   function toggleLanguage() {
     const next = currentLang === "fr" ? "en" : "fr";
     setCurrentLang(next);
-    // Persiste le choix (cookie host-only : `domain=.fr` était un suffixe public
-    // rejeté par le navigateur, d'où l'ancien bug de non-persistance).
-    const expires = new Date(Date.now() + 365 * 24 * 3600 * 1000).toUTCString();
-    document.cookie = `googtrans=/fr/${next}; expires=${expires}; path=/`;
-    // Traduit en place, sans rechargement.
-    applyGoogleTranslate(next);
+    if (next === "en") {
+      // Traduit en place, sans rechargement, et persiste le choix (cookie
+      // host-only : `domain=.fr` était un suffixe public rejeté par le navigateur).
+      const expires = new Date(Date.now() + 365 * 24 * 3600 * 1000).toUTCString();
+      document.cookie = `googtrans=/fr/en; expires=${expires}; path=/`;
+      applyGoogleTranslate("en");
+    } else {
+      // Retour au français = texte original. Google Translate n'expose pas
+      // d'option fiable pour revenir à la langue SOURCE (le français est exclu
+      // du menu), donc on efface le cookie et on recharge : la page se ré-affiche
+      // en français natif, sans traduction.
+      document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+      window.location.reload();
+    }
   }
 
   const navLinks = [
