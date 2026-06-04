@@ -77,7 +77,8 @@ const INLINE_EMPHASIS = "mark|span|b|strong|em|i|u|a|small|sub|sup";
 function protectInlineSpacing(html: string): string {
   const beforeOpen = new RegExp(` +(<(?:${INLINE_EMPHASIS})[\\s>])`, "gi");
   const afterClose = new RegExp(`(</(?:${INLINE_EMPHASIS})>) +`, "gi");
-  return html.replace(beforeOpen, "\\u00A0$1").replace(afterClose, "$1\\u00A0");
+  const nbsp = String.fromCharCode(160); // espace insécable
+  return html.replace(beforeOpen, nbsp + "$1").replace(afterClose, "$1" + nbsp);
 }
 
 /** Render arbitrary text that may contain HTML from the rich editor.
