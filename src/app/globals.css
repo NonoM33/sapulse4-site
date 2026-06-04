@@ -456,3 +456,29 @@ body {
 .tippy-box[data-theme~="light"] > .tippy-arrow {
   display: none;
 }
+
+/* ─── Masque l'UI Google Translate ───────────────────────────────────
+   On utilise le widget pour traduire FR/EN via notre propre bouton, mais on
+   ne veut pas son bandeau « Traduit · Afficher l'original » en haut, ni le
+   décalage du <body> qu'il applique, ni le tooltip au survol. */
+.goog-te-banner-frame.skiptranslate,
+.goog-te-gadget,
+#goog-gt-tt,
+.goog-te-balloon-frame,
+.goog-tooltip {
+  display: none !important;
+}
+.skiptranslate iframe {
+  display: none !important;
+  visibility: hidden !important;
+}
+/* Google Translate pousse le body vers le bas pour son bandeau : on annule. */
+body {
+  top: 0 !important;
+  position: static !important;
+}
+/* Pas de surlignage jaune sur le texte traduit. */
+.goog-text-highlight {
+  background: none !important;
+  box-shadow: none !important;
+}
